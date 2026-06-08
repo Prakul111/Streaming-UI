@@ -1,12 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { createBrowserRouter, Outlet } from "react-router"
+import { createBrowserRouter } from "react-router"
 import { RouterProvider } from "react-router/dom"
 import HomePage from "./components/pages/HomePage"
 import ErrorPage from "./components/pages/ErrorPage"
 import MovieDetails from "./components/pages/MovieDetails"
 import TvDetails from "./components/pages/TvDetails"
 import Navbar from "./components/navbar"
+import { ThemeProvider } from "./components/theme-provider"
 
 const queryClient = new QueryClient()
 
@@ -37,10 +38,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 

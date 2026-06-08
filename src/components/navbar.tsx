@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { Button } from "@base-ui/react/button"
-import { Outlet, useNavigate } from "react-router"
+import { NavLink, Outlet, useNavigate } from "react-router"
+import { ModeToggle } from "./mode-toggle"
+import { Field } from "@base-ui/react/field"
+import { Input } from "./ui/input"
 
 export default function Navbar() {
   const navigate = useNavigate()
@@ -20,7 +23,7 @@ export default function Navbar() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="-screen bg-background p-4 text-foreground">
       {/* Fixed Header */}
       <header
         className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
@@ -29,19 +32,27 @@ export default function Navbar() {
             : "border-b border-transparent bg-transparent"
         }`}
       >
-        <div className="flex items-center gap-3">
-          <Button
-            className="cursor-pointer rounded-md border border-border p-2 text-sm font-medium transition transform-3d hover:bg-gray-500/45"
-            onClick={() => {
-              navigate("/")
-            }}
+        <div className="flex items-center gap-x-1">
+          <NavLink
+            to="/"
+            // className="cursor-pointer rounded-md p-2 text-sm font-medium"
           >
             <img
-              className="h-5"
+              className="h-6"
               src="/src/assets/popcorn-svgrepo-com.svg"
             ></img>
-          </Button>
-          <h2 className="text-lg font-bold tracking-tight">Streaming UI</h2>
+          </NavLink>
+          <NavLink to="/">
+            <h2 className="text-lg font-bold tracking-tight">Streaming UI</h2>
+          </NavLink>
+        </div>
+        <div>
+          <Field.Root className="flex items-center gap-2">
+            <Input type="search" placeholder="Search..." />
+            <Button className="cursor-pointer rounded-md border border-border px-3 py-1.5 text-sm font-medium transition hover:bg-gray-500/45">
+              Search
+            </Button>
+          </Field.Root>
         </div>
 
         <div className="flex items-center gap-2">
@@ -61,6 +72,7 @@ export default function Navbar() {
           >
             Tv Details
           </Button>
+          <ModeToggle />
         </div>
       </header>
 
