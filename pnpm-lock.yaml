@@ -15,7 +15,7 @@ importers:
         specifier: ^5.2.9
         version: 5.2.9
       '@tailwindcss/vite':
-        specifier: ^4
+        specifier: ^4.3.0
         version: 4.3.0(vite@8.0.16(@types/node@24.13.1)(jiti@2.7.0))
       '@tanstack/react-query':
         specifier: ^5.101.0
@@ -29,6 +29,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      daisyui:
+        specifier: ^5.5.23
+        version: 5.5.23
       embla-carousel-autoplay:
         specifier: ^8.6.0
         version: 8.6.0(embla-carousel@8.6.0)
@@ -54,7 +57,7 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       tailwindcss:
-        specifier: ^4
+        specifier: ^4.3.0
         version: 4.3.0
       tw-animate-css:
         specifier: ^1.4.0
@@ -1012,6 +1015,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  daisyui@5.5.23:
+    resolution: {integrity: sha512-xuheNUSL4T6ZVtWXoioqcNkjoyGX85QTDz4HTw2aBPfqk4fuMjax5HDo8qCmpV6M1YN8bGvfx5BpYCoDeRlt+A==}
 
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
@@ -3315,6 +3321,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.2.3: {}
+
+  daisyui@5.5.23: {}
 
   data-uri-to-buffer@4.0.1: {}
 

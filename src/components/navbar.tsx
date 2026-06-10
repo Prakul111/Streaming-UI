@@ -23,7 +23,7 @@ export default function Navbar() {
   }, [])
 
   return (
-    <div className="-screen bg-background p-4 text-foreground">
+    <div className="bg-background p-4 text-foreground">
       {/* Fixed Header */}
       <header
         className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
@@ -77,7 +77,7 @@ export default function Navbar() {
       </header>
 
       {/* Page Content */}
-      <main className="px-6 pt-20">
+      <main className="px-6 pt-10">
         <Outlet />
       </main>
     </div>
