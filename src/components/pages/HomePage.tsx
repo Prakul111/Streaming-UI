@@ -184,7 +184,7 @@ export default function HomePage() {
   return (
     <div className="w-full pb-16 bg-background text-foreground">
       {/* 1. Full-Bleed Hero Banner Carousel */}
-      <div className="relative group w-full h-[650px] md:h-[80vh] md:min-h-[700px] bg-black overflow-hidden select-none">
+      <div className="relative group w-full h-[480px] sm:h-[550px] md:h-[80vh] md:min-h-[700px] bg-black overflow-hidden select-none">
         {isNowPlayingPending ? (
           <div className="flex size-full items-center justify-center">
             <CarouselSkeleton />
@@ -219,7 +219,7 @@ export default function HomePage() {
 
             {/* Overlaid Movie Details (Bottom-Left) */}
             {activeMovie && (
-              <div className="absolute bottom-16 left-6 right-6 md:bottom-24 md:left-16 z-20 max-w-2xl space-y-4">
+              <div className="absolute bottom-12 left-6 right-6 md:bottom-24 md:left-16 z-20 max-w-2xl space-y-3 md:space-y-4">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeMovie.id}
@@ -227,7 +227,7 @@ export default function HomePage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4 }}
-                    className="space-y-4"
+                    className="space-y-3 md:space-y-4"
                   >
                     {/* Metadata Row */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs md:text-sm font-semibold text-gray-300">
@@ -243,17 +243,17 @@ export default function HomePage() {
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-white leading-none drop-shadow-md">
+                    <h1 className="text-2xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-white leading-none drop-shadow-md">
                       {activeMovie.title}
                     </h1>
 
                     {/* Description */}
-                    <p className="text-xs md:text-sm text-gray-200/90 leading-relaxed font-normal max-w-xl line-clamp-3">
+                    <p className="text-xs md:text-sm text-gray-200/90 leading-relaxed font-normal max-w-xl line-clamp-3 sm:line-clamp-4 md:line-clamp-none">
                       {activeMovie.overview}
                     </p>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <div className="flex flex-wrap items-center gap-3 pt-1">
                       <Link to={`/movie-details/${activeMovie.id}?autoplay=true`}>
                         <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-black shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.98]">
                           <Play className="size-4 fill-black text-black" />
@@ -272,24 +272,24 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Edge Navigation Arrow Overlays (Visible on Hover) */}
+            {/* Edge Navigation Arrow Overlays (Visible on Hover, Hidden on Mobile) */}
             <button
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-30 flex size-12 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-sm opacity-0 transition-all duration-300 hover:bg-black/50 hover:scale-105 active:scale-95 group-hover:opacity-100"
+              className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 flex size-12 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-sm opacity-0 transition-all duration-300 hover:bg-black/50 hover:scale-105 active:scale-95 group-hover:opacity-100"
               aria-label="Previous slide"
             >
               <ChevronLeft className="size-6" />
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex size-12 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-sm opacity-0 transition-all duration-300 hover:bg-black/50 hover:scale-105 active:scale-95 group-hover:opacity-100"
+              className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 flex size-12 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-sm opacity-0 transition-all duration-300 hover:bg-black/50 hover:scale-105 active:scale-95 group-hover:opacity-100"
               aria-label="Next slide"
             >
               <ChevronRight className="size-6" />
             </button>
 
-            {/* Bottom-Right Slide Indicator Bars */}
-            <div className="absolute bottom-16 right-6 md:bottom-24 md:right-16 z-20 flex items-center gap-2.5">
+            {/* Slide Indicator Bars - Centered on Mobile, Bottom-Right on Desktop */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-16 md:bottom-24 z-20 flex items-center gap-2.5">
               {nowPlayingMovies.map((_, index) => {
                 const isActive = index === activeIndex
                 return (

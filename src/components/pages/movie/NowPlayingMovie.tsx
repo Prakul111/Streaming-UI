@@ -30,7 +30,7 @@ export default function NowPlayingMovie() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 md:px-12">
-      <h1 className="font-extrabold mt-4 text-5xl">Now Playing Movies</h1>
+      <h1 className="font-extrabold mt-4 text-3xl sm:text-4xl md:text-5xl">Now Playing Movies</h1>
 
       <div className="mt-10">
         {isPending ? (

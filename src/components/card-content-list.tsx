@@ -1,6 +1,7 @@
 import { useState, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
+import starIcon from "@/assets/star-svgrepo-com.svg"
 
 interface ContentListProps {
   id?: number
@@ -94,7 +95,7 @@ export default function CardContentList({
       <div className="flex items-center justify-between gap-2 py-2 text-xs text-muted-foreground font-medium">
         <div className="flex items-center justify-center rounded-full bg-muted text-foreground px-2.5 py-1 whitespace-nowrap">
           <img
-            src="/src/assets/star-svgrepo-com.svg"
+            src={starIcon}
             className="h-2.5 pr-0.5"
             alt="star"
           />

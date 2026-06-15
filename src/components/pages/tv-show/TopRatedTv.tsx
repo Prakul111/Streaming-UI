@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import CardContentList from "../../card-content-list"
@@ -32,6 +32,14 @@ export default function TopRatedTv() {
   // Collapsible states
   const [isSortOpen, setIsSortOpen] = useState(true)
   const [isFiltersOpen, setIsFiltersOpen] = useState(true)
+
+  // Collapse filters by default on mobile/tablet viewports
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setIsSortOpen(false)
+      setIsFiltersOpen(false)
+    }
+  }, [])
 
   // Filter States - Default sort by Rating Descending for Top Rated TV
   const [activeFilters, setActiveFilters] = useState({
@@ -91,7 +99,7 @@ export default function TopRatedTv() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 md:px-12">
-      <h1 className="font-extrabold mt-4 text-5xl">Top Rated TV Shows</h1>
+      <h1 className="font-extrabold mt-4 text-3xl sm:text-4xl md:text-5xl">Top Rated TV Shows</h1>
 
       <div className="mt-8 flex flex-col gap-8 lg:flex-row">
         {/* Left Side: Filter and Sort Sidebar */}

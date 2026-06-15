@@ -38,7 +38,7 @@ export default function TrendingAll() {
   return (
     <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 md:px-12">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/40 pb-4">
-        <h1 className="font-extrabold text-5xl">Trending Content</h1>
+        <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">Trending Content</h1>
 
         {/* Day / Week Switcher */}
         <div className="flex self-start rounded-xl border border-border/40 bg-muted/60 p-1.5 backdrop-blur-md sm:self-auto">

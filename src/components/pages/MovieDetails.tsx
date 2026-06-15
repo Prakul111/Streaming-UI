@@ -121,7 +121,7 @@ export default function MovieDetails() {
   return (
     <div className="w-full bg-background text-foreground pb-24">
       {/* 1. Hero Backdrop Banner */}
-      <div className="relative w-full h-[550px] md:h-[70vh] bg-black overflow-hidden select-none">
+      <div className="relative w-full h-[280px] sm:h-[400px] md:h-[70vh] bg-black overflow-hidden select-none">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -135,98 +135,98 @@ export default function MovieDetails() {
         {/* Back Button */}
         <button
           onClick={() => window.history.back()}
-          className="absolute top-28 left-6 md:left-12 z-30 cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md hover:bg-white/10 transition-all active:scale-95"
+          className="absolute top-20 md:top-28 left-6 md:left-12 z-30 cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md hover:bg-white/10 transition-all active:scale-95"
         >
           <ArrowLeft className="size-4" />
           Back
         </button>
+      </div>
 
-        {/* Hero Info Overlay */}
-        <div className="absolute bottom-12 left-6 right-6 md:left-12 z-20 flex flex-col md:flex-row gap-8 items-end max-w-7xl mx-auto">
-          {/* Poster Card (hidden on small devices) */}
-          <div className="hidden md:block w-52 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 hover:scale-[1.02] transition-transform duration-300">
-            <img src={posterUrl} alt={movie.title} className="w-full aspect-[2/3] object-cover" />
-          </div>
+      {/* Hero Info Overlay */}
+      <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 -mt-20 sm:-mt-28 md:-mt-36 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-end">
+        {/* Poster Card (hidden on small devices) */}
+        <div className="hidden md:block w-52 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 hover:scale-[1.02] transition-transform duration-300 bg-background">
+          <img src={posterUrl} alt={movie.title} className="w-full aspect-[2/3] object-cover" />
+        </div>
 
-          {/* Text Metadata */}
-          <div className="flex-grow space-y-4 text-left">
-            {/* Title / Logo */}
-            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-white leading-none drop-shadow-md">
-              {movie.title}
-            </h1>
+        {/* Text Metadata */}
+        <div className="flex-grow space-y-4 text-left">
+          {/* Title / Logo */}
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-white leading-tight drop-shadow-md">
+            {movie.title}
+          </h1>
 
-            {/* Action buttons (Stranger Things UI layout) */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+          {/* Action buttons (Stranger Things UI layout) */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              onClick={() => setIsPlayerOpen(true)}
+              className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all active:scale-95"
+            >
+              <Play className="size-4 fill-white text-white" />
+              Watch Now
+            </button>
+
+            {trailerVideo && (
               <button
-                onClick={() => setIsPlayerOpen(true)}
-                className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all active:scale-95"
-              >
-                <Play className="size-4 fill-white text-white" />
-                Watch Now
-              </button>
-
-              {trailerVideo && (
-                <button
-                  onClick={() => setIsTrailerOpen(true)}
-                  className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
-                >
-                  Play Trailer
-                </button>
-              )}
-
-              <button
-                className="cursor-pointer flex items-center justify-center rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white p-2.5 transition-all active:scale-95"
-                title="Add to Watchlist"
-              >
-                <Plus className="size-4" />
-              </button>
-
-              <button
-                onClick={scrollToSimilars}
+                onClick={() => setIsTrailerOpen(true)}
                 className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
               >
-                <Compass className="size-4" />
-                Similars
+                Play Trailer
               </button>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs md:text-sm font-semibold text-gray-300">
-              <span className="flex items-center gap-1 text-cyan-400 font-bold">
-                <Star className="size-4 fill-cyan-400 text-cyan-400" />
-                {movie.vote_average ? movie.vote_average.toFixed(1) : "0.0"}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Calendar className="size-4" />
-                {releaseYear}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Clock className="size-4" />
-                {formatRuntime(movie.runtime)}
-              </span>
-            </div>
-
-            {movie.tagline && (
-              <p className="text-lg italic text-cyan-200/80 font-medium">
-                "{movie.tagline}"
-              </p>
             )}
 
-            <p className="text-xs md:text-sm text-gray-200/90 leading-relaxed font-normal max-w-3xl drop-shadow">
-              {movie.overview}
-            </p>
+            <button
+              className="cursor-pointer flex items-center justify-center rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white p-2.5 transition-all active:scale-95"
+              title="Add to Watchlist"
+            >
+              <Plus className="size-4" />
+            </button>
 
-            <div className="flex flex-wrap gap-2 pt-1">
-              {movie.genres?.map((genre: any) => (
-                <span
-                  key={genre.id}
-                  className="rounded-full bg-white/10 border border-white/5 px-3.5 py-1 text-xs font-semibold text-white whitespace-nowrap"
-                >
-                  {genre.name}
-                </span>
-              ))}
-            </div>
+            <button
+              onClick={scrollToSimilars}
+              className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
+            >
+              <Compass className="size-4" />
+              Similars
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs md:text-sm font-semibold text-gray-300">
+            <span className="flex items-center gap-1 text-cyan-400 font-bold">
+              <Star className="size-4 fill-cyan-400 text-cyan-400" />
+              {movie.vote_average ? movie.vote_average.toFixed(1) : "0.0"}
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Calendar className="size-4" />
+              {releaseYear}
+            </span>
+            <span>•</span>
+            <span className="flex items-center gap-1">
+              <Clock className="size-4" />
+              {formatRuntime(movie.runtime)}
+            </span>
+          </div>
+
+          {movie.tagline && (
+            <p className="text-base md:text-lg italic text-cyan-200/80 font-medium">
+              "{movie.tagline}"
+            </p>
+          )}
+
+          <p className="text-xs md:text-sm text-gray-200/90 leading-relaxed font-normal max-w-3xl drop-shadow">
+            {movie.overview}
+          </p>
+
+          <div className="flex flex-wrap gap-2 pt-1">
+            {movie.genres?.map((genre: any) => (
+              <span
+                key={genre.id}
+                className="rounded-full bg-white/10 border border-white/5 px-3.5 py-1 text-xs font-semibold text-white whitespace-nowrap"
+              >
+                {genre.name}
+              </span>
+            ))}
           </div>
         </div>
       </div>
