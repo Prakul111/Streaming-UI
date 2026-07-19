@@ -101,7 +101,7 @@ export default function MovieDetails() {
   const cast = credits?.cast?.slice(0, 12) || []
   const recommendedMovies = recommendations?.results?.slice(0, 12) || []
   const releaseYear = movie.release_date ? movie.release_date.split("-")[0] : "N/A"
-  
+
   // Format Runtime (e.g. 130 -> 2h 10m)
   const formatRuntime = (minutes: number) => {
     if (!minutes) return "N/A"
@@ -233,7 +233,7 @@ export default function MovieDetails() {
 
       {/* Main Details Body */}
       <div className="mx-auto max-w-7xl px-6 md:px-12 mt-12 space-y-16">
-        
+
         {/* 2. Cast List Carousel */}
         {cast.length > 0 && (
           <div className="space-y-6">
@@ -350,7 +350,7 @@ export default function MovieDetails() {
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        embedUrl={`https://www.vidking.net/embed/movie/${movie.id}?color=a855f7&autoPlay=true`}
+        embedUrl={`https://vixsrc.to/movie/${movie.id}?color=a855f7&autoPlay=true`}
         title={`${movie.title} Player`}
       />
     </div>

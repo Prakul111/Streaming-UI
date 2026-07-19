@@ -107,8 +107,10 @@ export default function PopularMovie() {
     "grid w-full grid-cols-2 justify-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4"
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 md:px-12">
-      <h1 className="font-extrabold mt-4 text-3xl sm:text-4xl md:text-5xl">Popular Movies</h1>
+    <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 sm:max-w-screen md:px-12">
+      <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl md:text-5xl">
+        Popular Movies
+      </h1>
 
       <div className="mt-8 flex flex-col gap-8 lg:flex-row">
         {/* Left Side: Filter and Sort Sidebar */}
@@ -250,7 +252,7 @@ export default function PopularMovie() {
         </div>
 
         {/* Right Side: Movie Grid */}
-        <div className="flex-grow flex flex-col min-w-0">
+        <div className="flex min-w-0 flex-grow flex-col">
           {isPending ? (
             <MovieRowSkeleton />
           ) : movies.length > 0 ? (

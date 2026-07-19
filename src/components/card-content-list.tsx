@@ -34,30 +34,30 @@ export default function CardContentList({
     const rect = card.getBoundingClientRect()
     const width = rect.width
     const height = rect.height
-    
+
     // Mouse position relative to the card element
     const mouseX = e.clientX - rect.left
     const mouseY = e.clientY - rect.top
-    
+
     // Calculate rotation angles based on mouse position relative to center
     const centerX = width / 2
     const centerY = height / 2
-    
+
     const deltaX = mouseX - centerX
     const deltaY = mouseY - centerY
-    
+
     // Normalize to range [-1, 1]
     const percentX = deltaX / centerX
     const percentY = deltaY / centerY
-    
+
     // Max tilt angles (in degrees)
     const maxTiltX = 12
     const maxTiltY = 12
-    
+
     // Tilt calculations (X tilt is based on Y mouse movement, and vice-versa)
     const tiltX = -percentY * maxTiltX
     const tiltY = percentX * maxTiltY
-    
+
     setTiltStyle({
       transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.05)`,
       boxShadow: "0 25px 35px -5px rgba(0, 0, 0, 0.4), 0 12px 20px -8px rgba(0, 0, 0, 0.4)",

@@ -122,7 +122,7 @@ export default function TvDetails() {
   const cast = credits?.cast?.slice(0, 12) || []
   const recommendedShows = recommendations?.results?.slice(0, 12) || []
   const airYear = show.first_air_date ? show.first_air_date.split("-")[0] : "N/A"
-  
+
   // Available seasons (excluding special season 0 if it has no episodes)
   const seasons = show.seasons?.filter((s: any) => s.season_number > 0 && s.episode_count > 0) || []
 
@@ -277,7 +277,7 @@ export default function TvDetails() {
 
       {/* Main Details Body */}
       <div className="mx-auto max-w-7xl px-6 md:px-12 mt-12 space-y-16">
-        
+
         {/* 2. Episodes Section */}
         {seasons.length > 0 && (
           <div ref={episodesSectionRef} className="space-y-6">
@@ -546,7 +546,7 @@ export default function TvDetails() {
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        embedUrl={`https://www.vidking.net/embed/tv/${show.id}/${playerSeason}/${playerEpisode}?color=a855f7&autoPlay=true&nextEpisode=true&episodeSelector=true`}
+        embedUrl={`https://vixsrc.to/tv/${show.id}/${playerSeason}/${playerEpisode}?color=a855f7&autoPlay=true&nextEpisode=true&episodeSelector=true`}
         title={`${show.name} S${playerSeason} E${playerEpisode} Player`}
       />
     </div>

@@ -8,8 +8,8 @@ Made with ♥️ by [Prakul](https://github.com/Prakul111).
 
 ## 🌟 Key Features
 
-### 📺 Integrated Media Player (VidKing API)
-- Implemented standard support for the `vidking.net` player API.
+### 📺 Integrated Media Player (Vixsrc API)
+- Implemented standard support for the `vixsrc.to` player API.
 - **Movies**: Watch movies directly inside a full-theater modal overlay.
 - **TV Shows**: Start streaming instantly from the hero card (defaults to S1 E1) or play individual episodes directly from the season episode listings.
 - **Custom Player Branding**: Embed parameters customized with a purple theme accent (`#a855f7`) to align with the visual design.
@@ -61,7 +61,7 @@ Made with ♥️ by [Prakul](https://github.com/Prakul111).
 │   │   ├── ui/                # Core visual design blocks (buttons, inputs, cards)
 │   │   ├── navbar.tsx         # Fixed global header with search and theme togglers
 │   │   ├── footer.tsx         # Centered footer with developer credits
-│   │   └── video-player-modal.tsx # Iframe player wrapper for VidKing streaming embeds
+│   │   └── video-player-modal.tsx # Iframe player wrapper for Vixsrc streaming embeds
 │   ├── lib/                   # Helper functions (utils.ts)
 │   ├── App.tsx                # App router declaration & Provider wrappers
 │   ├── index.css              # Custom Tailwind theme overrides & global styling rules

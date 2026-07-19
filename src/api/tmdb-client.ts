@@ -1,4 +1,4 @@
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL || "https://api.themoviedb.org/3";
 
 export interface FetchOptions extends RequestInit {
     params?: Record<string, string | number | boolean>;
