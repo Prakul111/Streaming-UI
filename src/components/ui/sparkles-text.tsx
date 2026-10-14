@@ -18,7 +18,7 @@ const Sparkle = ({ id, x, y, color, delay, scale }: Sparkle) => {
   return (
     <motion.svg
       key={id}
-      className="pointer-events-none absolute z-20"
+      className="pointer-events-none absolute z-20 size-2.5 sm:size-3"
       initial={{ opacity: 0, left: x, top: y }}
       animate={{
         opacity: [0, 1, 0],
@@ -26,8 +26,6 @@ const Sparkle = ({ id, x, y, color, delay, scale }: Sparkle) => {
         rotate: [75, 120, 150],
       }}
       transition={{ duration: 0.8, repeat: Infinity, delay }}
-      width="21"
-      height="21"
       viewBox="0 0 21 21"
     >
       <path

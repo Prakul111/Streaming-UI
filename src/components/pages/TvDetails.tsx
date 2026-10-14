@@ -1,7 +1,26 @@
 import { useState, useEffect, useRef } from "react"
 import { useParams, useSearchParams, Link } from "react-router"
 import { useQuery } from "@tanstack/react-query"
-import { Play, X, Star, Calendar, Clock, Tv, Plus, List, Compass, Search, ArrowUpDown, Download, ArrowLeft } from "lucide-react"
+import {
+  Play,
+  X,
+  Star,
+  Clock,
+  Tv,
+  Download,
+  Bookmark,
+  Share2,
+  Check,
+  Film,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LayoutGrid,
+  List,
+  Columns3,
+  User,
+  Clapperboard,
+} from "lucide-react"
 import {
   tvDetailsQuery,
   tvCreditsQuery,
@@ -27,7 +46,14 @@ export default function TvDetails() {
   const [selectedSeason, setSelectedSeason] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false)
+  const [episodeViewMode, setEpisodeViewMode] = useState<"cards" | "grid" | "list">("cards")
+  const [isSeasonDropdownOpen, setIsSeasonDropdownOpen] = useState(false)
+  const [watchedEpisodes, setWatchedEpisodes] = useState<number[]>([])
 
+  const episodesScrollRef = useRef<HTMLDivElement>(null)
   const episodesSectionRef = useRef<HTMLDivElement>(null)
   const similarsSectionRef = useRef<HTMLDivElement>(null)
 
@@ -77,14 +103,6 @@ export default function TvDetails() {
     setSearchQuery("")
     setSortOrder("asc")
   }, [id])
-
-  const scrollToEpisodes = () => {
-    episodesSectionRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const scrollToSimilars = () => {
-    similarsSectionRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
   if (isNaN(numericId)) {
     return (
@@ -144,339 +162,996 @@ export default function TvDetails() {
     ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
     : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600"
 
-  const posterUrl = show.poster_path
-    ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
-    : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
+  const ratingPercent = show.vote_average ? Math.round(show.vote_average * 10) : 0
+  const starCount = Math.round((show.vote_average || 0) / 2)
+
+  const creator =
+    show.created_by?.[0] ||
+    credits?.crew?.find(
+      (c: any) =>
+        c.job === "Creator" ||
+        c.job === "Executive Producer" ||
+        c.job === "Writer"
+    )
+
+  const creatorName = creator?.name
+
+  const showrunners =
+    credits?.crew
+      ?.filter(
+        (c: any) =>
+          c.job === "Executive Producer" ||
+          c.job === "Showrunner" ||
+          c.job === "Co-Executive Producer"
+      )
+      .slice(0, 2) || []
+
+  const producers =
+    credits?.crew
+      ?.filter(
+        (c: any) =>
+          c.job === "Producer" ||
+          c.job === "Supervising Producer" ||
+          c.job === "Consulting Producer" ||
+          c.job === "Line Producer"
+      )
+      .slice(0, 2) || []
+
+  const toggleEpisodeWatched = (episodeId: number) => {
+    setWatchedEpisodes((prev) =>
+      prev.includes(episodeId)
+        ? prev.filter((id) => id !== episodeId)
+        : [...prev, episodeId]
+    )
+  }
+
+  const scrollEpisodes = (direction: "left" | "right") => {
+    if (!episodesScrollRef.current) return
+    const offset = direction === "left" ? -400 : 400
+    episodesScrollRef.current.scrollBy({ left: offset, behavior: "smooth" })
+  }
+
+  const latestEpisode =
+    show.last_episode_to_air ||
+    show.next_episode_to_air ||
+    (seasonData?.episodes && seasonData.episodes[seasonData.episodes.length - 1])
+
+  const network = show.networks?.[0]
+
+  const formatLongDate = (dateStr?: string) => {
+    if (!dateStr) return "N/A"
+    try {
+      return new Date(dateStr).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    } catch {
+      return dateStr
+    }
+  }
+
+  const formatShortDate = (dateStr?: string) => {
+    if (!dateStr) return "N/A"
+    try {
+      return new Date(dateStr).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    } catch {
+      return dateStr
+    }
+  }
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
+  }
 
   return (
-    <div className="w-full bg-background text-foreground pb-24">
-      {/* 1. Hero Backdrop Banner */}
-      <div className="relative w-full h-[280px] sm:h-[400px] md:h-[70vh] bg-black overflow-hidden select-none">
-        {/* Background Image */}
+    <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
+      {/* 1. HERO SECTION (100% Zoom Responsive Layout Matching Reference) */}
+      <section className="relative w-full min-h-[92vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-black select-none pt-16 sm:pt-20 pb-4 sm:pb-6">
+        {/* Cinematic Backdrop Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
           style={{ backgroundImage: `url(${backdropUrl})` }}
         />
 
-        {/* Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/30 to-transparent" />
+        {/* Ambient Film Grid Texture Overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
 
-        {/* Back Button */}
-        <button
-          onClick={() => window.history.back()}
-          className="absolute top-20 md:top-28 left-6 md:left-12 z-30 cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md hover:bg-white/10 transition-all active:scale-95"
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </button>
-      </div>
+        {/* Mood Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#090b10] via-[#090b10]/65 to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#090b10] via-[#090b10]/80 to-transparent" />
 
-      {/* Hero Info Overlay */}
-      <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 -mt-20 sm:-mt-28 md:-mt-36 flex flex-col md:flex-row gap-6 md:gap-8 items-start md:items-end">
-        {/* Poster Card (hidden on small devices) */}
-        <div className="hidden md:block w-52 shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 hover:scale-[1.02] transition-transform duration-300 bg-background">
-          <img src={posterUrl} alt={show.name} className="w-full aspect-[2/3] object-cover" />
+        {/* Subtle Watermark on far right edge (matching reference) */}
+        <div className="hidden xl:block absolute right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none opacity-20 text-[10px] tracking-[0.5em] text-white [writing-mode:vertical-rl]">
+          CINEMA08
         </div>
 
-        {/* Text Metadata */}
-        <div className="flex-grow space-y-4 text-left">
-          {/* Title / Logo */}
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black uppercase tracking-tight text-white leading-tight drop-shadow-md">
-            {show.name}
-          </h1>
-
-          {/* Action buttons (Stranger Things UI layout) */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button
-              onClick={() => {
-                setPlayerSeason(1)
-                setPlayerEpisode(1)
-                setIsPlayerOpen(true)
-              }}
-              className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all active:scale-95"
-            >
-              <Play className="size-4 fill-white text-white" />
-              Watch Now
-            </button>
-
-            {trailerVideo && (
-              <button
-                onClick={() => setIsTrailerOpen(true)}
-                className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
-              >
-                Play Trailer
-              </button>
-            )}
-
-            <button
-              className="cursor-pointer flex items-center justify-center rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white p-2.5 transition-all active:scale-95"
-              title="Add to Watchlist"
-            >
-              <Plus className="size-4" />
-            </button>
-
-            {seasons.length > 0 && (
-              <button
-                onClick={scrollToEpisodes}
-                className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
-              >
-                <List className="size-4" />
-                Episodes
-              </button>
-            )}
-
-            <button
-              onClick={scrollToSimilars}
-              className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95"
-            >
-              <Compass className="size-4" />
-              Similars
-            </button>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs md:text-sm font-semibold text-gray-300">
-            <span className="flex items-center gap-1 text-cyan-400 font-bold">
-              <Star className="size-4 fill-cyan-400 text-cyan-400" />
-              {show.vote_average ? show.vote_average.toFixed(1) : "0.0"}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <Calendar className="size-4" />
-              {airYear}
-            </span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              <Tv className="size-4" />
-              {show.number_of_seasons} {show.number_of_seasons === 1 ? "Season" : "Seasons"} ({show.number_of_episodes} Episodes)
-            </span>
-          </div>
-
-          {show.tagline && (
-            <p className="text-base md:text-lg italic text-cyan-200/80 font-medium">
-              "{show.tagline}"
-            </p>
-          )}
-
-          <p className="text-xs md:text-sm text-gray-200/90 leading-relaxed font-normal max-w-3xl drop-shadow">
-            {show.overview}
-          </p>
-
-          <div className="flex flex-wrap gap-2 pt-1">
-            {show.genres?.map((genre: any) => (
-              <span
-                key={genre.id}
-                className="rounded-full bg-white/10 border border-white/5 px-3.5 py-1 text-xs font-semibold text-white whitespace-nowrap"
-              >
-                {genre.name}
+        {/* Main Hero Container */}
+        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 py-4 flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 lg:gap-10 flex-grow">
+          {/* Left Column: Metadata, Title, Ratings, Overview, Creator, Actions */}
+          <div className="flex-1 space-y-3 sm:space-y-4 max-w-2xl xl:max-w-3xl text-left">
+            {/* Top Badges Row */}
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-wider uppercase text-gray-300">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-[11px] font-bold text-white tracking-widest uppercase shadow-sm">
+                <Tv className="size-3 text-purple-400" />
+                CINEMA08
               </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Details Body */}
-      <div className="mx-auto max-w-7xl px-6 md:px-12 mt-12 space-y-16">
-
-        {/* 2. Episodes Section */}
-        {seasons.length > 0 && (
-          <div ref={episodesSectionRef} className="space-y-6">
-            {/* Section Header */}
-            <div className="flex items-center gap-2.5 border-b border-border/40 pb-2">
-              <div className="w-[3px] h-6 bg-cyan-400" />
-              <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
-                Episodes
-              </h2>
+              <span>•</span>
+              <span className="text-white/90">SERIES</span>
+              <span>•</span>
+              <span>{airYear}-</span>
+              <span>•</span>
+              <span>
+                {show.number_of_seasons || seasons.length}{" "}
+                {show.number_of_seasons === 1 ? "SEASON" : "SEASONS"}
+              </span>
+              <span>•</span>
+              <span className="px-1.5 py-0.5 rounded border border-white/20 text-[10px] text-white/90 bg-white/5 font-bold">
+                TV-MA
+              </span>
             </div>
 
-            {/* Season Selector & Episode Filters */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-muted/20 border border-border/40 rounded-xl p-4">
-              {/* Dropdown Selector */}
-              <div className="relative shrink-0">
-                <select
-                  value={selectedSeason}
-                  onChange={(e) => {
-                    setSelectedSeason(parseInt(e.target.value, 10))
-                    setSearchQuery("")
-                  }}
-                  className="w-full cursor-pointer appearance-none rounded-lg border border-border/40 bg-background pl-4 pr-10 py-2.5 text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary shadow-sm"
+            {/* Title */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tight text-white leading-[0.95] drop-shadow-2xl">
+              {show.name}
+            </h1>
+
+            {/* Tagline */}
+            {show.tagline && (
+              <p className="text-sm sm:text-base italic text-gray-400 font-medium">
+                "{show.tagline}"
+              </p>
+            )}
+
+            {/* Ratings & Genres Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-0.5 text-xs md:text-sm font-semibold">
+              {/* Star Rating Icons */}
+              <div className="flex items-center gap-0.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={cn(
+                      "size-4",
+                      star <= starCount
+                        ? "fill-amber-400 text-amber-400"
+                        : "fill-white/10 text-white/20"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Match Score */}
+              <span className="font-extrabold text-white">{ratingPercent}%</span>
+              <span className="text-muted-foreground text-xs">
+                ({show.vote_count?.toLocaleString() || 0})
+              </span>
+
+              {/* IMDb Badge */}
+              <span className="bg-[#f5c518] text-black font-extrabold text-[11px] px-1.5 py-0.5 rounded shadow-sm tracking-tight">
+                IMDb
+              </span>
+
+              {/* Genres Pills */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {show.genres?.slice(0, 3).map((genre: any) => (
+                  <span
+                    key={genre.id}
+                    className="rounded-full bg-white/10 border border-white/10 px-3 py-0.5 text-xs font-medium text-white/90 backdrop-blur-sm"
+                  >
+                    {genre.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Synopsis / Overview */}
+            {show.overview && (
+              <div className="space-y-1">
+                <p
+                  className={cn(
+                    "text-xs sm:text-sm text-gray-300 font-normal leading-relaxed drop-shadow transition-all",
+                    !isOverviewExpanded && "line-clamp-3"
+                  )}
                 >
-                  {seasons.map((season: any) => (
-                    <option key={season.id} value={season.season_number}>
-                      {season.name} ({season.episode_count} Episodes)
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
-                  <Play className="size-3.5 rotate-90 fill-muted-foreground" />
+                  {show.overview}
+                </p>
+                {show.overview.length > 180 && (
+                  <button
+                    onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
+                    className="cursor-pointer text-xs font-bold text-purple-400 hover:text-purple-300 underline underline-offset-4 transition-colors"
+                  >
+                    {isOverviewExpanded ? "Read Less" : "Read More"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Creator Mention */}
+            {creatorName && (
+              <div className="text-xs sm:text-sm text-muted-foreground uppercase tracking-wider font-semibold">
+                CREATED BY <span className="text-white font-bold ml-1">{creatorName}</span>
+              </div>
+            )}
+
+            {/* Action Buttons Row */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              {/* Play Button */}
+              <button
+                onClick={() => {
+                  setPlayerSeason(1)
+                  setPlayerEpisode(1)
+                  setIsPlayerOpen(true)
+                }}
+                className="cursor-pointer flex items-center justify-center gap-2.5 rounded-full bg-white hover:bg-white/90 text-black font-bold px-7 py-2.5 text-sm shadow-xl hover:scale-105 active:scale-95 transition-all"
+              >
+                <Play className="size-4 fill-black text-black" />
+                <span>Play</span>
+              </button>
+
+              {/* Trailer Button */}
+              {trailerVideo && (
+                <button
+                  onClick={() => setIsTrailerOpen(true)}
+                  className="cursor-pointer flex items-center justify-center gap-2.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-2.5 text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all"
+                >
+                  <Film className="size-4 text-white" />
+                  <span>Trailer</span>
+                </button>
+              )}
+
+              {/* Bookmark Button */}
+              <button
+                onClick={() => setIsBookmarked(!isBookmarked)}
+                className={cn(
+                  "cursor-pointer flex size-10 items-center justify-center rounded-full border backdrop-blur-md transition-all active:scale-95",
+                  isBookmarked
+                    ? "bg-purple-600 border-purple-500 text-white"
+                    : "border-white/20 bg-white/10 hover:bg-white/20 text-white"
+                )}
+                title={isBookmarked ? "In Watchlist" : "Add to Watchlist"}
+              >
+                <Bookmark className={cn("size-4", isBookmarked && "fill-white")} />
+              </button>
+
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                className="cursor-pointer flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
+                title="Share link"
+              >
+                {isCopied ? (
+                  <Check className="size-4 text-emerald-400" />
+                ) : (
+                  <Share2 className="size-4" />
+                )}
+              </button>
+
+              {/* Download Button */}
+              <button
+                className="cursor-pointer flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
+                title="Download"
+              >
+                <Download className="size-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Hero Preview Card / Latest Episode Card (Desktop) */}
+          <div className="hidden lg:block w-80 xl:w-96 shrink-0">
+            <div className="rounded-2xl bg-[#121620]/80 backdrop-blur-xl border border-white/10 p-4 shadow-2xl space-y-3.5">
+              {/* Preview Video / Latest Episode Thumbnail */}
+              <div
+                onClick={() => {
+                  if (latestEpisode) {
+                    setPlayerSeason(latestEpisode.season_number)
+                    setPlayerEpisode(latestEpisode.episode_number)
+                    setIsPlayerOpen(true)
+                  } else if (trailerVideo) {
+                    setIsTrailerOpen(true)
+                  }
+                }}
+                className="relative aspect-video w-full rounded-xl overflow-hidden group cursor-pointer border border-white/10 bg-black/60 shadow-lg"
+              >
+                <img
+                  src={
+                    latestEpisode?.still_path
+                      ? `https://image.tmdb.org/t/p/w500${latestEpisode.still_path}`
+                      : backdropUrl
+                  }
+                  alt={latestEpisode?.name || show.name}
+                  className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+                {/* Badge top-left */}
+                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase text-white/90 tracking-widest shadow-md">
+                  LATEST EPISODE
+                </div>
+
+                {/* Central Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="size-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-purple-600 group-hover:border-purple-500 transition-all shadow-xl">
+                    <Play className="size-5 fill-white text-white ml-0.5" />
+                  </div>
+                </div>
+
+                {/* Bottom title & info */}
+                <div className="absolute bottom-2.5 inset-x-3 text-left">
+                  <p className="text-xs font-bold text-white truncate drop-shadow">
+                    {latestEpisode?.name || "Latest Episode"}
+                  </p>
+                  <p className="text-[10px] text-white/70">
+                    {latestEpisode
+                      ? `S${latestEpisode.season_number} • E${latestEpisode.episode_number} • Aired ${formatShortDate(latestEpisode.air_date)} • ${latestEpisode.runtime ? `${latestEpisode.runtime}m` : "50m"}`
+                      : "Available to stream"}
+                  </p>
                 </div>
               </div>
 
-              {/* Search input & Sort toggler */}
-              <div className="flex items-center gap-3 w-full sm:max-w-md">
-                {/* Search Bar */}
-                <div className="relative w-full">
-                  <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Search episode..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-lg border border-border/40 bg-background pl-10 pr-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary shadow-sm"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
-                    >
-                      <X className="size-4" />
-                    </button>
+              {/* Link to watch latest episode */}
+              <button
+                onClick={() => {
+                  if (latestEpisode) {
+                    setPlayerSeason(latestEpisode.season_number)
+                    setPlayerEpisode(latestEpisode.episode_number)
+                    setIsPlayerOpen(true)
+                  }
+                }}
+                className="cursor-pointer w-full flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white transition-colors pt-0.5"
+              >
+                <span>Watch latest episode</span>
+                <span className="text-sm">→</span>
+              </button>
+
+              <div className="border-t border-white/10" />
+
+              {/* Starring row with avatars and names */}
+              <div className="space-y-1.5 text-left">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground block">
+                  STARRING
+                </span>
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2.5 overflow-hidden shrink-0">
+                    {cast.slice(0, 4).map((actor: any) => (
+                      <img
+                        key={actor.id}
+                        src={
+                          actor.profile_path
+                            ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                            : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
+                        }
+                        alt={actor.name}
+                        className="size-8 rounded-full border-2 border-[#121620] object-cover ring-1 ring-white/10"
+                        title={actor.name}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs text-white/80 truncate leading-tight">
+                    {cast.slice(0, 3).map((a: any) => a.name).join(", ")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Status / Network Metadata Bar inside Hero */}
+        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-3 pb-2">
+          <div className="rounded-2xl bg-[#0d121c]/75 backdrop-blur-xl border border-white/10 px-6 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-xl">
+            {/* Left metadata points */}
+            <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-left">
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  STATUS
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {show.status || "Returning Series"}
+                </div>
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  LANGUAGE
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {show.original_language?.toUpperCase() || "EN"}
+                </div>
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  FIRST AIRED
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {formatLongDate(show.first_air_date)}
+                </div>
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  LAST AIRED
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {formatLongDate(show.last_air_date || latestEpisode?.air_date)}
+                </div>
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  SEASONS
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {show.number_of_seasons || seasons.length}
+                </div>
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  EPISODES
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-white">
+                  {show.number_of_episodes || 0}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Network Logo / Name */}
+            {network && (
+              <div className="flex items-center gap-3 text-right">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground [writing-mode:vertical-rl] rotate-180">
+                  NETWORK
+                </span>
+                <div className="h-6 w-px bg-white/10" />
+                <div className="flex items-center">
+                  {network.logo_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/h60${network.logo_path}`}
+                      alt={network.name}
+                      className="h-6 max-w-[120px] object-contain filter invert opacity-90 hover:opacity-100 transition-opacity"
+                      title={network.name}
+                    />
+                  ) : (
+                    <span className="text-xs font-black tracking-widest uppercase text-white/80">
+                      {network.name}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Main Details Body */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12 mt-8 sm:mt-12 space-y-10 sm:space-y-16">
+
+        {/* =======================================================================
+            2. EPISODES SECTION (Screenshot Reference)
+        ======================================================================= */}
+        {seasons.length > 0 && (
+          <section ref={episodesSectionRef} className="space-y-5 text-left">
+            {/* Header & Controls */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
+                  <div className="w-1 h-3.5 bg-purple-500 rounded-full" />
+                  <span>
+                    SEASON {selectedSeason} • {sortedEpisodes.length} EPISODES
+                  </span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  Episodes
+                </h2>
+              </div>
+
+              {/* Right Side: View toggles & Season selector */}
+              <div className="flex items-center gap-2.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                {/* 3 View Mode Toggles: Cards (Carousel), Grid, List */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
+                  <button
+                    onClick={() => setEpisodeViewMode("cards")}
+                    className={cn(
+                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                      episodeViewMode === "cards"
+                        ? "bg-white text-black shadow-md font-bold"
+                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    )}
+                    title="Carousel Cards View"
+                  >
+                    <Columns3 className="size-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => setEpisodeViewMode("grid")}
+                    className={cn(
+                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                      episodeViewMode === "grid"
+                        ? "bg-white text-black shadow-md font-bold"
+                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    )}
+                    title="Grid View"
+                  >
+                    <LayoutGrid className="size-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => setEpisodeViewMode("list")}
+                    className={cn(
+                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                      episodeViewMode === "list"
+                        ? "bg-white text-black shadow-md font-bold"
+                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    )}
+                    title="List View"
+                  >
+                    <List className="size-3.5" />
+                  </button>
+                </div>
+
+                {/* Season Dropdown Pill */}
+                <div className="relative shrink-0">
+                  <button
+                    onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
+                    className="cursor-pointer flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs sm:text-sm font-bold text-white transition-all shadow-sm"
+                  >
+                    <div className="size-5 rounded-full bg-white/15 flex items-center justify-center text-[10px] font-black text-white">
+                      S{selectedSeason}
+                    </div>
+                    <span>Season {selectedSeason}</span>
+                    <ChevronDown
+                      className={cn(
+                        "size-3.5 text-muted-foreground transition-transform duration-200",
+                        isSeasonDropdownOpen && "rotate-180"
+                      )}
+                    />
+                  </button>
+
+                  {isSeasonDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-2 z-40 w-48 rounded-xl bg-[#121620]/95 backdrop-blur-xl border border-white/15 p-1.5 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-200">
+                      {seasons.map((season: any) => (
+                        <button
+                          key={season.id}
+                          onClick={() => {
+                            setSelectedSeason(season.season_number)
+                            setIsSeasonDropdownOpen(false)
+                          }}
+                          className={cn(
+                            "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                            selectedSeason === season.season_number
+                              ? "bg-purple-600 text-white"
+                              : "text-white/80 hover:bg-white/10 hover:text-white"
+                          )}
+                        >
+                          <span>Season {season.season_number}</span>
+                          <span className="text-[10px] text-muted-foreground font-mono">
+                            {season.episode_count} eps
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
 
-                {/* Sort Toggle Button */}
-                <button
-                  onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
-                  className="cursor-pointer shrink-0 flex items-center justify-center rounded-lg border border-border/40 bg-background hover:bg-muted/30 p-2.5 transition-all text-foreground shadow-sm"
-                  title={sortOrder === "asc" ? "Sort Descending" : "Sort Ascending"}
-                >
-                  <ArrowUpDown className={cn("size-4 transition-transform duration-300", sortOrder === "desc" && "rotate-180")} />
-                </button>
+                {/* Scroll controls (for carousel mode) */}
+                {episodeViewMode === "cards" && (
+                  <div className="hidden sm:flex items-center gap-1 ml-1 shrink-0">
+                    <button
+                      onClick={() => scrollEpisodes("left")}
+                      className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                      aria-label="Scroll left"
+                    >
+                      <ChevronLeft className="size-4" />
+                    </button>
+                    <button
+                      onClick={() => scrollEpisodes("right")}
+                      className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="size-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Episode List Rows */}
-            <div className="space-y-4">
-              {isSeasonPending ? (
-                <div className="py-12 text-center text-muted-foreground">Loading season episodes...</div>
-              ) : sortedEpisodes.length > 0 ? (
-                sortedEpisodes.map((episode: any) => {
-                  const epThumbnail = episode.still_path
-                    ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-                    : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300"
+            {/* Episodes Content (Loading / Empty / Views) */}
+            {isSeasonPending ? (
+              <div className="py-16 text-center text-sm text-muted-foreground">
+                Loading season {selectedSeason} episodes...
+              </div>
+            ) : sortedEpisodes.length > 0 ? (
+              <>
+                {/* 1. CARDS / CAROUSEL VIEW (Default, matches reference screenshot) */}
+                {episodeViewMode === "cards" && (
+                  <div
+                    ref={episodesScrollRef}
+                    className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent snap-x"
+                  >
+                    {sortedEpisodes.map((episode: any) => {
+                      const epThumbnail = episode.still_path
+                        ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
+                        : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
+                      const isWatched = watchedEpisodes.includes(episode.id)
 
-                  return (
-                    <div
-                      key={episode.id}
-                      className="group flex flex-col md:flex-row gap-5 items-center md:items-start p-4 rounded-xl border border-border/40 bg-muted/10 transition-all hover:bg-muted/20 w-full"
-                    >
-                      {/* Left side Thumbnail */}
-                      <div className="relative aspect-video w-full md:w-56 shrink-0 rounded-lg overflow-hidden shadow-md border border-border/20 select-none">
-                        <img
-                          src={epThumbnail}
-                          alt={episode.name}
-                          className="size-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        {/* Play Overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => {
-                              setPlayerSeason(selectedSeason)
-                              setPlayerEpisode(episode.episode_number)
-                              setIsPlayerOpen(true)
-                            }}
-                            className="cursor-pointer flex size-10 items-center justify-center rounded-full bg-white text-black shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-300"
-                          >
-                            <Play className="size-4 fill-black text-black translate-x-0.5" />
-                          </button>
-                        </div>
-                        {/* Episode Number badge */}
-                        <div className="absolute bottom-2 left-2 bg-black/85 text-white border border-white/10 text-xs font-black px-2 py-0.5 rounded shadow">
-                          {episode.episode_number}
-                        </div>
-                      </div>
-
-                      {/* Right side Metadata */}
-                      <div className="flex-grow space-y-1 text-center md:text-left select-text">
-                        <h3
+                      return (
+                        <div
+                          key={episode.id}
                           onClick={() => {
                             setPlayerSeason(selectedSeason)
                             setPlayerEpisode(episode.episode_number)
                             setIsPlayerOpen(true)
                           }}
-                          className="text-base md:text-lg font-bold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer transition-colors"
+                          className="w-72 sm:w-80 md:w-88 shrink-0 snap-start group cursor-pointer space-y-2.5 select-none"
                         >
-                          {episode.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground font-semibold flex items-center justify-center md:justify-start gap-1">
-                          <Clock className="size-3.5" />
-                          {episode.runtime ? `${episode.runtime} min` : "45 min"}
-                        </p>
-                        <p className="text-xs md:text-sm text-gray-300/95 font-normal leading-relaxed line-clamp-3 pt-1">
-                          {episode.overview || "No description available for this episode."}
-                        </p>
-                      </div>
+                          <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-lg group-hover:border-purple-500/50 transition-all duration-300">
+                            <img
+                              src={epThumbnail}
+                              alt={episode.name}
+                              className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-                      {/* Download Icon on Right */}
-                      <div className="shrink-0 flex items-center justify-center md:self-center md:ml-auto select-none">
-                        <button
-                          className="cursor-pointer flex size-9 items-center justify-center rounded-full border border-border/40 hover:border-foreground/45 bg-background text-muted-foreground hover:text-foreground hover:scale-105 transition-all active:scale-95"
-                          title="Download Episode"
+                            {/* Top-left: E{number} badge */}
+                            <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-extrabold uppercase text-white shadow tracking-wider">
+                              E{episode.episode_number}
+                            </div>
+
+                            {/* Top-right: Dotted watch status button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleEpisodeWatched(episode.id)
+                              }}
+                              className="absolute top-2.5 right-2.5 size-6 rounded-full border border-dashed border-white/40 flex items-center justify-center text-white/70 hover:text-white hover:border-white transition-all bg-black/30 backdrop-blur-sm"
+                              title={isWatched ? "Marked as watched" : "Mark as watched"}
+                            >
+                              <Check
+                                className={cn(
+                                  "size-3",
+                                  isWatched ? "text-emerald-400 stroke-[3]" : "text-white/40"
+                                )}
+                              />
+                            </button>
+
+                            {/* Bottom-right: Duration pill */}
+                            <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-white/15 text-[10px] font-bold text-white/90 shadow">
+                              {episode.runtime ? `${episode.runtime}m` : "50m"}
+                            </div>
+
+                            {/* Center Play Button on hover */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <div className="size-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-purple-600 group-hover:border-purple-500 transition-all shadow-xl">
+                                <Play className="size-5 fill-white text-white ml-0.5" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Episode Title & Overview below */}
+                          <div className="space-y-1 text-left">
+                            <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                              {episode.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
+                              {episode.overview || "No description available for this episode."}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* 2. GRID VIEW */}
+                {episodeViewMode === "grid" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 pt-1">
+                    {sortedEpisodes.map((episode: any) => {
+                      const epThumbnail = episode.still_path
+                        ? `https://image.tmdb.org/t/p/w500${episode.still_path}`
+                        : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
+                      const isWatched = watchedEpisodes.includes(episode.id)
+
+                      return (
+                        <div
+                          key={episode.id}
+                          onClick={() => {
+                            setPlayerSeason(selectedSeason)
+                            setPlayerEpisode(episode.episode_number)
+                            setIsPlayerOpen(true)
+                          }}
+                          className="group cursor-pointer space-y-2.5 select-none"
                         >
-                          <Download className="size-4" />
-                        </button>
-                      </div>
+                          <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-lg group-hover:border-purple-500/50 transition-all duration-300">
+                            <img
+                              src={epThumbnail}
+                              alt={episode.name}
+                              className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+                            <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md border border-white/15 text-[10px] font-extrabold uppercase text-white shadow">
+                              E{episode.episode_number}
+                            </div>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleEpisodeWatched(episode.id)
+                              }}
+                              className="absolute top-2.5 right-2.5 size-6 rounded-full border border-dashed border-white/40 flex items-center justify-center text-white/70 hover:text-white transition-all bg-black/30 backdrop-blur-sm"
+                            >
+                              <Check
+                                className={cn(
+                                  "size-3",
+                                  isWatched ? "text-emerald-400 stroke-[3]" : "text-white/40"
+                                )}
+                              />
+                            </button>
+
+                            <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-md border border-white/15 text-[10px] font-bold text-white/90 shadow">
+                              {episode.runtime ? `${episode.runtime}m` : "50m"}
+                            </div>
+
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="size-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-purple-600 transition-all shadow-xl">
+                                <Play className="size-5 fill-white text-white ml-0.5" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 text-left">
+                            <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                              {episode.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
+                              {episode.overview || "No description available."}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* 3. LIST VIEW */}
+                {episodeViewMode === "list" && (
+                  <div className="space-y-3 pt-1">
+                    {sortedEpisodes.map((episode: any) => {
+                      const epThumbnail = episode.still_path
+                        ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                        : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300"
+
+                      return (
+                        <div
+                          key={episode.id}
+                          onClick={() => {
+                            setPlayerSeason(selectedSeason)
+                            setPlayerEpisode(episode.episode_number)
+                            setIsPlayerOpen(true)
+                          }}
+                          className="group flex flex-col sm:flex-row gap-4 items-start p-3 sm:p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer w-full select-none"
+                        >
+                          <div className="relative aspect-video w-full sm:w-48 md:w-56 shrink-0 rounded-xl overflow-hidden shadow-md border border-white/10 bg-black/60">
+                            <img
+                              src={epThumbnail}
+                              alt={episode.name}
+                              className="size-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <div className="size-10 rounded-full bg-white text-black flex items-center justify-center shadow-lg">
+                                <Play className="size-4 fill-black text-black ml-0.5" />
+                              </div>
+                            </div>
+                            <div className="absolute bottom-2 left-2 bg-black/85 text-white border border-white/10 text-xs font-black px-2 py-0.5 rounded shadow">
+                              E{episode.episode_number}
+                            </div>
+                          </div>
+
+                          <div className="flex-grow space-y-1 text-left">
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition-colors">
+                                {episode.name}
+                              </h3>
+                              <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1">
+                                <Clock className="size-3.5" />
+                                {episode.runtime ? `${episode.runtime}m` : "50m"}
+                              </span>
+                            </div>
+                            <p className="text-xs sm:text-sm text-gray-300/80 font-normal leading-relaxed line-clamp-2">
+                              {episode.overview || "No description available for this episode."}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-8 text-center text-sm text-muted-foreground">
+                No episodes found for season {selectedSeason}.
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* =======================================================================
+            3. CAST & CREW SECTION (Screenshot Reference)
+        ======================================================================= */}
+        <section className="rounded-3xl border border-white/10 bg-[#0c1017]/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl space-y-6 text-left">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
+                <div className="w-1 h-3.5 bg-purple-500 rounded-full" />
+                <span>FEATURING</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Cast & crew
+              </h2>
+            </div>
+
+            <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              {cast.length} CREDITED
+            </div>
+          </div>
+
+          {/* Split Columns: Starring (left) & Creative Team (right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-2">
+            {/* Left Column: Starring (7 cols) */}
+            <div className="lg:col-span-7 space-y-5">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <User className="size-3.5 text-purple-400" />
+                <span>Starring</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                {cast.slice(0, 8).map((actor: any) => (
+                  <Link
+                    key={actor.id || actor.cast_id}
+                    to={`/person/${actor.id}`}
+                    className="flex items-center gap-3.5 group cursor-pointer"
+                  >
+                    <img
+                      src={
+                        actor.profile_path
+                          ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                          : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
+                      }
+                      alt={actor.name}
+                      className="size-12 rounded-full object-cover border border-white/15 bg-muted/40 shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple-500/50 transition-all"
+                      loading="lazy"
+                    />
+                    <div className="space-y-0.5 min-w-0">
+                      <p className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                        {actor.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {actor.character || "Cast"}
+                      </p>
                     </div>
-                  )
-                })
-              ) : (
-                <div className="flex h-[150px] flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/10">
-                  <span className="font-medium text-muted-foreground">
-                    No episodes match your search query.
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column: Creative Team (5 cols) */}
+            <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-8 space-y-6">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <Clapperboard className="size-3.5 text-purple-400" />
+                <span>Creative team</span>
+              </div>
+
+              {/* CREATED BY */}
+              {creator && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">
+                    CREATED BY
                   </span>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={
+                        creator.profile_path
+                          ? `https://image.tmdb.org/t/p/w185${creator.profile_path}`
+                          : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
+                      }
+                      alt={creator.name}
+                      className="size-10 rounded-full object-cover border border-white/15 bg-muted/40 shrink-0 shadow-md"
+                      loading="lazy"
+                    />
+                    <span className="text-sm font-bold text-white">
+                      {creator.name}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* SHOWRUNNER */}
+              {showrunners.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">
+                    SHOWRUNNER
+                  </span>
+                  <div className="flex flex-wrap items-center gap-4">
+                    {showrunners.map((sr: any) => (
+                      <div key={sr.id || sr.credit_id} className="flex items-center gap-2.5">
+                        {sr.profile_path ? (
+                          <img
+                            src={`https://image.tmdb.org/t/p/w185${sr.profile_path}`}
+                            alt={sr.name}
+                            className="size-7 rounded-full object-cover border border-white/15 shadow"
+                          />
+                        ) : (
+                          <div className="size-7 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white/70">
+                            <User className="size-3.5" />
+                          </div>
+                        )}
+                        <span className="text-xs font-bold text-white">
+                          {sr.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* PRODUCED BY */}
+              {producers.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">
+                    PRODUCED BY
+                  </span>
+                  <div className="flex flex-wrap items-center gap-4">
+                    {producers.map((prod: any) => (
+                      <div key={prod.id || prod.credit_id} className="flex items-center gap-2.5">
+                        {prod.profile_path ? (
+                          <img
+                            src={`https://image.tmdb.org/t/p/w185${prod.profile_path}`}
+                            alt={prod.name}
+                            className="size-7 rounded-full object-cover border border-white/15 shadow"
+                          />
+                        ) : (
+                          <div className="size-7 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white/70">
+                            <User className="size-3.5" />
+                          </div>
+                        )}
+                        <span className="text-xs font-bold text-white">
+                          {prod.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           </div>
-        )}
-
-        {/* 3. Cast List Carousel */}
-        {cast.length > 0 && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-2.5 border-b border-border/40 pb-2">
-              <div className="w-[3px] h-6 bg-cyan-400" />
-              <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
-                Cast
-              </h2>
-            </div>
-            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-              {cast.map((actor: any) => {
-                const actorImg = actor.profile_path
-                  ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                  : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150"
-                return (
-                  <div key={actor.cast_id} className="w-28 shrink-0 flex flex-col items-center text-center space-y-2 select-none">
-                    <img
-                      src={actorImg}
-                      alt={actor.name}
-                      className="size-20 md:size-24 rounded-full object-cover shadow-md border border-border/50 bg-muted/20"
-                    />
-                    <div className="space-y-0.5">
-                      <p className="text-xs font-bold text-foreground leading-tight line-clamp-2">
-                        {actor.name}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground leading-tight line-clamp-2">
-                        {actor.character}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
+        </section>
 
         {/* 4. Similars Section */}
-        <div ref={similarsSectionRef} className="space-y-6">
+        <div ref={similarsSectionRef} className="space-y-4 sm:space-y-6">
           <div className="flex items-center gap-2.5 border-b border-border/40 pb-2">
-            <div className="w-[3px] h-6 bg-cyan-400" />
-            <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
+            <div className="w-1 h-5 bg-purple-500 rounded-full" />
+            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground">
               Similars
             </h2>
           </div>
 
           {recommendedShows.length > 0 ? (
-            <div className="grid grid-cols-2 justify-items-center sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 justify-items-center sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
               {recommendedShows.map((show: any) => (
                 <CardContentList
                   key={show.id}

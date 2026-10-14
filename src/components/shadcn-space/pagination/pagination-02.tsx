@@ -32,7 +32,7 @@ export default function PremiumRibbon({
     const maxVisible = 5
 
     let start = Math.max(1, activePage - Math.floor(maxVisible / 2))
-    let end = Math.min(totalPages, start + maxVisible - 1)
+    const end = Math.min(totalPages, start + maxVisible - 1)
 
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1)
@@ -47,7 +47,7 @@ export default function PremiumRibbon({
               e.preventDefault()
               handlePageChange(1)
             }}
-            className="h-10 w-10 rounded-xl"
+            className="size-8 sm:size-10 rounded-lg sm:rounded-xl text-xs sm:text-sm p-0"
           >
             1
           </PaginationLink>
@@ -56,7 +56,7 @@ export default function PremiumRibbon({
       if (start > 2) {
         buttons.push(
           <PaginationItem key="ellipsis-start">
-            <PaginationEllipsis />
+            <PaginationEllipsis className="size-8 sm:size-10" />
           </PaginationItem>
         )
       }
@@ -74,7 +74,7 @@ export default function PremiumRibbon({
               handlePageChange(i)
             }}
             className={cn(
-              "h-10 w-10 rounded-xl border-0 text-sm font-bold transition-all",
+              "size-8 sm:size-10 rounded-lg sm:rounded-xl border-0 text-xs sm:text-sm font-bold transition-all p-0",
               isActive
                 ? "text-foreground"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -85,7 +85,7 @@ export default function PremiumRibbon({
           {isActive && (
             <motion.div
               layoutId="ribbon-active"
-              className="absolute inset-x-1.5 bottom-0.5 h-0.5 rounded-full bg-primary"
+              className="absolute inset-x-1 sm:inset-x-1.5 bottom-0.5 h-0.5 rounded-full bg-primary"
               transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
             />
           )}
@@ -97,7 +97,7 @@ export default function PremiumRibbon({
       if (end < totalPages - 1) {
         buttons.push(
           <PaginationItem key="ellipsis-end">
-            <PaginationEllipsis />
+            <PaginationEllipsis className="size-8 sm:size-10" />
           </PaginationItem>
         )
       }
@@ -109,7 +109,7 @@ export default function PremiumRibbon({
               e.preventDefault()
               handlePageChange(totalPages)
             }}
-            className="h-10 w-10 rounded-xl"
+            className="size-8 sm:size-10 rounded-lg sm:rounded-xl text-xs sm:text-sm p-0"
           >
             {totalPages}
           </PaginationLink>
@@ -121,9 +121,9 @@ export default function PremiumRibbon({
   }
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <Pagination>
-        <PaginationContent className="gap-1 rounded-2xl border bg-background/80 p-2">
+    <div className="flex flex-col items-center gap-3 sm:gap-4 max-w-full overflow-hidden">
+      <Pagination className="max-w-full">
+        <PaginationContent className="flex flex-wrap sm:flex-nowrap justify-center max-w-full gap-0.5 sm:gap-1 rounded-2xl border bg-background/80 p-1 sm:p-2 shadow-sm">
           <PaginationItem>
             <PaginationPrevious
               href="#"
@@ -132,11 +132,11 @@ export default function PremiumRibbon({
                 handlePageChange(activePage - 1)
               }}
               text=""
-              className="group flex h-10 w-10 justify-center rounded-xl p-0 hover:bg-muted"
+              className="group flex size-8 sm:size-10 justify-center rounded-lg sm:rounded-xl p-0 hover:bg-muted"
             />
           </PaginationItem>
 
-          <div className="mx-2 flex items-center gap-1.5">
+          <div className="mx-0.5 sm:mx-2 flex flex-wrap items-center justify-center gap-0.5 sm:gap-1.5">
             {renderPageButtons()}
           </div>
 
@@ -148,7 +148,7 @@ export default function PremiumRibbon({
                 handlePageChange(activePage + 1)
               }}
               text=""
-              className="group flex h-10 w-10 justify-center rounded-xl p-0 hover:bg-muted"
+              className="group flex size-8 sm:size-10 justify-center rounded-lg sm:rounded-xl p-0 hover:bg-muted"
             />
           </PaginationItem>
         </PaginationContent>

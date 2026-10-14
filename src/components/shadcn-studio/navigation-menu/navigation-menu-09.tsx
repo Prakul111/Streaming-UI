@@ -5,63 +5,63 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { NavLink } from "react-router"
+import { cn } from "@/lib/utils"
 
 const NavigationMenuDemo = () => {
   return (
     <div className="flex items-center justify-center">
       <NavigationMenu>
-        <NavigationMenuList>
+        <NavigationMenuList className="gap-1">
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="[&>svg]:size-4">
+            <NavLink
+              to="/movie"
+              className={({ isActive }) =>
+                cn(
+                  navigationMenuTriggerStyle(),
+                  "cursor-pointer text-sm font-medium transition-colors bg-transparent",
+                  isActive
+                    ? "bg-muted text-foreground font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                )
+              }
+            >
               Movie
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="w-50">
-                <li>
-                  <NavigationMenuLink render={<NavLink to="/now-playing-movie" />}>
-                    <div className="px-1 font-medium">Now Playing</div>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink render={<NavLink to="/popular-movie" />}>
-                    <div className="px-1 font-medium">Popular</div>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink
-                    render={<NavLink to="/top-rated-movie" />}
-                  >
-                    <div className="px-1 font-medium">Top rated</div>
-                  </NavigationMenuLink>
-                </li>
-              </ul>
-            </NavigationMenuContent>
+            </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="[&>svg]:size-4">
+            <NavLink
+              to="/tv-shows"
+              className={({ isActive }) =>
+                cn(
+                  navigationMenuTriggerStyle(),
+                  "cursor-pointer text-sm font-medium transition-colors bg-transparent",
+                  isActive
+                    ? "bg-muted text-foreground font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                )
+              }
+            >
               Tv Show
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="w-50">
-                <li>
-                  <NavigationMenuLink render={<NavLink to="/popular-tv" />}>
-                    <div className="px-1 font-medium">Popular</div>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink render={<NavLink to="top-rated-tv" />}>
-                    <div className="px-1 font-medium">Top Rated</div>
-                  </NavigationMenuLink>
-                </li>
-                <li>
-                  <NavigationMenuLink render={<NavLink to="/airing-today-tv" />}>
-                    <div className="px-1 font-medium">Airing Today</div>
-                  </NavigationMenuLink>
-                </li>
-              </ul>
-            </NavigationMenuContent>
+            </NavLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavLink
+              to="/people"
+              className={({ isActive }) =>
+                cn(
+                  navigationMenuTriggerStyle(),
+                  "cursor-pointer text-sm font-medium transition-colors bg-transparent",
+                  isActive
+                    ? "bg-muted text-foreground font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                )
+              }
+            >
+              People
+            </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="[&>svg]:size-4">

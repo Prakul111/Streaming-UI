@@ -33,12 +33,12 @@ export default function TrendingMovie() {
   }
 
   const gridClassName =
-    "grid w-full grid-cols-2 justify-items-center sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+    "grid w-full grid-cols-2 justify-items-center sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6"
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 md:px-12">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/40 pb-4">
-        <h1 className="font-extrabold text-3xl sm:text-4xl md:text-5xl">Trending Movies</h1>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12 pt-20 sm:pt-24 pb-16">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border/40 pb-4">
+        <h1 className="font-extrabold text-2xl sm:text-4xl md:text-5xl">Trending Movies</h1>
 
         {/* Day / Week Switcher */}
         <div className="flex self-start rounded-xl border border-border/40 bg-muted/60 p-1.5 backdrop-blur-md sm:self-auto">
@@ -89,7 +89,7 @@ export default function TrendingMovie() {
                 }
                 year={
                   movie.release_date
-                    ? parseInt(movie.release_date.split("-")[0])
+                    ? parseInt(movie.release_date.split("-")[0]) || 0
                     : 0
                 }
                 type="Movie"
@@ -105,13 +105,15 @@ export default function TrendingMovie() {
           </div>
         )}
 
-        <div className="mt-12">
-          <PremiumRibbon
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
+        {movies.length > 0 && totalPages > 1 && (
+          <div className="mt-12">
+            <PremiumRibbon
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

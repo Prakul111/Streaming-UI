@@ -50,6 +50,12 @@ export interface DiscoverMoviesParams {
   withGenres?: string
   releaseDateGte?: string
   releaseDateLte?: string
+  watchRegion?: string
+  withWatchProviders?: string
+  withWatchMonetizationTypes?: string
+  voteAverageGte?: number
+  voteCountGte?: number
+  voteCountLte?: number
 }
 
 export function discoverMoviesQuery(params: DiscoverMoviesParams = {}) {
@@ -67,6 +73,24 @@ export function discoverMoviesQuery(params: DiscoverMoviesParams = {}) {
   }
   if (params.releaseDateLte) {
     queryParams["primary_release_date.lte"] = params.releaseDateLte
+  }
+  if (params.watchRegion) {
+    queryParams.watch_region = params.watchRegion
+  }
+  if (params.withWatchProviders) {
+    queryParams.with_watch_providers = params.withWatchProviders
+  }
+  if (params.withWatchMonetizationTypes) {
+    queryParams.with_watch_monetization_types = params.withWatchMonetizationTypes
+  }
+  if (params.voteAverageGte !== undefined) {
+    queryParams["vote_average.gte"] = params.voteAverageGte
+  }
+  if (params.voteCountGte !== undefined) {
+    queryParams["vote_count.gte"] = params.voteCountGte
+  }
+  if (params.voteCountLte !== undefined) {
+    queryParams["vote_count.lte"] = params.voteCountLte
   }
 
   return queryOptions({
@@ -104,6 +128,30 @@ export function movieRecommendationsQuery(id: number) {
   return queryOptions({
     queryKey: ["movieRecommendations", id],
     queryFn: () => tmdbFetch<any>(`movie/${id}/recommendations`),
+    staleTime: DEFAULT_STALE_TIME,
+  })
+}
+
+export function movieSimilarQuery(id: number) {
+  return queryOptions({
+    queryKey: ["movieSimilar", id],
+    queryFn: () => tmdbFetch<any>(`movie/${id}/similar`),
+    staleTime: DEFAULT_STALE_TIME,
+  })
+}
+
+export function movieReleaseDatesQuery(id: number) {
+  return queryOptions({
+    queryKey: ["movieReleaseDates", id],
+    queryFn: () => tmdbFetch<any>(`movie/${id}/release_dates`),
+    staleTime: DEFAULT_STALE_TIME,
+  })
+}
+
+export function movieImagesQuery(id: number) {
+  return queryOptions({
+    queryKey: ["movieImages", id],
+    queryFn: () => tmdbFetch<any>(`movie/${id}/images`),
     staleTime: DEFAULT_STALE_TIME,
   })
 }
@@ -186,7 +234,15 @@ export function movieRecommendationsQuery(id: number) {
 //       headers: {
 //         Authorization: `Bearer ${import.meta.env.VITE_TMDB_API}`,
 //       },
-//     }
-//   )
-//   return await res.json()
-// }
+export function searchMoviesQuery(query: string, page: number = 1) {
+  return queryOptions({
+    queryKey: ["searchMovies", { query, page }],
+    queryFn: () =>
+      tmdbFetch<any>("search/movie", {
+        params: { query, page },
+      }),
+    staleTime: DEFAULT_STALE_TIME,
+    enabled: !!query.trim(),
+  })
+}
+

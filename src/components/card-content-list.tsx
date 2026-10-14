@@ -11,6 +11,7 @@ interface ContentListProps {
   year: number
   type: string
   className?: string
+  releaseDate?: string
 }
 
 export default function CardContentList({
@@ -21,11 +22,29 @@ export default function CardContentList({
   year,
   type,
   className,
+  releaseDate,
 }: ContentListProps) {
   const isMovie = type.toLowerCase().includes("movie")
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
   const cardRef = useRef<HTMLDivElement>(null)
   const [tiltStyle, setTiltStyle] = useState<React.CSSProperties>({})
+
+  const formattedDate = releaseDate
+    ? (() => {
+        try {
+          const d = new Date(releaseDate)
+          return isNaN(d.getTime())
+            ? ""
+            : d.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
+        } catch {
+          return ""
+        }
+      })()
+    : ""
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current
@@ -73,12 +92,14 @@ export default function CardContentList({
     })
   }
 
+  const isFullWidth = className?.includes("w-full")
+
   const cardContent = (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={cn("w-40 shrink-0 select-none p-1.5 cursor-pointer", className)}
+      className={cn("w-40 shrink-0 select-none p-1 sm:p-1.5 cursor-pointer", className)}
     >
       <div
         style={tiltStyle}
@@ -92,8 +113,8 @@ export default function CardContentList({
           />
         </figure>
       </div>
-      <div className="flex items-center justify-between gap-2 py-2 text-xs text-muted-foreground font-medium">
-        <div className="flex items-center justify-center rounded-full bg-muted text-foreground px-2.5 py-1 whitespace-nowrap">
+      <div className="flex items-center justify-between gap-1 sm:gap-1.5 py-1.5 sm:py-2 text-[10px] sm:text-xs text-muted-foreground font-medium">
+        <div className="flex items-center justify-center rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap">
           <img
             src={starIcon}
             className="h-2.5 pr-0.5"
@@ -101,18 +122,26 @@ export default function CardContentList({
           />
           {rating}
         </div>
-        <span className="rounded-full bg-muted text-foreground px-2.5 py-1 whitespace-nowrap">{year}</span>
-        <span className="rounded-full bg-muted text-foreground px-2.5 py-1 whitespace-nowrap">{type}</span>
+        <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap">{year}</span>
+        <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap truncate max-w-[65px] sm:max-w-none">{type}</span>
       </div>
-      <div className="font-md px-1 text-sm leading-snug wrap-anywhere">
+      <div className="font-semibold px-0.5 sm:px-1 text-xs sm:text-sm leading-snug line-clamp-2 wrap-anywhere">
         {title}
       </div>
+      {formattedDate && (
+        <div className="px-0.5 sm:px-1 text-[11px] text-muted-foreground mt-0.5 font-normal">
+          {formattedDate}
+        </div>
+      )}
     </div>
   )
 
   if (id) {
     return (
-      <Link to={detailUrl} className="block no-underline">
+      <Link
+        to={detailUrl}
+        className={cn("block no-underline", isFullWidth ? "w-full" : "w-auto shrink-0")}
+      >
         {cardContent}
       </Link>
     )

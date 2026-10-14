@@ -8,16 +8,14 @@ import MovieDetails from "./components/pages/MovieDetails"
 import TvDetails from "./components/pages/TvDetails"
 import Navbar from "./components/navbar"
 import { ThemeProvider } from "./components/theme-provider"
-import PopularMovie from "./components/pages/movie/PopularMovie"
-import TopRatedMovie from "./components/pages/movie/TopRatedMovie"
-import PopularTv from "./components/pages/tv-show/PopularTv"
-import TopRatedTv from "./components/pages/tv-show/TopRatedTv"
-import NowPlayingMovie from "./components/pages/movie/NowPlayingMovie"
-import AiringTodayTv from "./components/pages/tv-show/AiringTodayTv"
+import Movie from "./components/pages/movie/Movie"
+import TvShows from "./components/pages/tv-show/TvShows"
 import TrendingAll from "./components/pages/TrendingAll"
 import TrendingMovie from "./components/pages/movie/TrendingMovie"
 import TrendingTv from "./components/pages/tv-show/TrendingTv"
 import SearchPage from "./components/pages/SearchPage"
+import People from "./components/pages/people/People"
+import PersonDetails from "./components/pages/PersonDetails"
 import Footer from "./components/footer"
 
 const queryClient = new QueryClient()
@@ -36,32 +34,48 @@ const router = createBrowserRouter([
         element: <MovieDetails />,
       },
       {
+        path: "/movie/:id",
+        element: <MovieDetails />,
+      },
+      {
         path: "/tv-details/:id",
         element: <TvDetails />,
       },
       {
+        path: "/tv/:id",
+        element: <TvDetails />,
+      },
+      {
+        path: "/movie",
+        element: <Movie />,
+      },
+      {
         path: "/now-playing-movie",
-        element: <NowPlayingMovie />,
+        element: <Movie />,
       },
       {
         path: "/popular-movie",
-        element: <PopularMovie />,
+        element: <Movie />,
       },
       {
         path: "/top-rated-movie",
-        element: <TopRatedMovie />,
+        element: <Movie />,
+      },
+      {
+        path: "/tv-shows",
+        element: <TvShows />,
       },
       {
         path: "/popular-tv",
-        element: <PopularTv />,
+        element: <TvShows />,
       },
       {
         path: "/top-rated-tv",
-        element: <TopRatedTv />,
+        element: <TvShows />,
       },
       {
         path: "/airing-today-tv",
-        element: <AiringTodayTv />,
+        element: <TvShows />,
       },
       {
         path: "/trending-all",
@@ -78,6 +92,22 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <SearchPage />,
+      },
+      {
+        path: "/people",
+        element: <People />,
+      },
+      {
+        path: "/person/:id",
+        element: <PersonDetails />,
+      },
+      {
+        path: "/person-details/:id",
+        element: <PersonDetails />,
+      },
+      {
+        path: "/people/:id",
+        element: <PersonDetails />,
       },
       {
         path: "*",
