@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { createBrowserRouter } from "react-router"
-import { RouterProvider } from "react-router/dom"
+import { createBrowserRouter, RouterProvider, Outlet, ScrollRestoration } from "react-router"
 import HomePage from "./components/pages/HomePage"
 import ErrorPage from "./components/pages/ErrorPage"
 import MovieDetails from "./components/pages/MovieDetails"
@@ -20,10 +19,23 @@ import Footer from "./components/footer"
 
 const queryClient = new QueryClient()
 
+function RootLayout() {
+  return (
+    <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
+      <ScrollRestoration />
+      <Navbar />
+      <main className="w-full flex-grow flex flex-col">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: [<Navbar />, <Footer />],
+    element: <RootLayout />,
     children: [
       {
         path: "/",

@@ -1,14 +1,13 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams, Link } from "react-router"
 import {
-  Search,
-  X,
   User,
   Sparkles,
   Flame,
   ExternalLink,
 } from "lucide-react"
+import { SearchBar } from "../../ui/search-bar"
 import {
   popularPeopleQuery,
   searchPeopleQuery,
@@ -34,20 +33,17 @@ export default function People() {
   const queryFromUrl = searchParams.get("q") || ""
   const deptFromUrl = searchParams.get("dept") || "all"
 
-  const [page, setPage] = useState(pageFromUrl)
+  const page = pageFromUrl
+  const activeQuery = queryFromUrl
+  const selectedDept = deptFromUrl
   const [searchInputValue, setSearchInputValue] = useState(queryFromUrl)
-  const [activeQuery, setActiveQuery] = useState(queryFromUrl)
-  const [selectedDept, setSelectedDept] = useState(deptFromUrl)
+  const [prevQuery, setPrevQuery] = useState(queryFromUrl)
+  if (prevQuery !== queryFromUrl) {
+    setPrevQuery(queryFromUrl)
+    setSearchInputValue(queryFromUrl)
+  }
 
   const topGridRef = useRef<HTMLDivElement>(null)
-
-  // Sync state with URL params
-  useEffect(() => {
-    setPage(pageFromUrl)
-    setActiveQuery(queryFromUrl)
-    setSearchInputValue(queryFromUrl)
-    setSelectedDept(deptFromUrl)
-  }, [pageFromUrl, queryFromUrl, deptFromUrl])
 
   // Queries: either search query or popular people query
   const isSearching = !!activeQuery.trim()
@@ -89,7 +85,6 @@ export default function People() {
   const error = isSearching ? searchError : popularError
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
     const newParams = new URLSearchParams(searchParams)
     newParams.set("page", String(newPage))
     setSearchParams(newParams)
@@ -112,7 +107,6 @@ export default function People() {
 
   const handleClearSearch = () => {
     setSearchInputValue("")
-    setActiveQuery("")
     const newParams = new URLSearchParams()
     if (selectedDept !== "all") {
       newParams.set("dept", selectedDept)
@@ -122,7 +116,6 @@ export default function People() {
   }
 
   const handleDeptSelect = (deptId: string) => {
-    setSelectedDept(deptId)
     const newParams = new URLSearchParams(searchParams)
     if (deptId === "all") {
       newParams.delete("dept")
@@ -175,36 +168,16 @@ export default function People() {
           {/* Search Bar & Filter Controls */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-2">
             {/* Search Input */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="relative w-full max-w-md"
-            >
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search actor, director, or creator..."
+            <div className="w-full max-w-md">
+              <SearchBar
                 value={searchInputValue}
-                onChange={(e) => setSearchInputValue(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-white/5 pl-10 pr-24 py-2.5 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 backdrop-blur-md transition-all shadow-inner"
+                onChange={setSearchInputValue}
+                onSubmit={handleSearchSubmit}
+                onClear={handleClearSearch}
+                placeholder="Search actor, director, or creator..."
+                size="md"
               />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                {searchInputValue && (
-                  <button
-                    type="button"
-                    onClick={handleClearSearch}
-                    className="p-1 rounded-full text-muted-foreground hover:text-white hover:bg-white/10 transition-colors"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                )}
-                <button
-                  type="submit"
-                  className="px-3 py-1 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
+            </div>
 
             {/* Department Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">

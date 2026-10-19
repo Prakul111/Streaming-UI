@@ -7,9 +7,6 @@ import {
   Star,
   Clock,
   Tv,
-  Download,
-  Bookmark,
-  Share2,
   Check,
   Film,
   ChevronDown,
@@ -27,11 +24,14 @@ import {
   tvVideosQuery,
   tvRecommendationsQuery,
   tvSeasonQuery,
+  tvExternalIdsQuery,
 } from "@/api/fetch-tv-shows"
 import CardContentList from "../card-content-list"
 import { MovieRowSkeleton } from "../skeleton"
 import { cn } from "@/lib/utils"
 import VideoPlayerModal from "../video-player-modal"
+import StreamingServerSelector from "../streaming-server-selector"
+import { getStoredServerId } from "@/lib/streaming-servers"
 
 export default function TvDetails() {
   const { id } = useParams<{ id: string }>()
@@ -41,13 +41,12 @@ export default function TvDetails() {
 
   const [isTrailerOpen, setIsTrailerOpen] = useState(false)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
+  const [selectedServerId, setSelectedServerId] = useState<string>(getStoredServerId)
   const [playerSeason, setPlayerSeason] = useState(1)
   const [playerEpisode, setPlayerEpisode] = useState(1)
   const [selectedSeason, setSelectedSeason] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
-  const [isBookmarked, setIsBookmarked] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false)
   const [episodeViewMode, setEpisodeViewMode] = useState<"cards" | "grid" | "list">("cards")
   const [isSeasonDropdownOpen, setIsSeasonDropdownOpen] = useState(false)
@@ -81,6 +80,11 @@ export default function TvDetails() {
   const { data: seasonData, isPending: isSeasonPending } = useQuery({
     ...tvSeasonQuery(numericId, selectedSeason),
     enabled: !isNaN(numericId) && !!selectedSeason,
+  })
+
+  const { data: externalIds } = useQuery({
+    ...tvExternalIdsQuery(numericId),
+    enabled: !isNaN(numericId),
   })
 
   // Find trailer video
@@ -244,12 +248,6 @@ export default function TvDetails() {
     }
   }
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), 2000)
-  }
-
   return (
     <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
       {/* 1. HERO SECTION (100% Zoom Responsive Layout Matching Reference) */}
@@ -276,7 +274,7 @@ export default function TvDetails() {
 
         {/* Subtle Watermark on far right edge (matching reference) */}
         <div className="hidden xl:block absolute right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none opacity-20 text-[10px] tracking-[0.5em] text-white [writing-mode:vertical-rl]">
-          CINEMA08
+          Streaming-UI
         </div>
 
         {/* Main Hero Container */}
@@ -287,7 +285,7 @@ export default function TvDetails() {
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-wider uppercase text-gray-300">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-[11px] font-bold text-white tracking-widest uppercase shadow-sm">
                 <Tv className="size-3 text-purple-400" />
-                CINEMA08
+                Streaming-UI
               </span>
               <span>•</span>
               <span className="text-white/90">SERIES</span>
@@ -412,40 +410,20 @@ export default function TvDetails() {
                 </button>
               )}
 
-              {/* Bookmark Button */}
-              <button
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={cn(
-                  "cursor-pointer flex size-10 items-center justify-center rounded-full border backdrop-blur-md transition-all active:scale-95",
-                  isBookmarked
-                    ? "bg-purple-600 border-purple-500 text-white"
-                    : "border-white/20 bg-white/10 hover:bg-white/20 text-white"
-                )}
-                title={isBookmarked ? "In Watchlist" : "Add to Watchlist"}
-              >
-                <Bookmark className={cn("size-4", isBookmarked && "fill-white")} />
-              </button>
+            </div>
 
-              {/* Share Button */}
-              <button
-                onClick={handleShare}
-                className="cursor-pointer flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
-                title="Share link"
-              >
-                {isCopied ? (
-                  <Check className="size-4 text-emerald-400" />
-                ) : (
-                  <Share2 className="size-4" />
-                )}
-              </button>
-
-              {/* Download Button */}
-              <button
-                className="cursor-pointer flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
-                title="Download"
-              >
-                <Download className="size-4" />
-              </button>
+            {/* Streaming Server Selector */}
+            <div className="pt-2">
+              <StreamingServerSelector
+                selectedServerId={selectedServerId}
+                onServerChange={setSelectedServerId}
+                onDirectPlay={(serverId) => {
+                  setSelectedServerId(serverId)
+                  setPlayerSeason(1)
+                  setPlayerEpisode(1)
+                  setIsPlayerOpen(true)
+                }}
+              />
             </div>
           </div>
 
@@ -658,7 +636,15 @@ export default function TvDetails() {
               </div>
 
               {/* Right Side: View toggles & Season selector */}
-              <div className="flex items-center gap-2.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+              <div className="relative z-20 flex flex-wrap md:flex-nowrap items-center gap-2.5 pb-1 md:pb-0">
+                {/* Server Selector for Episodes */}
+                <StreamingServerSelector
+                  selectedServerId={selectedServerId}
+                  onServerChange={setSelectedServerId}
+                  variant="compact"
+                  align="right"
+                />
+
                 {/* 3 View Mode Toggles: Cards (Carousel), Grid, List */}
                 <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
                   <button
@@ -1221,8 +1207,19 @@ export default function TvDetails() {
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        embedUrl={`https://vixsrc.to/tv/${show.id}/${playerSeason}/${playerEpisode}?color=a855f7&autoPlay=true&nextEpisode=true&episodeSelector=true`}
         title={`${show.name} S${playerSeason} E${playerEpisode} Player`}
+        mediaType="tv"
+        tmdbId={show.id}
+        imdbId={externalIds?.imdb_id}
+        season={playerSeason}
+        episode={playerEpisode}
+        totalEpisodes={seasonData?.episodes?.length}
+        onEpisodeChange={(newSeason, newEpisode) => {
+          setPlayerSeason(newSeason)
+          setPlayerEpisode(newEpisode)
+        }}
+        selectedServerId={selectedServerId}
+        onServerChange={setSelectedServerId}
       />
     </div>
   )

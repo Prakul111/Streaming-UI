@@ -6,12 +6,9 @@ import {
   X,
   Star,
   Clapperboard,
-  Bookmark,
-  Share2,
   Download,
   ChevronLeft,
   ChevronRight,
-  Check,
   Film,
   User,
   Maximize2,
@@ -27,6 +24,8 @@ import {
 } from "@/api/fetch-movie"
 import CardContentList from "../card-content-list"
 import VideoPlayerModal from "../video-player-modal"
+import StreamingServerSelector from "../streaming-server-selector"
+import { getStoredServerId } from "@/lib/streaming-servers"
 import { cn } from "@/lib/utils"
 
 export default function MovieDetails() {
@@ -39,9 +38,8 @@ export default function MovieDetails() {
   const [isTrailerOpen, setIsTrailerOpen] = useState(false)
   const [activeTrailerKey, setActiveTrailerKey] = useState<string | null>(null)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
+  const [selectedServerId, setSelectedServerId] = useState<string>(getStoredServerId)
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false)
-  const [isBookmarked, setIsBookmarked] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
 
   // Media section tabs state (sequence: most popular, videos, backdrops, posters)
   type MediaTab = "popular" | "videos" | "backdrops" | "posters"
@@ -136,15 +134,6 @@ export default function MovieDetails() {
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       })
-    }
-  }
-
-  // Handle Share link copy
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
     }
   }
 
@@ -269,7 +258,7 @@ export default function MovieDetails() {
             <div className="flex flex-wrap items-center gap-2.5 text-xs font-bold tracking-wider uppercase text-muted-foreground">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-[11px] font-bold text-white tracking-widest uppercase shadow-sm">
                 <Film className="size-3 text-purple-400" />
-                CINEMAOS
+                Streaming-UI
               </span>
               <span>•</span>
               <span className="text-white/80">MOVIE</span>
@@ -388,42 +377,19 @@ export default function MovieDetails() {
                 </button>
               )}
 
-              {/* Bookmark Button */}
-              <button
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={cn(
-                  "cursor-pointer flex size-11 items-center justify-center rounded-full border backdrop-blur-md transition-all active:scale-95",
-                  isBookmarked
-                    ? "bg-purple-600 border-purple-500 text-white"
-                    : "border-white/20 bg-white/10 hover:bg-white/20 text-white"
-                )}
-                title={isBookmarked ? "In Watchlist" : "Add to Watchlist"}
-              >
-                <Bookmark
-                  className={cn("size-4", isBookmarked && "fill-white")}
-                />
-              </button>
 
-              {/* Share Button */}
-              <button
-                onClick={handleShare}
-                className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
-                title="Share link"
-              >
-                {isCopied ? (
-                  <Check className="size-4 text-emerald-400" />
-                ) : (
-                  <Share2 className="size-4" />
-                )}
-              </button>
+            </div>
 
-              {/* Download / Action Button */}
-              <button
-                className="cursor-pointer flex size-11 items-center justify-center rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all active:scale-95"
-                title="Download"
-              >
-                <Download className="size-4" />
-              </button>
+            {/* Streaming Server Selector */}
+            <div className="pt-2">
+              <StreamingServerSelector
+                selectedServerId={selectedServerId}
+                onServerChange={setSelectedServerId}
+                onDirectPlay={(serverId) => {
+                  setSelectedServerId(serverId)
+                  setIsPlayerOpen(true)
+                }}
+              />
             </div>
           </div>
 
@@ -1340,8 +1306,12 @@ export default function MovieDetails() {
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
-        embedUrl={`https://vixsrc.to/movie/${movie.id}?color=a855f7&autoPlay=true`}
         title={`${movie.title} Player`}
+        mediaType="movie"
+        tmdbId={movie.id}
+        imdbId={movie.imdb_id}
+        selectedServerId={selectedServerId}
+        onServerChange={setSelectedServerId}
       />
 
       {/* 3. Image Fullscreen Lightbox Modal (Backdrops & Posters) */}

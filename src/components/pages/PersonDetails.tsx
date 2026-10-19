@@ -36,10 +36,10 @@ function formatBirthdayAndAge(birthday: string | null, deathday: string | null) 
     const deathDate = new Date(deathday)
     const formattedDeath = !isNaN(deathDate.getTime())
       ? deathDate.toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
       : deathday
     return `${formattedBirth} (Died ${formattedDeath}, age ${age})`
   }
@@ -512,7 +512,7 @@ export default function PersonDetails() {
                   {/* Search toggle / input */}
                   {isSearchOpen ? (
                     <div className="relative flex items-center animate-in fade-in duration-200">
-                      <Search className="absolute left-2.5 size-3.5 text-muted-foreground" />
+                      <Search className="absolute left-2.5 size-3.5 text-muted-foreground z-10 pointer-events-none" />
                       <input
                         type="text"
                         autoFocus
@@ -554,8 +554,8 @@ export default function PersonDetails() {
                         {mediaTypeFilter === "all"
                           ? "All"
                           : mediaTypeFilter === "movie"
-                          ? "Movies"
-                          : "TV Shows"}
+                            ? "Movies"
+                            : "TV Shows"}
                       </span>
                       <ChevronDown className="size-3 text-muted-foreground" />
                     </button>

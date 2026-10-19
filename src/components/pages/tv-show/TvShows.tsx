@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router"
-import { ChevronDown, ChevronUp, Search, X, Sparkles } from "lucide-react"
+import { ChevronDown, ChevronUp, Sparkles, Search } from "lucide-react"
 import CardContentList from "../../card-content-list"
+import { SearchBar } from "../../ui/search-bar"
 import { MovieRowSkeleton } from "../../skeleton"
 import PremiumRibbon from "../../shadcn-space/pagination/pagination-02"
 import {
@@ -43,14 +44,14 @@ export default function PopularTv() {
   const categoryFilters = getTvCategoryFilterParams(activeCategory)
   const queryFromUrl = searchParams.get("q") || ""
 
-  const [searchInputValue, setSearchInputValue] = useState(queryFromUrl)
-  const [activeQuery, setActiveQuery] = useState(queryFromUrl)
+  const activeQuery = queryFromUrl
   const isSearching = !!activeQuery.trim()
-
-  useEffect(() => {
-    setActiveQuery(queryFromUrl)
+  const [searchInputValue, setSearchInputValue] = useState(queryFromUrl)
+  const [prevQuery, setPrevQuery] = useState(queryFromUrl)
+  if (prevQuery !== queryFromUrl) {
+    setPrevQuery(queryFromUrl)
     setSearchInputValue(queryFromUrl)
-  }, [queryFromUrl])
+  }
 
   // Collapsible states - default collapsed on mobile/tablet viewports
   const [isSortOpen, setIsSortOpen] = useState(() =>
@@ -60,20 +61,35 @@ export default function PopularTv() {
     typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   )
 
+  const genreFromUrl = searchParams.get("genre") || searchParams.get("with_genres")
+  const initialGenres = genreFromUrl
+    ? [parseInt(genreFromUrl, 10)].filter((n) => !isNaN(n))
+    : []
+
   // Filter States
   const [activeFilters, setActiveFilters] = useState({
     sortBy: "",
-    withGenres: [] as number[],
+    withGenres: initialGenres,
     airDateGte: "",
     airDateLte: "",
   })
 
   const [draftFilters, setDraftFilters] = useState({
     sortBy: "popularity.desc",
-    withGenres: [] as number[],
+    withGenres: initialGenres,
     airDateGte: "",
     airDateLte: "",
   })
+
+  const [prevGenreParam, setPrevGenreParam] = useState(genreFromUrl)
+  if (prevGenreParam !== genreFromUrl) {
+    setPrevGenreParam(genreFromUrl)
+    const newGenres = genreFromUrl
+      ? [parseInt(genreFromUrl, 10)].filter((n) => !isNaN(n))
+      : []
+    setActiveFilters((prev) => ({ ...prev, withGenres: newGenres }))
+    setDraftFilters((prev) => ({ ...prev, withGenres: newGenres }))
+  }
 
   // Determine effective query parameters
   const effectiveSortBy =
@@ -141,7 +157,6 @@ export default function PopularTv() {
     }
     // Clear search query when explicitly switching category
     setSearchInputValue("")
-    setActiveQuery("")
     setSearchParams(newParams)
     setPage(1)
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -157,13 +172,11 @@ export default function PopularTv() {
       newParams.delete("q")
     }
     setSearchParams(newParams)
-    setActiveQuery(trimmed)
     setPage(1)
   }
 
   const handleClearSearch = () => {
     setSearchInputValue("")
-    setActiveQuery("")
     const newParams = new URLSearchParams(searchParams)
     newParams.delete("q")
     setSearchParams(newParams)
@@ -240,37 +253,16 @@ export default function PopularTv() {
         </div>
 
         {/* TV Show Search Bar */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="relative w-full md:max-w-md shrink-0"
-        >
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search TV shows by name, keyword..."
+        <div className="w-full md:max-w-md shrink-0">
+          <SearchBar
             value={searchInputValue}
-            onChange={(e) => setSearchInputValue(e.target.value)}
-            className="w-full rounded-2xl border border-white/10 bg-white/5 pl-10 pr-24 py-2.5 text-sm text-white placeholder:text-muted-foreground focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 backdrop-blur-md transition-all shadow-inner"
+            onChange={setSearchInputValue}
+            onSubmit={handleSearchSubmit}
+            onClear={handleClearSearch}
+            placeholder="Search TV shows by name, keyword..."
+            size="md"
           />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            {searchInputValue && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="p-1 rounded-full text-muted-foreground hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Clear search"
-              >
-                <X className="size-3.5" />
-              </button>
-            )}
-            <button
-              type="submit"
-              className="px-3.5 py-1 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
 
       <div className="mt-6 sm:mt-8 flex flex-col gap-6 lg:gap-8 lg:flex-row">

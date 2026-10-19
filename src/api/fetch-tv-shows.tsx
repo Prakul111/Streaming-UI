@@ -158,6 +158,14 @@ export function tvSeasonQuery(tvId: number, seasonNumber: number) {
   })
 }
 
+export function tvExternalIdsQuery(id: number) {
+  return queryOptions({
+    queryKey: ["tvExternalIds", id],
+    queryFn: () => tmdbFetch<any>(`tv/${id}/external_ids`),
+    staleTime: DEFAULT_STALE_TIME,
+  })
+}
+
 export function searchTvShowsQuery(query: string, page: number = 1) {
   return queryOptions({
     queryKey: ["searchTvShows", { query, page }],

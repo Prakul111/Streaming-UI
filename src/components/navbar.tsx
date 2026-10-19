@@ -1,10 +1,8 @@
 import { useEffect, useState, useRef } from "react"
-import { Button } from "@base-ui/react/button"
-import { NavLink, Outlet, useNavigate, useLocation, useSearchParams } from "react-router"
-import { Field } from "@base-ui/react/field"
-import { Input } from "./ui/input"
+import { NavLink, useNavigate, useLocation, useSearchParams } from "react-router"
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler"
 import { SparklesText } from "./ui/sparkles-text"
+import { SearchBar } from "./ui/search-bar"
 import {
   Menu,
   X,
@@ -20,12 +18,14 @@ import {
 import NavigationMenuDemo from "./shadcn-studio/navigation-menu/navigation-menu-09"
 import popcornLogo from "@/assets/popcorn-svgrepo-com.svg"
 import { useDebounce } from "@/hooks/use-debounce"
+import { cn } from "@/lib/utils"
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
@@ -36,24 +36,28 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState(urlQuery)
   const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery)
   const [prevPathname, setPrevPathname] = useState(location.pathname)
-
   const isInitialMount = useRef(true)
+  const lastNavigatedQueryRef = useRef(urlQuery)
 
   // Adjust state during render when URL query or pathname changes
   if (location.pathname !== prevPathname) {
     setPrevPathname(location.pathname)
     setPrevUrlQuery(urlQuery)
+    setIsInputFocused(false)
     setIsMobileMenuOpen(false)
     setIsMobileSearchOpen(false)
     if (location.pathname === "/search") {
       setSearchQuery(urlQuery)
+      lastNavigatedQueryRef.current = urlQuery
     } else {
       setSearchQuery("")
+      lastNavigatedQueryRef.current = ""
     }
   } else if (urlQuery !== prevUrlQuery) {
     setPrevUrlQuery(urlQuery)
     if (!isInputFocused) {
       setSearchQuery(urlQuery)
+      lastNavigatedQueryRef.current = urlQuery
     }
   }
 
@@ -69,16 +73,26 @@ export default function Navbar() {
     }
   }, [isMobileMenuOpen])
 
-  // Close mobile menu on Escape key press or desktop resize
+  // Global keyboard shortcuts (Cmd+K / Ctrl+K) and Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsMobileMenuOpen(false)
         setIsMobileSearchOpen(false)
+        setIsInputFocused(false)
+        searchInputRef.current?.blur()
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        if (window.innerWidth < 768) {
+          setIsMobileSearchOpen(true)
+        } else {
+          searchInputRef.current?.focus()
+        }
       }
     }
+
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false)
         setIsMobileSearchOpen(false)
       }
@@ -101,10 +115,21 @@ export default function Navbar() {
       return
     }
 
+    // Only auto-navigate if the user is actively typing into the search input
+    if (!isInputFocused) {
+      return
+    }
+
     const trimmed = debouncedQuery.trim()
+
+    // Prevent redundant navigation if query hasn't changed
+    if (trimmed === lastNavigatedQueryRef.current) {
+      return
+    }
 
     if (isSearchPage) {
       if (trimmed !== urlQuery) {
+        lastNavigatedQueryRef.current = trimmed
         if (trimmed) {
           navigate(`/search?q=${encodeURIComponent(trimmed)}`, { replace: true })
         } else {
@@ -113,30 +138,38 @@ export default function Navbar() {
       }
     } else {
       if (trimmed) {
+        lastNavigatedQueryRef.current = trimmed
         navigate(`/search?q=${encodeURIComponent(trimmed)}`)
       }
     }
-  }, [debouncedQuery, isSearchPage, urlQuery, navigate])
+  }, [debouncedQuery, isSearchPage, urlQuery, isInputFocused, navigate])
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setIsInputFocused(false)
+    searchInputRef.current?.blur()
     const trimmed = searchQuery.trim()
+    lastNavigatedQueryRef.current = trimmed
     if (trimmed) {
       navigate(`/search?q=${encodeURIComponent(trimmed)}`, {
         replace: isSearchPage,
       })
-      setIsMobileSearchOpen(false)
-      setIsMobileMenuOpen(false)
+    } else {
+      navigate("/search")
     }
+    setIsMobileSearchOpen(false)
+    setIsMobileMenuOpen(false)
   }
 
   const handleClearSearch = () => {
     setSearchQuery("")
+    lastNavigatedQueryRef.current = ""
     if (isSearchPage) {
       navigate("/search", { replace: true })
     }
   }
 
+  // Handle scroll detection for dynamic glassmorphic elevation
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -146,139 +179,128 @@ export default function Navbar() {
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
-    <div className="bg-background text-foreground min-h-screen flex flex-col">
+    <>
       {/* Fixed Header */}
       <header
-        className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 ${
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
           isScrolled || isMobileMenuOpen || isMobileSearchOpen
-            ? "border-b border-border/40 bg-background/85 shadow-sm backdrop-blur-md"
-            : "border-b border-transparent bg-transparent"
-        }`}
+            ? "bg-background/80 shadow-lg shadow-black/10 backdrop-blur-xl"
+            : "bg-transparent"
+        )}
       >
-        <div className="flex items-center gap-x-1 shrink-0">
-          <NavLink to="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <img
-              className="h-5 sm:h-6"
-              src={popcornLogo}
-              alt="Streaming UI Logo"
-            />
-          </NavLink>
-          <NavLink to="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <SparklesText
-              sparklesCount={2}
-              className="text-base sm:text-lg font-bold tracking-tight"
+        <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* Left Cluster: Logo & Desktop Navigation */}
+          <div className="flex items-center gap-6 xl:gap-8">
+            {/* Brand Logo */}
+            <NavLink
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.02]"
             >
-              Streaming UI
-            </SparklesText>
-          </NavLink>
-        </div>
+              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-purple-500/15 border border-purple-500/25 shadow-sm shadow-purple-500/10 group-hover:border-purple-500/40 group-hover:bg-purple-500/20 transition-all">
+                <img
+                  className="h-5 sm:h-6 w-auto transition-transform duration-300 group-hover:scale-110"
+                  src={popcornLogo}
+                  alt="Streaming UI Logo"
+                />
+              </div>
+              <SparklesText
+                sparklesCount={2}
+                className="text-lg sm:text-xl font-black tracking-tight"
+              >
+                Streaming UI
+              </SparklesText>
+            </NavLink>
 
-        {/* Desktop Search (lg+ screens) */}
-        <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center justify-center pl-8">
-          <Field.Root className="flex items-center justify-center gap-2">
-            <div className="relative flex items-center">
-              <Input
-                className="rounded-md pr-8"
-                type="search"
-                placeholder="Search..."
-                value={searchQuery}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={handleClearSearch}
-                  className="absolute right-2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full"
-                  title="Clear search"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
+            {/* Desktop Navigation Links */}
+            <div className="hidden md:flex items-center">
+              <NavigationMenuDemo />
             </div>
-            <Button type="submit" className="cursor-pointer rounded-md border border-border px-3 py-2 text-sm font-medium transition hover:bg-gray-500/45">
-              Search
-            </Button>
-          </Field.Root>
-        </form>
-
-        <div className="flex items-center gap-2">
-          {/* Mobile & Tablet Search Toggle Button */}
-          <button
-            onClick={() => {
-              setIsMobileSearchOpen(!isMobileSearchOpen)
-              setIsMobileMenuOpen(false)
-            }}
-            className="lg:hidden cursor-pointer flex items-center justify-center rounded-full p-2 text-foreground hover:bg-muted/50 transition-colors"
-            title="Search"
-            aria-label="Search"
-          >
-            <Search className="size-5" />
-          </button>
-
-          {/* Desktop Menu (lg+ screens) */}
-          <div className="hidden lg:flex items-center">
-            <NavigationMenuDemo />
           </div>
 
-          <AnimatedThemeToggler
-            className="rounded-full bg-gray-500/15 p-2 transition hover:bg-gray-500/30"
-            variant="circle"
-            duration={400}
-          />
+          {/* Right Cluster: Desktop Search Bar + Theme Toggler + Mobile Triggers */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Desktop Search Bar (md+ screens) */}
+            <div className="hidden md:block w-48 lg:w-64 xl:w-72">
+              <SearchBar
+                inputRef={searchInputRef}
+                value={searchQuery}
+                onChange={setSearchQuery}
+                onSubmit={handleSearchSubmit}
+                onClear={handleClearSearch}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                placeholder="Search movies, shows..."
+                size="sm"
+                shortcutKey="⌘K"
+              />
+            </div>
 
-          {/* Mobile & Tablet Menu Hamburger Button */}
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(!isMobileMenuOpen)
-              setIsMobileSearchOpen(false)
-            }}
-            className="lg:hidden cursor-pointer flex items-center justify-center rounded-full p-2 text-foreground hover:bg-muted/50 transition-colors"
-            title={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+            {/* Mobile & Tablet Search Toggle Button */}
+            <button
+              onClick={() => {
+                setIsMobileSearchOpen(!isMobileSearchOpen)
+                setIsMobileMenuOpen(false)
+              }}
+              className="md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground backdrop-blur-md transition-colors"
+              title="Search"
+              aria-label="Search"
+            >
+              <Search className="size-4.5" />
+            </button>
+
+            {/* Theme Toggler */}
+            <div className="flex items-center justify-center size-10 rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 backdrop-blur-md transition-all">
+              <AnimatedThemeToggler
+                className="p-2 transition text-foreground"
+                variant="circle"
+                duration={400}
+              />
+            </div>
+
+            {/* Mobile & Tablet Menu Hamburger Button */}
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(!isMobileMenuOpen)
+                setIsMobileSearchOpen(false)
+              }}
+              className="md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground backdrop-blur-md transition-colors"
+              title={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Mobile & Tablet Search Dropdown */}
       {isMobileSearchOpen && (
-        <div className="fixed top-[57px] sm:top-[65px] left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-b border-border/40 p-4 lg:hidden animate-in slide-in-from-top duration-300">
-          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 max-w-xl mx-auto">
-            <div className="relative flex-1">
-              <Input
-                className="w-full rounded-md pr-8"
-                type="search"
-                placeholder="Search for movies or shows..."
-                autoFocus
-                value={searchQuery}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setIsInputFocused(false)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={handleClearSearch}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full"
-                  title="Clear search"
-                >
-                  <X className="size-4" />
-                </button>
-              )}
-            </div>
-            <Button type="submit" className="cursor-pointer rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted/50 transition-colors">
-              Search
-            </Button>
-          </form>
+        <div className="fixed top-16 sm:top-18 left-0 right-0 z-40 bg-background/95 backdrop-blur-xl border-b border-border/40 p-4 md:hidden animate-in slide-in-from-top duration-300 shadow-xl">
+          <div className="max-w-xl mx-auto">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSubmit={handleSearchSubmit}
+              onClear={handleClearSearch}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+              placeholder="Search movies, TV shows, actors..."
+              size="md"
+              autoFocus
+            />
+          </div>
         </div>
       )}
 
@@ -286,64 +308,58 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div
           id="mobile-tablet-menu"
-          className="fixed inset-x-0 bottom-0 top-[57px] sm:top-[65px] z-40 flex flex-col bg-background/95 backdrop-blur-xl border-t border-border/40 overflow-y-auto lg:hidden animate-in fade-in slide-in-from-top-2 duration-200"
+          className="fixed inset-x-0 bottom-0 top-16 sm:top-18 z-40 flex flex-col bg-background/95 backdrop-blur-2xl border-t border-border/40 overflow-y-auto md:hidden animate-in fade-in slide-in-from-top-2 duration-200"
         >
-          <nav className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-5 flex flex-col min-h-full justify-between pb-12">
+          <nav className="w-full max-w-lg mx-auto px-4 sm:px-6 py-6 flex flex-col min-h-full justify-between pb-12">
             <div className="space-y-6">
               {/* Integrated Search Box */}
-              <form onSubmit={handleSearchSubmit} className="relative w-full">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-                <Input
-                  type="search"
-                  placeholder="Search movies, TV shows, actors..."
-                  value={searchQuery}
-                  onFocus={() => setIsInputFocused(true)}
-                  onBlur={() => setIsInputFocused(false)}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-muted/40 border-border/50 text-sm focus:bg-background transition-all"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={handleClearSearch}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer p-0.5 rounded-full"
-                    title="Clear search"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                )}
-              </form>
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                onSubmit={handleSearchSubmit}
+                onClear={handleClearSearch}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                placeholder="Search movies, shows, people..."
+                size="md"
+              />
 
-              {/* Quick Home Feed Link */}
-              <NavLink
-                to="/"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-primary/10 text-primary border border-primary/25 font-semibold"
-                      : "text-foreground hover:bg-muted/50 border border-transparent"
-                  }`
-                }
-              >
-                <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <Home className="size-4" />
-                </div>
-                <div className="flex-1 font-medium">Home Feed</div>
-                <ChevronRight className="size-4 text-muted-foreground/60" />
-              </NavLink>
-
-              {/* Quick Navigation Links */}
+              {/* Navigation Links */}
               <div className="flex flex-col space-y-1.5">
+                {/* Home */}
+                <NavLink
+                  to="/"
+                  end
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
+                      isActive
+                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                    )
+                  }
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                      <Home className="size-4" />
+                    </div>
+                    <span className="font-medium">Home</span>
+                  </div>
+                  <ChevronRight className="size-4 text-muted-foreground/60" />
+                </NavLink>
+
+                {/* Movies */}
                 <NavLink
                   to="/movie"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
                         ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
-                    }`
+                    )
                   }
                 >
                   <div className="flex items-center gap-3">
@@ -355,15 +371,17 @@ export default function Navbar() {
                   <ChevronRight className="size-4 text-muted-foreground/60" />
                 </NavLink>
 
+                {/* TV Shows */}
                 <NavLink
                   to="/tv-shows"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
                         ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
-                    }`
+                    )
                   }
                 >
                   <div className="flex items-center gap-3">
@@ -375,15 +393,17 @@ export default function Navbar() {
                   <ChevronRight className="size-4 text-muted-foreground/60" />
                 </NavLink>
 
+                {/* People */}
                 <NavLink
                   to="/people"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
                         ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
-                    }`
+                    )
                   }
                 >
                   <div className="flex items-center gap-3">
@@ -397,68 +417,71 @@ export default function Navbar() {
               </div>
 
               {/* Trending Section */}
-              <div className="flex flex-col space-y-2">
-                  <div className="flex items-center gap-2 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                    <Flame className="size-3.5 text-amber-400" />
-                    <span>Trending</span>
-                  </div>
-                  <div className="space-y-1">
-                    <NavLink
-                      to="/trending-all"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all ${
-                          isActive
-                            ? "bg-amber-500/15 text-amber-400 font-semibold border border-amber-500/30"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
-                        }`
-                      }
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <TrendingUp className="size-3.5 text-muted-foreground" />
-                        <span>All Trending</span>
-                      </div>
-                      <ChevronRight className="size-3.5 text-muted-foreground/50" />
-                    </NavLink>
+              <div className="flex flex-col space-y-2 pt-2 border-t border-border/30">
+                <div className="flex items-center gap-2 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                  <Flame className="size-3.5 text-amber-400" />
+                  <span>Trending</span>
+                </div>
+                <div className="space-y-1">
+                  <NavLink
+                    to="/trending-all"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all",
+                        isActive
+                          ? "bg-amber-500/15 text-amber-400 font-semibold border border-amber-500/30"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
+                      )
+                    }
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <TrendingUp className="size-3.5 text-amber-400" />
+                      <span>All Trending</span>
+                    </div>
+                    <ChevronRight className="size-3.5 text-muted-foreground/50" />
+                  </NavLink>
 
-                    <NavLink
-                      to="/trending-movie"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all ${
-                          isActive
-                            ? "bg-amber-500/15 text-amber-400 font-semibold border border-amber-500/30"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
-                        }`
-                      }
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Film className="size-3.5 text-muted-foreground" />
-                        <span>Trending Movies</span>
-                      </div>
-                      <ChevronRight className="size-3.5 text-muted-foreground/50" />
-                    </NavLink>
+                  <NavLink
+                    to="/trending-movie"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all",
+                        isActive
+                          ? "bg-rose-500/15 text-rose-400 font-semibold border border-rose-500/30"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
+                      )
+                    }
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Film className="size-3.5 text-rose-400" />
+                      <span>Trending Movies</span>
+                    </div>
+                    <ChevronRight className="size-3.5 text-muted-foreground/50" />
+                  </NavLink>
 
-                    <NavLink
-                      to="/trending-tv"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all ${
-                          isActive
-                            ? "bg-amber-500/15 text-amber-400 font-semibold border border-amber-500/30"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
-                        }`
-                      }
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Tv className="size-3.5 text-muted-foreground" />
-                        <span>Trending TV Shows</span>
-                      </div>
-                      <ChevronRight className="size-3.5 text-muted-foreground/50" />
-                    </NavLink>
-                  </div>
+                  <NavLink
+                    to="/trending-tv"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      cn(
+                        "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all",
+                        isActive
+                          ? "bg-sky-500/15 text-sky-400 font-semibold border border-sky-500/30"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50 font-medium border border-transparent"
+                      )
+                    }
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Tv className="size-3.5 text-sky-400" />
+                      <span>Trending TV Shows</span>
+                    </div>
+                    <ChevronRight className="size-3.5 text-muted-foreground/50" />
+                  </NavLink>
                 </div>
               </div>
+            </div>
 
             {/* Bottom Drawer Footer */}
             <div className="mt-8 pt-4 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
@@ -475,11 +498,6 @@ export default function Navbar() {
           </nav>
         </div>
       )}
-
-      {/* Page Content */}
-      <main className="w-full flex-grow flex flex-col">
-        <Outlet />
-      </main>
-    </div>
+    </>
   )
 }
