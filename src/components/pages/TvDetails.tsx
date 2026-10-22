@@ -163,7 +163,7 @@ export default function TvDetails() {
   })
 
   const backdropUrl = show.backdrop_path
-    ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
+    ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}`
     : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600"
 
   const ratingPercent = show.vote_average ? Math.round(show.vote_average * 10) : 0
@@ -1145,7 +1145,7 @@ export default function TvDetails() {
                   title={show.name}
                   image={
                     show.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+                      ? `https://image.tmdb.org/t/p/w342${show.poster_path}`
                       : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
                   }
                   rating={

@@ -51,7 +51,7 @@ export default function Footer() {
   return (
     <footer
       role="contentinfo"
-      className="relative mt-auto w-full border-t border-border/40 bg-card/30 text-foreground backdrop-blur-xl transition-colors"
+      className="content-auto relative mt-auto w-full border-t border-border/40 bg-card/30 text-foreground backdrop-blur-xl transition-colors"
     >
       {/* Top Ambient Glow & Accent Gradient Line */}
       <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
@@ -71,7 +71,7 @@ export default function Footer() {
                   1,000,000+ Titles
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Deep catalog of global movies, TV series, seasons & episodes.
+                  Deep catalog of global movies, TV series, anime & episodes.
                 </p>
               </div>
             </div>
@@ -126,9 +126,9 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12 pt-12 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
-          {/* Brand & Identity Column (lg:col-span-4) */}
-          <div className="space-y-5 lg:col-span-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-8 lg:gap-8">
+          {/* Brand & Identity Column (lg:col-span-3) */}
+          <div className="space-y-5 lg:col-span-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
               <Link to="/" onClick={scrollToTop} className="flex items-center gap-2 group">
@@ -149,11 +149,8 @@ export default function Footer() {
             {/* Tagline */}
             <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
               The premier open-source streaming interface and cinematic discovery platform.
-              Explore trending movies, binge television series, inspect cast filmographies,
-              and watch high-definition trailers seamlessly.
+              Explore trending movies, anime series, television shows, and watch high-definition streams seamlessly.
             </p>
-
-
           </div>
 
           {/* Movies Column (lg:col-span-2) */}
@@ -206,15 +203,6 @@ export default function Footer() {
                   className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
                 >
                   Trending Movies
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/movie?category=upcoming"
-                  onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
-                >
-                  Upcoming Releases
                 </Link>
               </li>
             </ul>
@@ -272,20 +260,66 @@ export default function Footer() {
                   Trending TV
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Anime Column (lg:col-span-2) */}
+          <div className="space-y-4 lg:col-span-2">
+            <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground">
+              <Sparkles className="size-3.5 text-purple-400" />
+              <span>Anime</span>
+            </h4>
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
-                  to="/people"
+                  to="/anime"
                   onClick={scrollToTop}
                   className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
                 >
-                  Cast & Celebrities
+                  Discover Anime
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/anime?category=popular"
+                  onClick={scrollToTop}
+                  className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
+                >
+                  Popular Anime
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/anime?category=top-rated"
+                  onClick={scrollToTop}
+                  className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
+                >
+                  Top Rated Anime
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/anime?category=airing"
+                  onClick={scrollToTop}
+                  className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
+                >
+                  Currently Airing
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/anime?category=movies"
+                  onClick={scrollToTop}
+                  className="text-muted-foreground hover:text-purple-400 transition-colors inline-flex items-center gap-1.5"
+                >
+                  Anime Movies
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Explore & Quick Search Column (lg:col-span-4) */}
-          <div className="space-y-5 lg:col-span-4">
+          {/* Explore & Quick Search Column (lg:col-span-3) */}
+          <div className="space-y-5 lg:col-span-3">
             <h4 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground">
               <Sparkles className="size-3.5 text-purple-400" />
               <span>Find & Stay Connected</span>
@@ -296,11 +330,10 @@ export default function Footer() {
               value={quickSearchInput}
               onChange={setQuickSearchInput}
               onSubmit={handleQuickSearch}
-              placeholder="Jump to any movie or show..."
+              placeholder="Jump to any movie, anime, or show..."
               size="sm"
               submitButtonText="Go"
             />
-
           </div>
         </div>
 
@@ -345,7 +378,7 @@ export default function Footer() {
               streamed from non-affiliated third-party servers.
             </p>
             <p className="text-[11px] pt-1">
-              &copy; {new Date().getFullYear()} Streaming UI. Crafted for movie & TV enthusiasts.
+              &copy; {new Date().getFullYear()} Streaming UI. Crafted for movie, anime & TV enthusiasts.
             </p>
           </div>
 

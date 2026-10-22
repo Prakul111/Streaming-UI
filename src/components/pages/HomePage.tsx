@@ -58,72 +58,72 @@ const MOVIE_GENRES = [
   {
     id: 28,
     name: "Action",
-    image: "https://image.tmdb.org/t/p/w500/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
+    image: "https://image.tmdb.org/t/p/w300/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
   },
   {
     id: 12,
     name: "Adventure",
-    image: "https://image.tmdb.org/t/p/w500/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+    image: "https://image.tmdb.org/t/p/w300/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
   },
   {
     id: 16,
     name: "Animation",
-    image: "https://image.tmdb.org/t/p/w500/qcSHGC5BfoqBoP99PzDIERYG5Qm.jpg",
+    image: "https://image.tmdb.org/t/p/w300/qcSHGC5BfoqBoP99PzDIERYG5Qm.jpg",
   },
   {
     id: 35,
     name: "Comedy",
-    image: "https://image.tmdb.org/t/p/w500/y6RIuwuxLG3Nsb37KUj5yatnTIp.jpg",
+    image: "https://image.tmdb.org/t/p/w300/y6RIuwuxLG3Nsb37KUj5yatnTIp.jpg",
   },
   {
     id: 80,
     name: "Crime",
-    image: "https://image.tmdb.org/t/p/w500/faJB8DXU0LXwq5ebMLj5drz8S4N.jpg",
+    image: "https://image.tmdb.org/t/p/w300/faJB8DXU0LXwq5ebMLj5drz8S4N.jpg",
   },
   {
     id: 99,
     name: "Documentary",
-    image: "https://image.tmdb.org/t/p/w500/7Ud7QIJo21odjCaev6V4md9sK16.jpg",
+    image: "https://image.tmdb.org/t/p/w300/7Ud7QIJo21odjCaev6V4md9sK16.jpg",
   },
   {
     id: 18,
     name: "Drama",
-    image: "https://image.tmdb.org/t/p/w500/tzoarEu7TsG959upiELyYPm5kO9.jpg",
+    image: "https://image.tmdb.org/t/p/w300/tzoarEu7TsG959upiELyYPm5kO9.jpg",
   },
   {
     id: 10751,
     name: "Family",
-    image: "https://image.tmdb.org/t/p/w500/qjTqY5coNiz6sVtPng40IzltsoN.jpg",
+    image: "https://image.tmdb.org/t/p/w300/qjTqY5coNiz6sVtPng40IzltsoN.jpg",
   },
   {
     id: 14,
     name: "Fantasy",
-    image: "https://image.tmdb.org/t/p/w500/twiVn9oFXOVR0uoYgawyEBlnFu8.jpg",
+    image: "https://image.tmdb.org/t/p/w300/twiVn9oFXOVR0uoYgawyEBlnFu8.jpg",
   },
   {
     id: 27,
     name: "Horror",
-    image: "https://image.tmdb.org/t/p/w500/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+    image: "https://image.tmdb.org/t/p/w300/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
   },
   {
     id: 9648,
     name: "Mystery",
-    image: "https://image.tmdb.org/t/p/w500/b9q9VmbXDvJmTziRqkwdEmFdwhr.jpg",
+    image: "https://image.tmdb.org/t/p/w300/b9q9VmbXDvJmTziRqkwdEmFdwhr.jpg",
   },
   {
     id: 10749,
     name: "Romance",
-    image: "https://image.tmdb.org/t/p/w500/oIglj0Jy9duG4LnrRUpH8n001Pk.jpg",
+    image: "https://image.tmdb.org/t/p/w300/oIglj0Jy9duG4LnrRUpH8n001Pk.jpg",
   },
   {
     id: 878,
     name: "Sci-Fi",
-    image: "https://image.tmdb.org/t/p/w500/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
+    image: "https://image.tmdb.org/t/p/w300/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
   },
   {
     id: 53,
     name: "Thriller",
-    image: "https://image.tmdb.org/t/p/w500/p40lmrdI4blcAPZQMTPaiy5v5Ym.jpg",
+    image: "https://image.tmdb.org/t/p/w300/p40lmrdI4blcAPZQMTPaiy5v5Ym.jpg",
   },
 ]
 
@@ -132,47 +132,47 @@ const TV_GENRES = [
   {
     id: 10759,
     name: "Action & Adventure",
-    image: "https://image.tmdb.org/t/p/w500/pF0qkRsrHkdYadPWY9AMeFZfcwk.jpg",
+    image: "https://image.tmdb.org/t/p/w300/pF0qkRsrHkdYadPWY9AMeFZfcwk.jpg",
   },
   {
     id: 16,
     name: "Animation",
-    image: "https://image.tmdb.org/t/p/w500/qcSHGC5BfoqBoP99PzDIERYG5Qm.jpg",
+    image: "https://image.tmdb.org/t/p/w300/qcSHGC5BfoqBoP99PzDIERYG5Qm.jpg",
   },
   {
     id: 35,
     name: "Comedy",
-    image: "https://image.tmdb.org/t/p/w500/hINekSpbcBxjnjGqmIm6I4bz2ab.jpg",
+    image: "https://image.tmdb.org/t/p/w300/hINekSpbcBxjnjGqmIm6I4bz2ab.jpg",
   },
   {
     id: 80,
     name: "Crime",
-    image: "https://image.tmdb.org/t/p/w500/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
+    image: "https://image.tmdb.org/t/p/w300/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
   },
   {
     id: 99,
     name: "Documentary",
-    image: "https://image.tmdb.org/t/p/w500/zkwyfIwqWnZbQiHL9oGU8iSNkLG.jpg",
+    image: "https://image.tmdb.org/t/p/w300/zkwyfIwqWnZbQiHL9oGU8iSNkLG.jpg",
   },
   {
     id: 18,
     name: "Drama",
-    image: "https://image.tmdb.org/t/p/w500/dyFTt1a9ZpFdKE96kPlE9fQvXOJ.jpg",
+    image: "https://image.tmdb.org/t/p/w300/dyFTt1a9ZpFdKE96kPlE9fQvXOJ.jpg",
   },
   {
     id: 10751,
     name: "Family",
-    image: "https://image.tmdb.org/t/p/w500/dyFTt1a9ZpFdKE96kPlE9fQvXOJ.jpg",
+    image: "https://image.tmdb.org/t/p/w300/dyFTt1a9ZpFdKE96kPlE9fQvXOJ.jpg",
   },
   {
     id: 9648,
     name: "Mystery",
-    image: "https://image.tmdb.org/t/p/w500/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
+    image: "https://image.tmdb.org/t/p/w300/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
   },
   {
     id: 10765,
     name: "Sci-Fi & Fantasy",
-    image: "https://image.tmdb.org/t/p/w500/9yCJtipMeDe8uAdSJKvw8BnYfRz.jpg",
+    image: "https://image.tmdb.org/t/p/w300/9yCJtipMeDe8uAdSJKvw8BnYfRz.jpg",
   },
 ]
 
@@ -423,6 +423,7 @@ interface DisplayMovie {
   overview: string
   poster_path: string
   backdrop_path: string
+  raw_backdrop_path?: string | null
   thumbnail: string
 }
 
@@ -530,41 +531,51 @@ export default function HomePage() {
   const activeGenre =
     genreMediaType === "movies" ? selectedMovieGenre : selectedTvGenre
 
+  // Delay non-critical below-the-fold queries slightly so Hero gets 100% of network priority
+  const [loadDeferred, setLoadDeferred] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadDeferred(true)
+    }, 120)
+    return () => clearTimeout(timer)
+  }, [])
+
   // Query 1: Now Playing for Hero Carousel
   const { data: nowPlayingData, isPending: isNowPlayingPending } = useQuery(
     nowPlayingQuery()
   )
 
-  // Query 2: Section 1 - Top 10 Trending Movies Today
+  // Query 2: Section 1 - Top 10 Trending Movies Today (immediate for above-the-fold)
   const { data: trendingMoviesData, isPending: isTrendingMoviesPending } =
     useQuery(trendingMovieQuery({ timeWindow: "day" }))
 
-  // Query 3: Section 2 - Top 10 Trending TV Shows Today
-  const { data: trendingTvData, isPending: isTrendingTvPending } = useQuery(
-    trendingTvQuery({ timeWindow: "day" })
-  )
+  // Query 3: Section 2 - Top 10 Trending TV Shows Today (deferred)
+  const { data: trendingTvData, isPending: isTrendingTvPending } = useQuery({
+    ...trendingTvQuery({ timeWindow: "day" }),
+    enabled: loadDeferred,
+  })
 
-  // Query 4: Section 3 - Top Rated (Movies or TV)
+  // Query 4: Section 3 - Top Rated (Movies or TV) (deferred)
   const { data: topRatedMovieData, isPending: isTopRatedMoviePending } =
     useQuery({
       ...topRatedQuery(),
-      enabled: ratedMediaType === "movies",
+      enabled: loadDeferred && ratedMediaType === "movies",
     })
 
   const { data: topRatedTvData, isPending: isTopRatedTvPending } = useQuery({
     ...topRatedTvQuery(),
-    enabled: ratedMediaType === "tv",
+    enabled: loadDeferred && ratedMediaType === "tv",
   })
 
-  // Query 5: Section 4 - Browse by Genre Items
+  // Query 5: Section 4 - Browse by Genre Items (deferred)
   const { data: genreMoviesData, isPending: isGenreMoviesPending } = useQuery({
     ...discoverMoviesQuery({ withGenres: String(selectedMovieGenre.id) }),
-    enabled: genreMediaType === "movies",
+    enabled: loadDeferred && genreMediaType === "movies",
   })
 
   const { data: genreTvData, isPending: isGenreTvPending } = useQuery({
     ...discoverTvQuery({ withGenres: String(selectedTvGenre.id) }),
-    enabled: genreMediaType === "tv",
+    enabled: loadDeferred && genreMediaType === "tv",
   })
 
   // Process Hero Banner Movies
@@ -590,15 +601,16 @@ export default function HomePage() {
             : ["Cinema"],
           overview: m.overview || "No overview available.",
           poster_path: m.poster_path
-            ? `https://image.tmdb.org/t/p/w500${m.poster_path}`
+            ? `https://image.tmdb.org/t/p/w342${m.poster_path}`
             : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500",
           backdrop_path: m.backdrop_path
-            ? `https://image.tmdb.org/t/p/original${m.backdrop_path}`
+            ? `https://image.tmdb.org/t/p/w1280${m.backdrop_path}`
             : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600",
+          raw_backdrop_path: m.backdrop_path,
           thumbnail: m.backdrop_path
-            ? `https://image.tmdb.org/t/p/w780${m.backdrop_path}`
+            ? `https://image.tmdb.org/t/p/w300${m.backdrop_path}`
             : m.poster_path
-              ? `https://image.tmdb.org/t/p/w500${m.poster_path}`
+              ? `https://image.tmdb.org/t/p/w342${m.poster_path}`
               : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600",
         }
       })
@@ -677,10 +689,10 @@ export default function HomePage() {
   // Helper for backdrop resolution
   const getBackdrop = (item: MediaCardItem) => {
     if (item.backdrop_path) {
-      return `https://image.tmdb.org/t/p/w780${item.backdrop_path}`
+      return `https://image.tmdb.org/t/p/w300${item.backdrop_path}`
     }
     if (item.poster_path) {
-      return `https://image.tmdb.org/t/p/w500${item.poster_path}`
+      return `https://image.tmdb.org/t/p/w342${item.poster_path}`
     }
     return "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600"
   }
@@ -727,11 +739,21 @@ export default function HomePage() {
         ) : nowPlayingMovies.length > 0 ? (
           <>
             {/* Animated Backdrop Slider with Ken Burns Effect */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
               <AnimatePresence mode="wait">
                 {activeMovie && (
-                  <motion.div
+                  <motion.img
                     key={activeMovie.id}
+                    src={activeMovie.backdrop_path}
+                    srcSet={
+                      activeMovie.raw_backdrop_path
+                        ? `https://image.tmdb.org/t/p/w780${activeMovie.raw_backdrop_path} 780w, https://image.tmdb.org/t/p/w1280${activeMovie.raw_backdrop_path} 1280w`
+                        : undefined
+                    }
+                    sizes="100vw"
+                    alt={activeMovie.title}
+                    fetchPriority="high"
+                    decoding="async"
                     initial={{ opacity: 0, scale: 1.02 }}
                     animate={{ opacity: 1, scale: 1.07 }}
                     exit={{ opacity: 0 }}
@@ -739,8 +761,7 @@ export default function HomePage() {
                       opacity: { duration: 0.8 },
                       scale: { duration: 6.5, ease: "easeOut" },
                     }}
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${activeMovie.backdrop_path})` }}
+                    className="size-full object-cover object-center"
                   />
                 )}
               </AnimatePresence>
@@ -928,6 +949,8 @@ export default function HomePage() {
                               <img
                                 src={item.thumbnail}
                                 alt={item.title}
+                                loading="lazy"
+                                decoding="async"
                                 className="size-full object-cover transition-transform duration-500 group-hover/thumb:scale-110"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60 group-hover/thumb:opacity-20 transition-opacity" />
@@ -1001,7 +1024,7 @@ export default function HomePage() {
         {/* ========================================================= */}
         {/* 2. TOP 10 TV SHOWS (Matching Screenshot 1)                */}
         {/* ========================================================= */}
-        <section className="space-y-4">
+        <section className="space-y-4 content-auto">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
@@ -1049,7 +1072,7 @@ export default function HomePage() {
         {/* ========================================================= */}
         {/* 3. TOP 10 RATED (Matching Screenshot 2)                   */}
         {/* ========================================================= */}
-        <section className="space-y-4">
+        <section className="space-y-4 content-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
@@ -1134,7 +1157,7 @@ export default function HomePage() {
         {/* ========================================================= */}
         {/* 4. BROWSE BY GENRE (Matching Screenshot 3)                */}
         {/* ========================================================= */}
-        <section className="space-y-6">
+        <section className="space-y-6 content-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
@@ -1225,6 +1248,7 @@ export default function HomePage() {
                     src={genre.image}
                     alt={genre.name}
                     loading="lazy"
+                    decoding="async"
                     className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => {
                       ; (e.currentTarget as HTMLImageElement).src =

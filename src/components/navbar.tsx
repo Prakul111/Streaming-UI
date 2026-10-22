@@ -14,6 +14,7 @@ import {
   Home,
   ChevronRight,
   Users,
+  Sparkles,
 } from "lucide-react"
 import NavigationMenuDemo from "./shadcn-studio/navigation-menu/navigation-menu-09"
 import popcornLogo from "@/assets/popcorn-svgrepo-com.svg"
@@ -320,7 +321,7 @@ export default function Navbar() {
                 onClear={handleClearSearch}
                 onFocus={() => setIsInputFocused(true)}
                 onBlur={() => setIsInputFocused(false)}
-                placeholder="Search movies, shows, people..."
+                placeholder="Search movies, shows, anime..."
                 size="md"
               />
 
@@ -389,6 +390,28 @@ export default function Navbar() {
                       <Tv className="size-4" />
                     </div>
                     <span className="font-medium">TV Shows</span>
+                  </div>
+                  <ChevronRight className="size-4 text-muted-foreground/60" />
+                </NavLink>
+
+                {/* Anime */}
+                <NavLink
+                  to="/anime"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
+                      isActive
+                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                    )
+                  }
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                      <Sparkles className="size-4" />
+                    </div>
+                    <span className="font-medium">Anime</span>
                   </div>
                   <ChevronRight className="size-4 text-muted-foreground/60" />
                 </NavLink>

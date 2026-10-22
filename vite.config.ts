@@ -50,5 +50,33 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    target: "esnext",
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("react-router") ||
+              id.includes("react-dom") ||
+              id.includes("/react/")
+            ) {
+              return "vendor-react"
+            }
+            if (id.includes("@tanstack/react-query")) {
+              return "vendor-query"
+            }
+            if (id.includes("motion")) {
+              return "vendor-motion"
+            }
+            if (id.includes("lucide-react")) {
+              return "vendor-icons"
+            }
+          }
+        },
+      },
+    },
+  },
 })
-

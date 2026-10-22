@@ -62,7 +62,7 @@ const AnimatedTabsTv = () => {
                   title={movie.title}
                   image={
                     movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
                       : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
                   }
                   rating={
@@ -112,7 +112,7 @@ const AnimatedTabsTv = () => {
                   title={movie.title}
                   image={
                     movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
                       : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
                   }
                   rating={
@@ -162,7 +162,7 @@ const AnimatedTabsTv = () => {
                   title={movie.title}
                   image={
                     movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
                       : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
                   }
                   rating={

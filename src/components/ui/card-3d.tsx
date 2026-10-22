@@ -112,6 +112,7 @@ export function Card3D({
               src={image}
               alt={title}
               loading="lazy"
+              decoding="async"
               className="size-full object-cover"
               onError={(e) => {
                 ; (e.currentTarget as HTMLImageElement).src =

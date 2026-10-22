@@ -12,6 +12,7 @@ interface ContentListProps {
   type: string
   className?: string
   releaseDate?: string
+  mediaType?: "movie" | "tv"
 }
 
 export default function CardContentList({
@@ -23,8 +24,9 @@ export default function CardContentList({
   type,
   className,
   releaseDate,
+  mediaType,
 }: ContentListProps) {
-  const isMovie = type.toLowerCase().includes("movie")
+  const isMovie = mediaType ? mediaType === "movie" : type.toLowerCase().includes("movie")
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
   const tiltRef = useRef<HTMLDivElement>(null)
 
@@ -106,6 +108,12 @@ export default function CardContentList({
             className="aspect-[2/3] w-full rounded-2xl object-cover pointer-events-none"
             src={image}
             alt={title}
+            loading="lazy"
+            decoding="async"
+            onError={(e) => {
+              ;(e.currentTarget as HTMLImageElement).src =
+                "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
+            }}
           />
         </figure>
       </div>

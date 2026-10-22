@@ -79,7 +79,7 @@ export default function TrendingTv() {
                 title={show.name}
                 image={
                   show.poster_path
-                    ? `https://image.tmdb.org/t/p/w500${show.poster_path}`
+                    ? `https://image.tmdb.org/t/p/w342${show.poster_path}`
                     : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
                 }
                 rating={

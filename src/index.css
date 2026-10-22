@@ -223,3 +223,8 @@
 .hover-3d:not([data-tracking="true"]):has(> :nth-child(7):hover) { --rx: -7deg; --ry: -7deg; --shine: 15% 85%; --scale: 1.04; --duration: 380ms; }
 .hover-3d:not([data-tracking="true"]):has(> :nth-child(8):hover) { --rx: -7deg; --ry: 0deg;   --shine: 50% 85%; --scale: 1.04; --duration: 380ms; }
 .hover-3d:not([data-tracking="true"]):has(> :nth-child(9):hover) { --rx: -7deg; --ry: 7deg;  --shine: 85% 85%; --scale: 1.04; --duration: 380ms; }
+/* Content visibility optimization for off-screen elements */
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 300px;
+}

@@ -206,7 +206,7 @@ export default function MovieDetails() {
 
   // Backdrop and Poster URLs
   const backdropUrl = movie.backdrop_path
-    ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1600"
 
   // Similar and Recommended list
@@ -1169,7 +1169,7 @@ export default function MovieDetails() {
                   ? parseFloat(item.vote_average.toFixed(1))
                   : 0.0
                 const poster = item.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                  ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
                   : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
 
                 return (
@@ -1244,7 +1244,7 @@ export default function MovieDetails() {
                   ? parseFloat(item.vote_average.toFixed(1))
                   : 0.0
                 const poster = item.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                  ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
                   : "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500"
 
                 return (
