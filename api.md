@@ -30,7 +30,7 @@ Season Details => https://api.2embed.cc/season?imdb_id={tt…}&season={1…N}
 
 ---
 
-#### - [AutoEmbed](https://autoembed.app/) - Movies / TV / Anime / Drama / 
+#### - [AutoEmbed](https://autoembed.app/) - Movies / TV / Anime / Drama 
 
 
 - Movie Endpoint
