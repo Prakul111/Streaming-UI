@@ -412,19 +412,7 @@ export default function TvDetails() {
 
             </div>
 
-            {/* Streaming Server Selector */}
-            <div className="pt-2">
-              <StreamingServerSelector
-                selectedServerId={selectedServerId}
-                onServerChange={setSelectedServerId}
-                onDirectPlay={(serverId) => {
-                  setSelectedServerId(serverId)
-                  setPlayerSeason(1)
-                  setPlayerEpisode(1)
-                  setIsPlayerOpen(true)
-                }}
-              />
-            </div>
+
           </div>
 
           {/* Right Column: Hero Preview Card / Latest Episode Card (Desktop) */}

@@ -377,20 +377,16 @@ export default function MovieDetails() {
                 </button>
               )}
 
-
-            </div>
-
-            {/* Streaming Server Selector */}
-            <div className="pt-2">
+              {/* Compact Server Selector Dropdown */}
               <StreamingServerSelector
                 selectedServerId={selectedServerId}
                 onServerChange={setSelectedServerId}
-                onDirectPlay={(serverId) => {
-                  setSelectedServerId(serverId)
-                  setIsPlayerOpen(true)
-                }}
+                variant="compact"
+                align="auto"
               />
             </div>
+
+
           </div>
 
           {/* Right Column: Hero Preview Card (Desktop) */}
