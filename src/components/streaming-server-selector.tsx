@@ -14,7 +14,7 @@ interface StreamingServerSelectorProps {
   onServerChange: (serverId: string) => void
   onDirectPlay?: (serverId: string) => void
   variant?: "pills" | "dropdown" | "compact"
-  align?: "left" | "right"
+  align?: "left" | "right" | "auto"
   className?: string
   showLabel?: boolean
   servers?: StreamingServer[]
@@ -26,7 +26,7 @@ export default function StreamingServerSelector({
   onServerChange,
   onDirectPlay,
   variant = "pills",
-  align = "right",
+  align = "auto",
   className,
   showLabel = true,
   servers: propServers,
@@ -34,6 +34,7 @@ export default function StreamingServerSelector({
 }: StreamingServerSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
+  const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({})
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const { servers: hookServers } = useStreamingServers()
@@ -43,6 +44,63 @@ export default function StreamingServerSelector({
   const activeServer =
     availableServers.find((s) => s.id === selectedServerId) ||
     getStreamingServer(selectedServerId)
+
+  // Dynamically position dropdown to guarantee it stays inside viewport
+  useEffect(() => {
+    if (!isOpen || !dropdownRef.current) return
+
+    const updatePosition = () => {
+      if (!dropdownRef.current) return
+      const rect = dropdownRef.current.getBoundingClientRect()
+      const screenWidth = window.innerWidth
+      // Optimal width: 320px on desktop/tablet, capped to screenWidth - 24px on mobile
+      const idealWidth = Math.min(320, screenWidth - 24)
+
+      // Determine effective alignment:
+      // If "auto", choose right if button is in right half of screen, otherwise left
+      let effectiveAlign = align
+      if (effectiveAlign === "auto") {
+        effectiveAlign = rect.left > screenWidth / 2 ? "right" : "left"
+      }
+
+      const style: React.CSSProperties = {
+        width: `${idealWidth}px`,
+        maxWidth: "calc(100vw - 1.5rem)",
+      }
+
+      if (effectiveAlign === "right") {
+        // Right edge of menu aligns with right edge of button
+        const leftEdgeInViewport = rect.right - idealWidth
+        if (leftEdgeInViewport < 12) {
+          // Overflows left edge: shift right to stay at least 12px from left screen edge
+          const overflow = 12 - leftEdgeInViewport
+          style.right = `-${overflow}px`
+          style.left = "auto"
+        } else {
+          style.right = "0px"
+          style.left = "auto"
+        }
+      } else {
+        // Left edge of menu aligns with left edge of button
+        const rightEdgeInViewport = rect.left + idealWidth
+        if (rightEdgeInViewport > screenWidth - 12) {
+          // Overflows right edge: shift left so it ends 12px from right screen edge
+          const overflow = rightEdgeInViewport - (screenWidth - 12)
+          style.left = `-${overflow}px`
+          style.right = "auto"
+        } else {
+          style.left = "0px"
+          style.right = "auto"
+        }
+      }
+
+      setMenuStyle(style)
+    }
+
+    updatePosition()
+    window.addEventListener("resize", updatePosition)
+    return () => window.removeEventListener("resize", updatePosition)
+  }, [isOpen, align])
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -77,7 +135,7 @@ export default function StreamingServerSelector({
     }
   }
 
-  // Dropdown / Compact Variant (Perfect for player modal header)
+  // Dropdown / Compact Variant (Perfect for player modal header & episodes section)
   if (variant === "dropdown" || variant === "compact") {
     return (
       <>
@@ -121,13 +179,11 @@ export default function StreamingServerSelector({
             />
           )}
 
-          {/* Dropdown Menu */}
+          {/* Dropdown Menu with Smart Positioning */}
           {isOpen && (
             <div
-              className={cn(
-                "absolute z-50 mt-2 w-72 sm:w-84 rounded-2xl bg-[#0c0e17] border border-white/20 p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] ring-1 ring-purple-500/30 animate-in fade-in zoom-in-95 duration-150",
-                align === "left" ? "left-0 right-auto" : "right-0 left-auto"
-              )}
+              style={menuStyle}
+              className="absolute z-50 mt-2 rounded-2xl bg-[#0c0e17] border border-white/20 p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] ring-1 ring-purple-500/30 animate-in fade-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="px-2.5 py-2 border-b border-white/10 mb-2 flex items-center justify-between">
@@ -173,7 +229,9 @@ export default function StreamingServerSelector({
                           <span className="text-xs font-bold text-white truncate flex items-center gap-1">
                             {server.name}
                             {isCommunity && (
-                              <span title="Community Server" className="inline-flex"><Globe className="size-2.5 text-blue-400 shrink-0" /></span>
+                              <span title="Community Server" className="inline-flex">
+                                <Globe className="size-2.5 text-blue-400 shrink-0" />
+                              </span>
                             )}
                             {isCustom && (
                               <span className="text-[9px] text-amber-400 font-normal shrink-0">(Custom)</span>

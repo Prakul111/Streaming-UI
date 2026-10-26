@@ -635,121 +635,150 @@ export default function TvDetails() {
                 </h2>
               </div>
 
-              {/* Right Side: View toggles & Season selector */}
-              <div className="relative z-20 flex flex-wrap md:flex-nowrap items-center gap-2.5 pb-1 md:pb-0">
-                {/* Server Selector for Episodes */}
-                <StreamingServerSelector
-                  selectedServerId={selectedServerId}
-                  onServerChange={setSelectedServerId}
-                  variant="compact"
-                  align="right"
-                />
+              {/* Controls Toolbar: Primary Selectors & View Toggles */}
+              <div className="relative z-20 flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-2.5 pb-1 md:pb-0">
+                {/* 1. Primary Dropdowns Cluster (Season + Server Selector) */}
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* Season Dropdown Pill */}
+                  <div className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
+                      className="cursor-pointer flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs sm:text-sm font-bold text-white transition-all shadow-sm"
+                      aria-expanded={isSeasonDropdownOpen}
+                      aria-haspopup="true"
+                    >
+                      <div className="size-5 rounded-full bg-white/15 flex items-center justify-center text-[10px] font-black text-white">
+                        S{selectedSeason}
+                      </div>
+                      <span>Season {selectedSeason}</span>
+                      <ChevronDown
+                        className={cn(
+                          "size-3.5 text-muted-foreground transition-transform duration-200",
+                          isSeasonDropdownOpen && "rotate-180"
+                        )}
+                      />
+                    </button>
 
-                {/* 3 View Mode Toggles: Cards (Carousel), Grid, List */}
-                <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
-                  <button
-                    onClick={() => setEpisodeViewMode("cards")}
-                    className={cn(
-                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
-                      episodeViewMode === "cards"
-                        ? "bg-white text-black shadow-md font-bold"
-                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    {/* Backdrop to close season dropdown when clicking outside */}
+                    {isSeasonDropdownOpen && (
+                      <div
+                        className="fixed inset-0 z-30 bg-black/20"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setIsSeasonDropdownOpen(false)
+                        }}
+                      />
                     )}
-                    title="Carousel Cards View"
-                  >
-                    <Columns3 className="size-3.5" />
-                  </button>
 
-                  <button
-                    onClick={() => setEpisodeViewMode("grid")}
-                    className={cn(
-                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
-                      episodeViewMode === "grid"
-                        ? "bg-white text-black shadow-md font-bold"
-                        : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    {isSeasonDropdownOpen && (
+                      <div className="absolute left-0 top-full mt-2 z-40 w-48 sm:w-52 rounded-xl bg-[#121620]/95 backdrop-blur-xl border border-white/15 p-1.5 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-200">
+                        {seasons.map((season: any) => (
+                          <button
+                            key={season.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedSeason(season.season_number)
+                              setIsSeasonDropdownOpen(false)
+                            }}
+                            className={cn(
+                              "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                              selectedSeason === season.season_number
+                                ? "bg-purple-600 text-white"
+                                : "text-white/80 hover:bg-white/10 hover:text-white"
+                            )}
+                          >
+                            <span>Season {season.season_number}</span>
+                            <span className="text-[10px] text-muted-foreground font-mono">
+                              {season.episode_count} eps
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     )}
-                    title="Grid View"
-                  >
-                    <LayoutGrid className="size-3.5" />
-                  </button>
+                  </div>
 
-                  <button
-                    onClick={() => setEpisodeViewMode("list")}
-                    className={cn(
-                      "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
-                      episodeViewMode === "list"
-                        ? "bg-white text-black shadow-md font-bold"
-                        : "text-muted-foreground hover:text-white hover:bg-white/5"
-                    )}
-                    title="List View"
-                  >
-                    <List className="size-3.5" />
-                  </button>
+                  {/* Server Selector for Episodes */}
+                  <StreamingServerSelector
+                    selectedServerId={selectedServerId}
+                    onServerChange={setSelectedServerId}
+                    variant="compact"
+                    align="auto"
+                  />
                 </div>
 
-                {/* Season Dropdown Pill */}
-                <div className="relative shrink-0">
-                  <button
-                    onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
-                    className="cursor-pointer flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs sm:text-sm font-bold text-white transition-all shadow-sm"
-                  >
-                    <div className="size-5 rounded-full bg-white/15 flex items-center justify-center text-[10px] font-black text-white">
-                      S{selectedSeason}
-                    </div>
-                    <span>Season {selectedSeason}</span>
-                    <ChevronDown
+                {/* 2. Secondary View Controls Cluster (View Mode Toggles + Scroll Arrows) */}
+                <div className="flex items-center gap-1.5 shrink-0 ml-auto sm:ml-0">
+                  {/* 3 View Mode Toggles: Cards (Carousel), Grid, List */}
+                  <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setEpisodeViewMode("cards")}
                       className={cn(
-                        "size-3.5 text-muted-foreground transition-transform duration-200",
-                        isSeasonDropdownOpen && "rotate-180"
+                        "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                        episodeViewMode === "cards"
+                          ? "bg-white text-black shadow-md font-bold"
+                          : "text-muted-foreground hover:text-white hover:bg-white/5"
                       )}
-                    />
-                  </button>
+                      title="Carousel Cards View"
+                      aria-label="Carousel Cards View"
+                    >
+                      <Columns3 className="size-3.5" />
+                    </button>
 
-                  {isSeasonDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-2 z-40 w-48 rounded-xl bg-[#121620]/95 backdrop-blur-xl border border-white/15 p-1.5 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-200">
-                      {seasons.map((season: any) => (
-                        <button
-                          key={season.id}
-                          onClick={() => {
-                            setSelectedSeason(season.season_number)
-                            setIsSeasonDropdownOpen(false)
-                          }}
-                          className={cn(
-                            "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
-                            selectedSeason === season.season_number
-                              ? "bg-purple-600 text-white"
-                              : "text-white/80 hover:bg-white/10 hover:text-white"
-                          )}
-                        >
-                          <span>Season {season.season_number}</span>
-                          <span className="text-[10px] text-muted-foreground font-mono">
-                            {season.episode_count} eps
-                          </span>
-                        </button>
-                      ))}
+                    <button
+                      type="button"
+                      onClick={() => setEpisodeViewMode("grid")}
+                      className={cn(
+                        "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                        episodeViewMode === "grid"
+                          ? "bg-white text-black shadow-md font-bold"
+                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      )}
+                      title="Grid View"
+                      aria-label="Grid View"
+                    >
+                      <LayoutGrid className="size-3.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setEpisodeViewMode("list")}
+                      className={cn(
+                        "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
+                        episodeViewMode === "list"
+                          ? "bg-white text-black shadow-md font-bold"
+                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      )}
+                      title="List View"
+                      aria-label="List View"
+                    >
+                      <List className="size-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Scroll controls (for carousel mode) */}
+                  {episodeViewMode === "cards" && (
+                    <div className="hidden sm:flex items-center gap-1 ml-1 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => scrollEpisodes("left")}
+                        className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                        aria-label="Scroll left"
+                      >
+                        <ChevronLeft className="size-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => scrollEpisodes("right")}
+                        className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                        aria-label="Scroll right"
+                      >
+                        <ChevronRight className="size-4" />
+                      </button>
                     </div>
                   )}
                 </div>
-
-                {/* Scroll controls (for carousel mode) */}
-                {episodeViewMode === "cards" && (
-                  <div className="hidden sm:flex items-center gap-1 ml-1 shrink-0">
-                    <button
-                      onClick={() => scrollEpisodes("left")}
-                      className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
-                      aria-label="Scroll left"
-                    >
-                      <ChevronLeft className="size-4" />
-                    </button>
-                    <button
-                      onClick={() => scrollEpisodes("right")}
-                      className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
-                      aria-label="Scroll right"
-                    >
-                      <ChevronRight className="size-4" />
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
 
