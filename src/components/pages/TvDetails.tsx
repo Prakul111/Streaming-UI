@@ -250,35 +250,35 @@ export default function TvDetails() {
 
   return (
     <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
-      {/* 1. HERO SECTION (100% Zoom Responsive Layout Matching Reference) */}
-      <section className="relative w-full min-h-[92vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-black select-none pt-16 sm:pt-20 pb-4 sm:pb-6">
-        {/* Cinematic Backdrop Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
-          style={{ backgroundImage: `url(${backdropUrl})` }}
-        />
-
-        {/* Ambient Film Grid Texture Overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-20"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-
-        {/* Mood Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#090b10] via-[#090b10]/65 to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#090b10] via-[#090b10]/80 to-transparent" />
-
-        {/* Subtle Watermark on far right edge (matching reference) */}
-        <div className="hidden xl:block absolute right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none opacity-20 text-[10px] tracking-[0.5em] text-white [writing-mode:vertical-rl]">
-          Streaming-UI
+      {/* 1. HERO SECTION (CinemaOS Hero Layout matching HomePage) */}
+      <section className="relative w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] max-h-[960px] bg-black overflow-hidden select-none flex flex-col justify-end">
+        {/* Cinematic Backdrop Image - Crystal clear on mobile and desktop */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <img
+            src={backdropUrl}
+            alt={show.name}
+            className="size-full object-cover object-center"
+          />
         </div>
 
-        {/* Main Hero Container */}
-        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 py-4 flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 lg:gap-10 flex-grow">
+        {/* Dark gradient mask overlays for legibility - matching HomePage */}
+        <div className="absolute inset-x-0 top-0 h-28 sm:h-36 z-10 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#090b10] via-[#090b10]/80 via-35% md:via-[#090b10]/40 to-transparent pointer-events-none" />
+        <div className="hidden md:block absolute inset-0 z-10 bg-gradient-to-r from-[#090b10] via-[#090b10]/75 via-45% to-transparent pointer-events-none" />
+
+        {/* Far right vertical watermark matching HomePage */}
+        <div
+          aria-hidden="true"
+          className="hidden xl:flex absolute right-5 top-1/2 -translate-y-1/2 z-20 pointer-events-none select-none"
+        >
+          <span className="[writing-mode:vertical-rl] text-[10px] tracking-[0.45em] text-white/20 uppercase font-bold">
+            Streaming-ui
+          </span>
+        </div>
+
+        {/* Main Hero Container - Pinned to bottom matching HomePage */}
+        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-24 sm:pt-28 pb-8 sm:pb-12 flex flex-col justify-end size-full">
+          <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 lg:gap-10 w-full">
           {/* Left Column: Metadata, Title, Ratings, Overview, Creator, Actions */}
           <div className="flex-1 space-y-3 sm:space-y-4 max-w-2xl xl:max-w-3xl text-left">
             {/* Top Badges Row */}
@@ -511,12 +511,14 @@ export default function TvDetails() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Bottom Status / Network Metadata Bar inside Hero */}
-        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-3 pb-2">
-          <div className="rounded-2xl bg-[#0d121c]/75 backdrop-blur-xl border border-white/10 px-6 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-xl">
+      {/* Floating Status / Network Metadata Bar below Hero */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 -mt-4 sm:-mt-6 mb-8">
+        <div className="rounded-2xl bg-[#0d121c]/80 backdrop-blur-xl border border-white/10 px-6 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-xl">
             {/* Left metadata points */}
             <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-left">
               <div className="space-y-0.5">
@@ -599,7 +601,6 @@ export default function TvDetails() {
             )}
           </div>
         </div>
-      </section>
 
       {/* Main Details Body */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12 mt-8 sm:mt-12 space-y-10 sm:space-y-16">
