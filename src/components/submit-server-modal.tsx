@@ -176,20 +176,22 @@ export default function SubmitServerModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-white/10 bg-[#101321] shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
-              <Server className="size-5" />
+        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-b border-white/10 bg-[#101321] shrink-0 gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
+              <Server className="size-4 sm:size-5" />
             </div>
-            <div>
-              <h2 id={`${modalId}-title`} className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                Add & Test Streaming Server
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <h2 id={`${modalId}-title`} className="text-sm sm:text-base font-bold text-white truncate">
+                  Add Streaming Server
+                </h2>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 shrink-0">
                   Global & Local
                 </span>
-              </h2>
-              <p className="text-xs text-white/50">
-                Share a new streaming API with the community or save it instantly to your own player
+              </div>
+              <p className="text-[11px] sm:text-xs text-white/50 line-clamp-1 sm:line-clamp-none">
+                Share a new streaming API with the community or save it to your browser
               </p>
             </div>
           </div>
@@ -197,7 +199,7 @@ export default function SubmitServerModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-8 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+            className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="size-4" />
@@ -205,38 +207,40 @@ export default function SubmitServerModal({
         </div>
 
         {/* Mode Selector Tabs (Global Community vs Instant Local) */}
-        <div className="flex items-center gap-2 p-2 px-5 sm:px-7 bg-[#080a12] border-b border-white/10 shrink-0">
+        <div className="grid grid-cols-2 gap-2 p-2 px-3 sm:px-7 bg-[#080a12] border-b border-white/10 shrink-0">
           <button
             type="button"
             onClick={() => setMode('global')}
             className={cn(
-              'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer',
+              'h-11 sm:h-10 flex items-center justify-center gap-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border',
               mode === 'global'
-                ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
+                ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.35)]'
+                : 'bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10'
             )}
           >
-            <Globe className="size-3.5" />
-            <span>Submit to Community (Worldwide)</span>
+            <Globe className="size-4 shrink-0" />
+            <span className="sm:hidden">Community</span>
+            <span className="hidden sm:inline">Submit to Community (Worldwide)</span>
           </button>
 
           <button
             type="button"
             onClick={() => setMode('local')}
             className={cn(
-              'flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer',
+              'h-11 sm:h-10 flex items-center justify-center gap-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border',
               mode === 'local'
-                ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
+                ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.35)]'
+                : 'bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10'
             )}
           >
-            <Laptop className="size-3.5" />
-            <span>Save to My Browser (Instant Local)</span>
+            <Laptop className="size-4 shrink-0" />
+            <span className="sm:hidden">My Browser</span>
+            <span className="hidden sm:inline">Save to My Browser (Instant Local)</span>
           </button>
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-5 sm:space-y-6 custom-scrollbar">
           {/* Mode Explainer Banner */}
           <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 flex items-start gap-3">
             <Sparkles className="size-4 text-purple-400 shrink-0 mt-0.5" />
@@ -302,10 +306,10 @@ export default function SubmitServerModal({
                       type="button"
                       onClick={() => setQuality(q)}
                       className={cn(
-                        'py-2 px-2 text-center rounded-xl text-xs font-bold transition-all cursor-pointer border',
+                        'h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer border select-none',
                         quality === q
-                          ? 'bg-purple-600/30 border-purple-500 text-purple-200 shadow-sm'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:text-white'
+                          ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_14px_rgba(168,85,247,0.35)]'
+                          : 'bg-white/5 border-white/10 text-white/65 hover:bg-white/10 hover:text-white'
                       )}
                     >
                       {q}
@@ -324,10 +328,10 @@ export default function SubmitServerModal({
                       type="button"
                       onClick={() => setSpeed(s)}
                       className={cn(
-                        'py-2 px-2 text-center rounded-xl text-xs font-bold transition-all cursor-pointer border',
+                        'h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer border select-none',
                         speed === s
-                          ? 'bg-purple-600/30 border-purple-500 text-purple-200 shadow-sm'
-                          : 'bg-white/5 border-white/10 text-white/60 hover:text-white'
+                          ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_14px_rgba(168,85,247,0.35)]'
+                          : 'bg-white/5 border-white/10 text-white/65 hover:bg-white/10 hover:text-white'
                       )}
                     >
                       {s}
@@ -339,7 +343,7 @@ export default function SubmitServerModal({
 
             {/* Movie Embed URL Pattern */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <label className="text-xs font-bold text-white/90 flex items-center gap-1.5">
                   Movie Embed Pattern <span className="text-red-400">*</span>
                 </label>
@@ -367,7 +371,7 @@ export default function SubmitServerModal({
 
             {/* TV Embed URL Pattern */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <label className="text-xs font-bold text-white/90 flex items-center gap-1.5">
                   TV Show Embed Pattern <span className="text-red-400">*</span>
                 </label>
@@ -428,7 +432,7 @@ export default function SubmitServerModal({
             {/* Live Interactive Embed Test Sandbox                       */}
             {/* ========================================================= */}
             <div className="pt-2">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
                     <Play className="size-3.5 text-purple-400 fill-purple-400" />
@@ -437,28 +441,34 @@ export default function SubmitServerModal({
                   <span className="text-[10px] text-white/50">Test before saving</span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between sm:justify-end gap-2">
                   {/* Test Media Switcher */}
                   <div className="flex rounded-lg bg-white/10 p-0.5 text-[11px] font-semibold">
                     <button
                       type="button"
                       onClick={() => setTestMediaType('movie')}
                       className={cn(
-                        'px-2.5 py-0.5 rounded-md transition-all cursor-pointer',
-                        testMediaType === 'movie' ? 'bg-purple-600 text-white' : 'text-white/60 hover:text-white'
+                        'px-2.5 py-1 sm:py-0.5 rounded-md transition-all cursor-pointer select-none',
+                        testMediaType === 'movie'
+                          ? 'bg-purple-600 text-white shadow-sm'
+                          : 'text-white/60 hover:text-white'
                       )}
                     >
-                      Movie (Fight Club)
+                      <span className="sm:hidden">Movie</span>
+                      <span className="hidden sm:inline">Movie (Fight Club)</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setTestMediaType('tv')}
                       className={cn(
-                        'px-2.5 py-0.5 rounded-md transition-all cursor-pointer',
-                        testMediaType === 'tv' ? 'bg-purple-600 text-white' : 'text-white/60 hover:text-white'
+                        'px-2.5 py-1 sm:py-0.5 rounded-md transition-all cursor-pointer select-none',
+                        testMediaType === 'tv'
+                          ? 'bg-purple-600 text-white shadow-sm'
+                          : 'text-white/60 hover:text-white'
                       )}
                     >
-                      TV (Breaking Bad S1E1)
+                      <span className="sm:hidden">TV</span>
+                      <span className="hidden sm:inline">TV (Breaking Bad)</span>
                     </button>
                   </div>
 
@@ -539,11 +549,11 @@ export default function SubmitServerModal({
         </div>
 
         {/* Modal Bottom Action Bar */}
-        <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-t border-white/10 bg-[#101321] shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-t border-white/10 bg-[#101321] shrink-0 gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-white/70 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+            className="h-10 px-4 rounded-xl text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/10 transition-all cursor-pointer"
           >
             Cancel
           </button>
@@ -552,7 +562,12 @@ export default function SubmitServerModal({
             type="submit"
             form="submit-server-form"
             disabled={!isFormValid || isSubmitting}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-[0_0_20px_rgba(168,85,247,0.4)] disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+            className={cn(
+              'h-10 flex items-center justify-center gap-2 px-5 sm:px-6 rounded-xl text-xs font-bold transition-all cursor-pointer border select-none',
+              isFormValid && !isSubmitting
+                ? 'bg-purple-600 hover:bg-purple-500 text-white border-purple-400/40 shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                : 'bg-white/10 text-white/35 border-white/10 cursor-not-allowed shadow-none'
+            )}
           >
             {isSubmitting ? (
               <>
@@ -561,12 +576,12 @@ export default function SubmitServerModal({
               </>
             ) : mode === 'global' ? (
               <>
-                <Globe className="size-3.5" />
+                <Globe className="size-4 shrink-0" />
                 <span>Submit to Community</span>
               </>
             ) : (
               <>
-                <Laptop className="size-3.5" />
+                <Laptop className="size-4 shrink-0" />
                 <span>Save to My Browser</span>
               </>
             )}
