@@ -1,54 +1,87 @@
 -- ==============================================================================
--- Streaming Servers Table & Row Level Security (RLS) Schema
--- Paste and run this script in your Supabase SQL Editor:
--- https://supabase.com/dashboard/project/_/sql
+-- Streaming UI: Community & Global Streaming Servers Schema
 -- ==============================================================================
+-- Run this script in the Supabase SQL Editor (https://supabase.com/dashboard/project/_/sql)
 
--- 1. Create table
-create table if not exists public.streaming_servers (
-  id uuid default gen_random_uuid() primary key,
-  name text not null,
-  display_name text not null,
-  badge text default '1080p • Fast',
-  quality text default '1080p' check (quality in ('4K', '1080p', 'HD')),
-  speed text default 'Fast' check (speed in ('Ultra', 'Fast', 'Stable')),
-  description text default '',
-  movie_url_pattern text not null,
-  tv_url_pattern text not null,
-  status text default 'pending' check (status in ('pending', 'approved', 'rejected', 'offline')),
-  submitter_name text default 'Anonymous',
-  submitter_note text default '',
-  latency_ms integer default 0,
-  last_checked_at timestamp with time zone default now(),
-  created_at timestamp with time zone default now()
+-- 1. Create streaming_servers table
+CREATE TABLE IF NOT EXISTS public.streaming_servers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    display_name TEXT NOT NULL,
+    badge TEXT NOT NULL DEFAULT '1080p • Fast',
+    quality TEXT NOT NULL DEFAULT '1080p',
+    speed TEXT NOT NULL DEFAULT 'Fast',
+    description TEXT DEFAULT '',
+    movie_url_pattern TEXT NOT NULL,
+    tv_url_pattern TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'approved', 'rejected', 'offline'
+    submitter_name TEXT DEFAULT 'Anonymous',
+    submitter_note TEXT DEFAULT '',
+    latency_ms INTEGER,
+    last_checked_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
--- 2. Indexes for fast queries
-create index if not exists idx_streaming_servers_status on public.streaming_servers(status);
-create index if not exists idx_streaming_servers_created_at on public.streaming_servers(created_at desc);
+-- 2. Performance indexes
+CREATE INDEX IF NOT EXISTS idx_streaming_servers_status ON public.streaming_servers(status);
+CREATE INDEX IF NOT EXISTS idx_streaming_servers_created_at ON public.streaming_servers(created_at DESC);
 
 -- 3. Enable Row Level Security (RLS)
-alter table public.streaming_servers enable row level security;
+ALTER TABLE public.streaming_servers ENABLE ROW LEVEL SECURITY;
 
--- Drop existing policies if re-running
-drop policy if exists "Allow public read for approved servers" on public.streaming_servers;
-drop policy if exists "Allow public to submit pending servers" on public.streaming_servers;
-drop policy if exists "Allow service role full access" on public.streaming_servers;
+-- 4. Policy: Anyone can read approved servers for video streaming in the frontend
+DROP POLICY IF EXISTS "Public can view approved servers" ON public.streaming_servers;
+CREATE POLICY "Public can view approved servers"
+ON public.streaming_servers
+FOR SELECT
+TO public
+USING (status = 'approved');
 
--- 4. Public Read Policy: Anyone (even unauthenticated visitors) can read approved servers
-create policy "Allow public read for approved servers"
-  on public.streaming_servers
-  for select
-  using (status = 'approved');
+-- 5. Policy: Public visitors can submit candidate servers for review
+DROP POLICY IF EXISTS "Public can submit servers for review" ON public.streaming_servers;
+CREATE POLICY "Public can submit servers for review"
+ON public.streaming_servers
+FOR INSERT
+TO public
+WITH CHECK (
+    status = 'pending' AND 
+    length(name) >= 2 AND 
+    length(movie_url_pattern) > 10 AND 
+    length(tv_url_pattern) > 10
+);
 
--- 5. Public Submit Policy: Visitors can submit new servers ONLY with 'pending' status
-create policy "Allow public to submit pending servers"
-  on public.streaming_servers
-  for insert
-  with check (status = 'pending');
+-- 6. Policy: Service Role (Backend automated health check bot) has full management access
+DROP POLICY IF EXISTS "Service role full access" ON public.streaming_servers;
+CREATE POLICY "Service role full access"
+ON public.streaming_servers
+FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
 
--- 6. Service Role / Admin Policy: Background bot & admin dashboard have full CRUD access
-create policy "Allow service role full access"
-  on public.streaming_servers
-  for all
-  using (auth.role() = 'service_role');
+-- 7. Seed verified starter servers
+INSERT INTO public.streaming_servers (name, display_name, badge, quality, speed, description, movie_url_pattern, tv_url_pattern, status)
+VALUES 
+(
+  'AutoEmbed Prime',
+  'AutoEmbed Prime',
+  '4K • Ultra',
+  '4K',
+  'Ultra',
+  'High speed multi-region CDN player',
+  'https://player.autoembed.app/embed/movie/{tmdbId}',
+  'https://player.autoembed.app/embed/tv/{tmdbId}/{season}/{episode}',
+  'approved'
+),
+(
+  'CineSRC Pro',
+  'CineSRC Pro',
+  '1080p • Fast',
+  '1080p',
+  'Fast',
+  'Clean fast streaming player',
+  'https://cinesrc.st/embed/movie/{tmdbId}',
+  'https://cinesrc.st/embed/tv/{tmdbId}?s={season}&e={episode}',
+  'approved'
+)
+ON CONFLICT DO NOTHING;
