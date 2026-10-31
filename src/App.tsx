@@ -20,6 +20,7 @@ const TrendingTv = lazy(() => import("./components/pages/tv-show/TrendingTv"))
 const SearchPage = lazy(() => import("./components/pages/SearchPage"))
 const People = lazy(() => import("./components/pages/people/People"))
 const PersonDetails = lazy(() => import("./components/pages/PersonDetails"))
+const Changelog = lazy(() => import("./components/pages/Changelog"))
 const ErrorPage = lazy(() => import("./components/pages/ErrorPage"))
 
 // DevTools dynamically imported only in development
@@ -146,6 +147,10 @@ const router = createBrowserRouter([
       {
         path: "/search",
         element: <SearchPage />,
+      },
+      {
+        path: "/changelog",
+        element: <Changelog />,
       },
       {
         path: "*",

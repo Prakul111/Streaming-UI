@@ -385,6 +385,17 @@ export default function Footer() {
           {/* Action Links & Back to Top */}
           <div className="flex flex-wrap items-center gap-4 shrink-0">
             <div className="flex items-center gap-3 text-xs">
+              <Link
+                to="/changelog"
+                onClick={scrollToTop}
+                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors inline-flex items-center gap-1.5"
+              >
+                <span>Changelog</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/30 font-bold">
+                  v2.4
+                </span>
+              </Link>
+              <span>•</span>
               <button
                 type="button"
                 onClick={() => setActiveModal("dmca")}

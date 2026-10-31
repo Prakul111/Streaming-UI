@@ -170,6 +170,23 @@ const NavigationMenuDemo = () => {
               People
             </NavLink>
           </NavigationMenuItem>
+
+          {/* Changelog Link */}
+          <NavigationMenuItem>
+            <NavLink
+              to="/changelog"
+              className={({ isActive }) =>
+                cn(
+                  linkBaseClasses,
+                  isActive
+                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                )
+              }
+            >
+              Changelog
+            </NavLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>
