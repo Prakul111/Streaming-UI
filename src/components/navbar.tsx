@@ -225,7 +225,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center">
-              <NavigationMenuDemo />
+              <NavigationMenuDemo onOpenSubmitServer={() => setIsSubmitModalOpen(true)} />
             </div>
           </div>
 
@@ -264,7 +264,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsSubmitModalOpen(true)}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] shrink-0"
+              className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] shrink-0"
               title="Submit or add custom streaming server"
             >
               <Server className="size-3.5 text-purple-400" />
