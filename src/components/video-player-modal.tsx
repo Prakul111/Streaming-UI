@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import {
   X,
   Loader2,
@@ -23,6 +23,7 @@ import { useStreamingServers } from "@/hooks/use-streaming-servers"
 import StreamingServerSelector from "./streaming-server-selector"
 import SubmitServerModal from "./submit-server-modal"
 import { cn } from "@/lib/utils"
+import { useServerHealth } from "@/context/server-health-context"
 
 interface VideoPlayerModalProps {
   isOpen: boolean
@@ -56,6 +57,12 @@ export default function VideoPlayerModal({
   onServerChange,
 }: VideoPlayerModalProps) {
   const { servers } = useStreamingServers()
+  const { healthMap, getRankedServers, isProbing, runHealthCheck, bestServerId } = useServerHealth()
+
+  // Dynamically sort servers with best performing at the top (Rank 1)
+  const sortedServers = useMemo(() => {
+    return getRankedServers(servers)
+  }, [servers, getRankedServers, healthMap])
 
   // Active server resolution: prefer local user selection in modal, then parent prop, then stored preference
   const [localServerId, setLocalServerId] = useState<string>(() => selectedServerId ?? getStoredServerId())
@@ -66,6 +73,20 @@ export default function VideoPlayerModal({
       setLocalServerId(selectedServerId)
     }
   }, [selectedServerId])
+
+  useEffect(() => {
+    if (bestServerId && !selectedServerId) {
+      setLocalServerId(bestServerId)
+    }
+  }, [bestServerId, selectedServerId])
+
+  // If the active server is marked offline and we have a verified best server, auto-switch
+  useEffect(() => {
+    if (bestServerId && healthMap[localServerId]?.status === "offline") {
+      setLocalServerId(bestServerId)
+      if (onServerChange) onServerChange(bestServerId)
+    }
+  }, [bestServerId, healthMap, localServerId, onServerChange])
 
   const activeServerId = localServerId || selectedServerId || getStoredServerId()
   const activeServer =
@@ -224,7 +245,7 @@ export default function VideoPlayerModal({
               <StreamingServerSelector
                 selectedServerId={activeServerId}
                 onServerChange={handleServerSwitch}
-                servers={servers}
+                servers={sortedServers}
                 variant="dropdown"
                 align="right"
                 onOpenSubmitModal={() => setIsSubmitModalOpen(true)}
@@ -279,17 +300,34 @@ export default function VideoPlayerModal({
             </div>
           </div>
 
-          {/* Quick Server Switcher Pills Strip (Scrollable) */}
+          {/* Quick Server Switcher Pills Strip (Scrollable & Ordered by Health) */}
           <div className="relative z-10 flex items-center gap-1.5 px-3 sm:px-5 py-2 bg-[#090b12] border-b border-white/5 overflow-x-auto no-scrollbar shrink-0">
-            <div className="flex items-center gap-1 text-[11px] font-semibold text-white/50 shrink-0 mr-1">
-              <Server className="size-3 text-purple-400" />
-              <span className="hidden sm:inline">Servers ({servers.length}):</span>
+            <div className="flex items-center gap-2 text-[11px] font-semibold text-white/60 shrink-0 mr-1">
+              <div className="flex items-center gap-1">
+                <Server className="size-3 text-purple-400" />
+                <span className="hidden sm:inline">Ranked ({sortedServers.length}):</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => runHealthCheck(servers, true)}
+                disabled={isProbing}
+                className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded-md active:scale-95"
+                title="Re-benchmark server latency"
+              >
+                <RefreshCw className={cn("size-2.5", isProbing && "animate-spin")} />
+                <span>{isProbing ? "Testing..." : "Speed Test"}</span>
+              </button>
             </div>
 
-            {servers.map((server, idx) => {
+            {sortedServers.map((server, idx) => {
               const isSelected = server.id === activeServer.id
               const isCommunity = server.id.startsWith("db-")
               const isCustom = server.id.startsWith("local-")
+              const health = healthMap[server.id]
+              const isOptimal = health?.status === "optimal"
+              const isFast = health?.status === "fast"
+              const isSlow = health?.status === "slow"
+              const isOffline = health?.status === "offline"
 
               return (
                 <button
@@ -297,14 +335,51 @@ export default function VideoPlayerModal({
                   type="button"
                   onClick={() => handleServerSwitch(server.id)}
                   className={cn(
-                    "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium shrink-0 transition-all cursor-pointer",
+                    "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium shrink-0 transition-all cursor-pointer border",
                     isSelected
-                      ? "bg-purple-600 text-white shadow-sm ring-1 ring-purple-400"
-                      : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                      ? "bg-purple-600 text-white shadow-sm ring-1 ring-purple-400 border-purple-400"
+                      : isOptimal
+                      ? "bg-emerald-500/10 text-emerald-200 border-emerald-500/30 hover:bg-emerald-500/20"
+                      : isOffline
+                      ? "bg-red-500/10 text-white/50 border-red-500/20 opacity-60 hover:opacity-100 hover:text-white"
+                      : isSlow
+                      ? "bg-amber-500/10 text-amber-200/90 border-amber-500/20 hover:bg-amber-500/20"
+                      : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border-transparent"
                   )}
                 >
-                  <span className="opacity-60 text-[9px]">#{idx + 1}</span>
-                  <span>{server.name}</span>
+                  <span
+                    className={cn(
+                      "text-[9px] px-1 py-0.2 rounded font-black",
+                      isSelected
+                        ? "bg-white text-purple-900"
+                        : isOptimal
+                        ? "bg-emerald-500 text-black font-bold"
+                        : isOffline
+                        ? "bg-red-500/20 text-red-300"
+                        : "opacity-60"
+                    )}
+                  >
+                    #{idx + 1}
+                  </span>
+                  <span className="font-semibold">{server.name}</span>
+                  {health && (
+                    <span
+                      className={cn(
+                        "text-[9px] px-1 py-0.2 rounded font-mono font-bold",
+                        isSelected
+                          ? "bg-purple-700/80 text-white"
+                          : isOptimal
+                          ? "text-emerald-300"
+                          : isFast
+                          ? "text-sky-300"
+                          : isSlow
+                          ? "text-amber-300"
+                          : "text-red-400"
+                      )}
+                    >
+                      {isOffline ? "Offline" : `${health.latencyMs}ms`}
+                    </span>
+                  )}
                   {isCommunity && (
                     <span title="Community Server" className="inline-flex"><Globe className="size-2 text-blue-400 shrink-0" /></span>
                   )}
@@ -366,11 +441,36 @@ export default function VideoPlayerModal({
 
           {/* Bottom Helper Bar */}
           <div className="relative z-10 flex items-center justify-between gap-2 px-4 py-2 border-t border-white/5 bg-[#090b12] rounded-b-2xl text-[11px] text-white/50 shrink-0">
-            <div className="flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
-              <span>
+            <div className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "size-1.5 rounded-full shrink-0",
+                  healthMap[activeServer.id]?.status === "offline"
+                    ? "bg-red-500"
+                    : healthMap[activeServer.id]?.status === "slow"
+                    ? "bg-amber-400"
+                    : "bg-emerald-400 animate-ping"
+                )}
+              />
+              <span className="truncate">
                 Currently streaming from{" "}
                 <strong className="text-purple-300 font-semibold">{activeServer.name}</strong>
+                {healthMap[activeServer.id] && (
+                  <span
+                    className={cn(
+                      "ml-1.5 font-mono text-[10px] px-1.5 py-0.5 rounded border",
+                      healthMap[activeServer.id]?.status === "optimal"
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                        : healthMap[activeServer.id]?.status === "offline"
+                        ? "bg-red-500/20 text-red-300 border-red-500/30"
+                        : "bg-white/10 text-white/60 border-white/10"
+                    )}
+                  >
+                    {healthMap[activeServer.id]?.status === "offline"
+                      ? "⚠️ Degraded / Offline"
+                      : `⚡ ${healthMap[activeServer.id]?.latencyMs}ms`}
+                  </span>
+                )}
               </span>
             </div>
             <div className="flex items-center gap-3">
