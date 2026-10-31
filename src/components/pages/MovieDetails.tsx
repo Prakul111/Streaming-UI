@@ -267,7 +267,7 @@ export default function MovieDetails() {
         </div>
 
         {/* Main Hero Container - Pinned to bottom matching HomePage */}
-        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-24 sm:pt-28 pb-8 sm:pb-12 flex flex-col justify-end size-full">
+        <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-24 sm:pt-28 pb-6 sm:pb-8 flex flex-col justify-end size-full">
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 md:gap-12 w-full">
           {/* Left Column: Metadata, Title, Ratings, Actions */}
           <div className="flex-1 space-y-4 md:space-y-5 max-w-3xl text-left">
@@ -494,7 +494,7 @@ export default function MovieDetails() {
       </section>
 
       {/* Floating Status / Studio Metadata Bar below Hero */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 -mt-4 sm:-mt-6 mb-8">
+      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 mt-4 sm:mt-6 mb-8">
         <div className="rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-4 flex flex-wrap items-center justify-between gap-6 shadow-xl">
             {/* Left metadata points */}
             <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-left">
