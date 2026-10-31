@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   Calendar,
   Search,
+  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -503,15 +504,28 @@ export default function Changelog() {
 
         {/* Search & Filter Toolbar */}
         <div className="mt-10 max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-3">
-          <div className="relative w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <div className="relative w-full group">
+            {/* Guaranteed visible search icon with high z-index and purple accent */}
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20 text-purple-400 group-focus-within:text-purple-300 transition-colors">
+              <Search className="size-4" />
+            </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search features, fixes, or versions..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-muted-foreground text-sm focus:outline-none focus:border-purple-500/60 transition-colors backdrop-blur-md"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 text-sm focus:outline-none focus:border-purple-500/60 focus:bg-white/10 transition-all backdrop-blur-md shadow-inner relative z-10"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer z-20"
+                title="Clear search"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
           </div>
 
           {/* Filter Pills */}
