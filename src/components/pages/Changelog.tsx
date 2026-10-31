@@ -31,56 +31,164 @@ interface ChangelogRelease {
 
 const RELEASES: ChangelogRelease[] = [
   {
-    version: "v2.4.0",
+    version: "v2.4.2",
     date: "October 31, 2026",
-    tagline: "Real-Time Preflight Server Benchmarks, Dynamic Health Ranking & TV Trailer Cards",
+    tagline: "Navbar 'More' Dropdown Consolidation & Navigation Streamlining",
     badge: "Latest",
     highlights: [
-      "Client-side latency benchmark before loading detail pages with high-tech HUD radar modal",
-      "Dynamic server ranking with lowest-latency mirrors pinned to Rank #1",
+      "Consolidated Anime, People, Add Server, and Changelog into a unified 'More' dropdown menu",
+      "Interactive 'Add Server' modal trigger integration from navigation menu with zero page reload",
+      "Intelligent route active indicator lighting up 'More' across /anime, /people, and /changelog",
+      "Streamlined desktop navbar from 7 loose links down to 5 high-focus primary categories",
+      "Cleaned unused imports and lambda parameters across build files for zero TypeScript warnings",
+    ],
+    screenshot: {
+      src: "/screenshots/01-home-hero.png",
+      caption: "Streamlined navigation bar with consolidated 'More' dropdown and balanced header spacing",
+    },
+    items: [
+      {
+        type: "ui",
+        title: "Navbar 'More' Dropdown Menu",
+        description:
+          "Replaced individual standalone navbar links for Anime, People, Add Server, and Changelog with a sleek, consolidated 'More' dropdown menu in the desktop navigation bar.",
+        tag: "Navbar",
+      },
+      {
+        type: "feat",
+        title: "Navigation Menu Add Server Action Trigger",
+        description:
+          "Wired Base UI's NavigationMenuLink with an interactive click handler that directly triggers the SubmitServerModal sandbox without causing route changes or unmounting.",
+        tag: "Navigation",
+      },
+      {
+        type: "ui",
+        title: "Multi-Route Active State Tracking",
+        description:
+          "Implemented smart route detection (`isMoreActive`) that highlights the 'More' dropdown trigger whenever the user navigates to /anime, /people, /person-details, or /changelog.",
+        tag: "UX",
+      },
+      {
+        type: "fix",
+        title: "TypeScript Strict Unused Locals Cleanup",
+        description:
+          "Removed unused icon imports and unreferenced lambda arguments in Changelog.tsx, ensuring 100% clean typecheck and fast production bundle generation.",
+        tag: "Build Fix",
+      },
+    ],
+  },
+  {
+    version: "v2.4.1",
+    date: "October 31, 2026",
+    tagline: "Movie Details Dropdown Stacking Fix, TV Trailer Card & Player Bar Synchronization",
+    badge: "Major",
+    highlights: [
+      "Fixed server dropdown clipping behind floating metadata bar with smart viewport collision detection (openUpwards)",
+      "Replaced redundant TV Show hero 'Latest Episode' card with high-res 'Official Trailer' preview card",
+      "Synchronized horizontal server strip below video player modal with dynamically ranked latency list",
+      "Fixed layout spacing and margin collapse between Play, Trailer, and Server buttons",
+      "Enhanced z-index layering and container isolation preventing hero element occlusion",
+    ],
+    screenshot: {
+      src: "/screenshots/07-movie-details.png",
+      caption: "CinemaOS Movie Details showing official trailer preview card, unobstructed hero, and floating studio pill",
+    },
+    items: [
+      {
+        type: "fix",
+        title: "Movie Page Server Dropdown Stacking Context & Clipping Fix",
+        description:
+          "Resolved critical layout issue where opening the server selector dropdown caused options to slide underneath the floating metadata bar. Added collision-aware upwards opening (`openUpwards`), elevated z-indices to z-50, and isolated parent stacking contexts.",
+        tag: "Dropdown Fix",
+      },
+      {
+        type: "fix",
+        title: "TV Show Hero Official Trailer Card Replacement",
+        description:
+          "Replaced the redundant 'Latest Episode' preview card on TV Show detail hero sections with the Official Trailer card matching Movie details, fetching authentic YouTube trailer keys and enabling one-click trailer previews.",
+        tag: "Hero Fix",
+      },
+      {
+        type: "fix",
+        title: "Video Player Modal Bottom Server Bar Synchronization",
+        description:
+          "Updated the horizontal server strip below the player modal to reflect the dynamically ranked server benchmark order instead of static default server lists, giving users instant access to the lowest-ping alternatives.",
+        tag: "Player Bar",
+      },
+      {
+        type: "fix",
+        title: "Action Bar Layout & Margin Collapse Below Play/Trailer",
+        description:
+          "Stabilized flex layout spacing and margin gaps below the Play, Trailer, and Server Selector action bar, preventing visual crowding against the floating metadata strip across mobile and tablet breakpoints.",
+        tag: "Layout Fix",
+      },
+      {
+        type: "ui",
+        title: "High-Resolution Trailer Poster Synchronization",
+        description:
+          "Added fallback backdrops and synchronized poster frames for trailer preview cards so empty thumbnail states are seamlessly filled with backdrop artwork.",
+        tag: "Visuals",
+      },
+    ],
+  },
+  {
+    version: "v2.4.0",
+    date: "October 31, 2026",
+    tagline: "Real-Time Preflight Server Benchmarks, Dynamic Health Ranking & Speed Test HUD",
+    badge: "Major",
+    highlights: [
+      "Client-side parallel latency benchmark before loading detail pages with high-tech HUD radar modal",
+      "Dynamic server ranking engine pinning lowest-latency mirrors (<400ms) to Rank #1",
       "In-player on-demand 'Speed Test' button in dropdown and horizontal server strips",
-      "Official trailer card integration for TV Show hero sections",
-      "Smart upwards/downwards dropdown positioning resolving hero stacking conflicts",
+      "Degraded and offline server detection marked with red status badges and muted opacity",
+      "New interactive in-app Changelog page (/changelog) with category filters and screenshot lightbox",
     ],
     screenshot: {
       src: "/screenshots/08-video-player-modal.png",
-      caption: "Live theater player with real-time latency badges and Speed Test re-benchmarking",
+      caption: "Live theater player modal with real-time latency badges and Speed Test re-benchmarking",
     },
     items: [
       {
         type: "feat",
-        title: "Preflight Server Benchmark HUD",
+        title: "Preflight Server Benchmark Radar HUD",
         description:
-          "Clicking any movie or show card benchmarks candidate servers in parallel with an interactive radar modal, automatically routing to the fastest available streaming server.",
+          "Clicking any movie or TV show card executes a concurrent non-blocking network ping test across candidate servers, presenting a futuristic radar modal and auto-routing to the fastest verified server.",
         tag: "Preflight",
       },
       {
         type: "perf",
-        title: "Dynamic Server Ranking Engine",
+        title: "Dynamic Server Health & Latency Ranking Engine",
         description:
           "StreamingServerSelector and the video player bar dynamically sort mirrors from lowest ping (⚡ Optimal <500ms) down to degraded/offline servers (marked red with muted opacity).",
         tag: "Engine",
       },
       {
         type: "feat",
-        title: "In-Player Speed Test Button",
+        title: "In-Player Speed Test Re-Benchmarking",
         description:
           "Added an interactive Speed Test button in both the server dropdown and horizontal strip to re-test server connection latency on the fly without interrupting video playback.",
         tag: "Player",
       },
       {
-        type: "ui",
-        title: "TV Show Hero Official Trailer Card",
+        type: "feat",
+        title: "In-App Interactive Changelog Page (/changelog)",
         description:
-          "Replaced the redundant 'Latest Episode' card in TV Show heroes with the Official Trailer preview card matching Movie details, featuring high-res YouTube thumbnails and one-click trailer playback.",
-        tag: "Hero",
+          "Created a comprehensive in-app release timeline covering all versions, equipped with real-time keyword search, category filter pills (Features, Speed, Fixes, UI), and visual lightbox previews.",
+        tag: "Changelog",
       },
       {
-        type: "fix",
-        title: "Hero Stacking Context & Stacking Resolution",
+        type: "ui",
+        title: "Visual Showcase Gallery & Screenshot Lightbox Zoom",
         description:
-          "Fixed server dropdown clipping behind the floating metadata bar by introducing smart vertical detection (openUpwards) and raising hero section z-indexes.",
-        tag: "UI Fix",
+          "Integrated edge-to-edge click-to-expand lightbox modals for all high-resolution screenshots across desktop and mobile browsers.",
+        tag: "UI/UX",
+      },
+      {
+        type: "perf",
+        title: "Non-Blocking Background Latency Probing",
+        description:
+          "Parallelized network latency probes using lightweight image/HEAD preflight requests with 3500ms timeouts to eliminate UI thread blocking.",
+        tag: "Network",
       },
     ],
   },
@@ -91,13 +199,13 @@ const RELEASES: ChangelogRelease[] = [
     badge: "Major",
     highlights: [
       "CinemaOS layout architecture with top navbar gradient fade & bottom-anchored content",
-      "Full backdrop visibility preserved across all mobile screen sizes",
+      "Full backdrop visibility preserved across all mobile screen sizes with zero dark tinting",
       "3 toggleable episode view modes: Carousel Cards, Grid View, and Skim List",
       "Floating glass metadata pill with authentic studio & network logos",
     ],
     screenshot: {
-      src: "/screenshots/07-movie-details.png",
-      caption: "CinemaOS Movie Details with unobstructed hero artwork and studio branding",
+      src: "/screenshots/04-tv-shows-catalog.png",
+      caption: "TV Shows catalog with comprehensive seasonSkim skim list and responsive grid view",
     },
     items: [
       {
@@ -121,6 +229,20 @@ const RELEASES: ChangelogRelease[] = [
           "Added translucent floating glass pills below hero sections displaying status, runtime, original language, release date, and inverted monochrome studio logos.",
         tag: "Metadata",
       },
+      {
+        type: "fix",
+        title: "Backdrop Aspect Ratio Distortion on Mobile Devices",
+        description:
+          "Resolved image cropping and stretching issues on mobile viewports by anchoring hero artwork to the top-center with custom aspect ratio scaling.",
+        tag: "Mobile Fix",
+      },
+      {
+        type: "fix",
+        title: "TV Series Episode Skim List Smooth Scrolling",
+        description:
+          "Optimized list virtualization and smooth horizontal snap scrolling on high-density season episode catalogs.",
+        tag: "Performance",
+      },
     ],
   },
   {
@@ -132,10 +254,11 @@ const RELEASES: ChangelogRelease[] = [
       "Dual mode: Submit to Global Community (Supabase) vs Save to My Browser (Instant Local)",
       "Interactive Embed Sandbox evaluating live URL tokens before saving",
       "Dynamic URL template tokenizer: {tmdbId}, {imdbId}, {season}, {episode}",
+      "Row Level Security (RLS) policies for secure community streaming contributions",
     ],
     screenshot: {
-      src: "/screenshots/01-home-hero.png",
-      caption: "Streaming UI Home Hero with UP NEXT carousel and instant navigation",
+      src: "/screenshots/06-search-database.png",
+      caption: "Instant debounced multi-search database with concurrent media and creator lookups",
     },
     items: [
       {
@@ -152,6 +275,27 @@ const RELEASES: ChangelogRelease[] = [
           "Universal token replacement engine that renders a live test iframe directly in the modal to verify server playback before committing changes.",
         tag: "Sandbox",
       },
+      {
+        type: "perf",
+        title: "Instant Zero-Latency Browser Storage",
+        description:
+          "Custom servers saved locally bypass backend round-trips entirely, persisting across browser restarts in localStorage with instant read access.",
+        tag: "Storage",
+      },
+      {
+        type: "fix",
+        title: "URL Template Token Sanitization",
+        description:
+          "Added strict regex parsing ensuring custom stream templates safely interpolate {tmdbId}, {imdbId}, {season}, and {episode} without malformed URL injection.",
+        tag: "Security Fix",
+      },
+      {
+        type: "fix",
+        title: "Iframe Embedding X-Frame-Options Handling",
+        description:
+          "Sandbox preview alerts users immediately if a streaming mirror rejects embedding via X-Frame-Options or Content-Security-Policy headers.",
+        tag: "Embed Fix",
+      },
     ],
   },
   {
@@ -163,7 +307,12 @@ const RELEASES: ChangelogRelease[] = [
       "Automated server probe bot running daily at 04:00 UTC via GitHub Actions",
       "Quality & speed badges: 4K, 1080p, HD, Ultra, Fast, Stable",
       "Row Level Security (RLS) on Supabase PostgreSQL tables",
+      "Automated GitHub Actions CI/CD with Vercel deployment gate",
     ],
+    screenshot: {
+      src: "/screenshots/03-movies-catalog.png",
+      caption: "Popular Movies explorer with genre tags, release year filters, and rating badges",
+    },
     items: [
       {
         type: "feat",
@@ -179,6 +328,27 @@ const RELEASES: ChangelogRelease[] = [
           "Every server is labeled with crisp resolution tags and network speed categories to guide users toward the best viewing experience.",
         tag: "Badges",
       },
+      {
+        type: "perf",
+        title: "Daily Scheduled Health Check Pipeline",
+        description:
+          "Configured GitHub Actions workflow (`server-bot.yml`) running daily automated server audits and automatically updating server availability flags in Supabase.",
+        tag: "Cron",
+      },
+      {
+        type: "fix",
+        title: "Supabase Row Level Security (RLS) Public Insertion Rules",
+        description:
+          "Hardened database security by configuring RLS policies allowing public reads for approved servers and rate-limited public submissions for pending servers.",
+        tag: "Security Fix",
+      },
+      {
+        type: "fix",
+        title: "CI/CD TypeScript & Vite Build Gate",
+        description:
+          "Configured strict typechecking (`tsc -b`) and asset bundle validation in GitHub Actions, preventing broken builds from deploying to production.",
+        tag: "CI/CD",
+      },
     ],
   },
   {
@@ -189,16 +359,17 @@ const RELEASES: ChangelogRelease[] = [
     highlights: [
       "Dedicated explorer hubs for Movies, TV Shows, Anime, and Cast & Crew",
       "DaisyUI 5 proportional 3D mouse tracking tilt physics",
-      "Debounced instant multi-search across all media types",
+      "Debounced instant multi-search across all media types with keyboard shortcuts (⌘K)",
+      "TanStack React Query v5 caching optimization (5min fresh / 30min memory cache)",
     ],
     screenshot: {
       src: "/screenshots/02-top10-rankings.png",
-      caption: "Interactive 3D ranking cards with custom numbered typography",
+      caption: "Interactive 3D ranking cards with custom numbered typography and inertia hover tilt",
     },
     items: [
       {
         type: "ui",
-        title: "3D Perspective Hover Tilt",
+        title: "3D Perspective Hover Tilt Physics",
         description:
           "Custom CSS 3D transforms tracking mouse movement with smooth inertia, ambient shine highlights, and rank typography.",
         tag: "3D Cards",
@@ -212,10 +383,31 @@ const RELEASES: ChangelogRelease[] = [
       },
       {
         type: "feat",
-        title: "Debounced Multi-Search",
+        title: "Debounced Multi-Search (⌘K / Ctrl+K)",
         description:
-          "Fast search bar with keyboard shortcut (Cmd+K) querying TMDB concurrently for movies, series, and cast members.",
+          "Fast search bar with global keyboard shortcut querying TMDB concurrently for movies, series, and cast members.",
         tag: "Search",
+      },
+      {
+        type: "perf",
+        title: "TanStack React Query v5 Cache Tuning",
+        description:
+          "Configured aggressive stale time (5 minutes) and garbage collection (30 minutes) while disabling window focus refetch storms to reduce API strain.",
+        tag: "Cache",
+      },
+      {
+        type: "fix",
+        title: "Search Navigation Spam & State Synchronization",
+        description:
+          "Fixed URL query param and input focus mismatch that previously generated redundant browser history entries while typing in the search bar.",
+        tag: "Search Fix",
+      },
+      {
+        type: "ui",
+        title: "Accessible Dark & Light Theme Modes",
+        description:
+          "Integrated Tailwind CSS v4 and DaisyUI theme toggling with zero flash on initial page load, persisting preference in localStorage.",
+        tag: "Themes",
       },
     ],
   },
@@ -225,24 +417,46 @@ const RELEASES: ChangelogRelease[] = [
     tagline: "Initial Release — Multi-Server Streaming Foundation",
     badge: "Stable",
     highlights: [
-      "44+ high-speed streaming server mirrors with instant switching",
-      "Theater video player modal with automated episode advancement",
-      "Full TMDB API integration with dark/light themes",
+      "44+ high-speed streaming server mirrors with instant failover switching",
+      "Branded theater video player modal with automated episode advancement",
+      "Full TMDB API integration with rich metadata, cast credits, and trailers",
+      "Modern responsive design system powered by Tailwind CSS v4 and DaisyUI",
     ],
     items: [
       {
         type: "feat",
-        title: "44+ Streaming Mirrors",
+        title: "44+ Multi-Server Streaming Engine",
         description:
-          "Comprehensive library of reliable embed servers with instant failover fallback.",
+          "Comprehensive library of reliable embed servers with instant failover fallback across 4K, 1080p, and HD formats.",
         tag: "Core",
       },
       {
-        type: "ui",
-        title: "Modern Dark/Light Themes",
+        type: "feat",
+        title: "Branded Theater Video Player Modal",
         description:
-          "Accessible high-contrast styling powered by Tailwind CSS v4 and DaisyUI.",
-        tag: "Theme",
+          "Embedded video player modal with fullscreen controls, aspect ratio adaptation, and automatic next-episode queue advancement.",
+        tag: "Player",
+      },
+      {
+        type: "feat",
+        title: "TMDB Cinematic Discovery Engine",
+        description:
+          "Deep integration with The Movie Database API providing full movie catalogs, TV seasons, cast filmographies, and media stills.",
+        tag: "TMDB",
+      },
+      {
+        type: "ui",
+        title: "Tailwind CSS v4 & DaisyUI Design System",
+        description:
+          "Modern glassmorphic interface with custom typography, responsive grids, and high-contrast dark theme defaults.",
+        tag: "Design",
+      },
+      {
+        type: "perf",
+        title: "Vite 8 Lightning Fast Bundling & HMR",
+        description:
+          "Configured Vite 8 with Rollup chunk splitting and code-splitting lazy routes for sub-second production page loads.",
+        tag: "Build",
       },
     ],
   },
@@ -493,7 +707,7 @@ export default function Changelog() {
             {release.items && release.items.length > 0 && (
               <div className="space-y-3 pt-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Changes & Details
+                  Changes & Detailed Specifications
                 </h4>
                 <div className="space-y-2.5">
                   {release.items.map((item, idx) => (
