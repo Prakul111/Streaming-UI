@@ -71,6 +71,12 @@ export default function StreamingServerSelector({
       // Optimal width: 320px on desktop/tablet, capped to screenWidth - 24px on mobile
       const idealWidth = Math.min(320, screenWidth - 24)
 
+      const screenHeight = window.innerHeight
+      // Determine vertical placement: open upwards if near bottom of screen
+      const spaceBelow = screenHeight - rect.bottom
+      const spaceAbove = rect.top
+      const openUpwards = spaceBelow < 360 && spaceAbove > spaceBelow
+
       // Determine effective alignment:
       // If "auto", choose right if button is in right half of screen, otherwise left
       let effectiveAlign = align
@@ -81,6 +87,14 @@ export default function StreamingServerSelector({
       const style: React.CSSProperties = {
         width: `${idealWidth}px`,
         maxWidth: "calc(100vw - 1.5rem)",
+      }
+
+      if (openUpwards) {
+        style.bottom = "calc(100% + 8px)"
+        style.top = "auto"
+      } else {
+        style.top = "calc(100% + 8px)"
+        style.bottom = "auto"
       }
 
       if (effectiveAlign === "right") {
@@ -114,7 +128,11 @@ export default function StreamingServerSelector({
 
     updatePosition()
     window.addEventListener("resize", updatePosition)
-    return () => window.removeEventListener("resize", updatePosition)
+    window.addEventListener("scroll", updatePosition, true)
+    return () => {
+      window.removeEventListener("resize", updatePosition)
+      window.removeEventListener("scroll", updatePosition, true)
+    }
   }, [isOpen, align])
 
   // Close dropdown on click outside
@@ -156,7 +174,7 @@ export default function StreamingServerSelector({
 
     return (
       <>
-        <div className={cn("relative inline-block text-left", className)} ref={dropdownRef}>
+        <div className={cn("relative inline-block text-left", isOpen ? "z-50" : "z-20", className)} ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setIsOpen((prev) => !prev)}
@@ -216,7 +234,7 @@ export default function StreamingServerSelector({
           {isOpen && (
             <div
               style={menuStyle}
-              className="absolute z-50 mt-2 rounded-2xl bg-[#0c0e17] border border-white/20 p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] ring-1 ring-purple-500/30 animate-in fade-in zoom-in-95 duration-150"
+              className="absolute z-[100] rounded-2xl bg-[#0c0e17] border border-white/20 p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.95)] ring-1 ring-purple-500/30 animate-in fade-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="px-2.5 py-2 border-b border-white/10 mb-2 flex items-center justify-between">

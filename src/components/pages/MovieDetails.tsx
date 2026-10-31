@@ -241,7 +241,7 @@ export default function MovieDetails() {
   return (
     <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
       {/* 1. HERO SECTION (CinemaOS Hero Layout matching HomePage) */}
-      <section className="relative w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] max-h-[960px] bg-black overflow-hidden select-none flex flex-col justify-end">
+      <section className="relative z-30 w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] max-h-[960px] bg-black select-none flex flex-col justify-end">
         {/* Cinematic Backdrop Image - Crystal clear on mobile and desktop */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <img
@@ -373,7 +373,7 @@ export default function MovieDetails() {
             )}
 
             {/* Action Buttons Row */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="relative z-30 flex flex-wrap items-center gap-3 pt-2">
               {/* Play Button */}
               <button
                 onClick={() => setIsPlayerOpen(true)}
@@ -494,7 +494,7 @@ export default function MovieDetails() {
       </section>
 
       {/* Floating Status / Studio Metadata Bar below Hero */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 -mt-4 sm:-mt-6 mb-8">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 -mt-4 sm:-mt-6 mb-8">
         <div className="rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-4 flex flex-wrap items-center justify-between gap-6 shadow-xl">
             {/* Left metadata points */}
             <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-left">
