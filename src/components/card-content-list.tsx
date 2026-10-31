@@ -2,6 +2,7 @@ import { useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
 import starIcon from "@/assets/star-svgrepo-com.svg"
+import { useServerHealth } from "@/context/server-health-context"
 
 interface ContentListProps {
   id?: number
@@ -29,6 +30,7 @@ export default function CardContentList({
   const isMovie = mediaType ? mediaType === "movie" : type.toLowerCase().includes("movie")
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
   const tiltRef = useRef<HTMLDivElement>(null)
+  const { startPreflight } = useServerHealth()
 
   const formattedDate = releaseDate
     ? (() => {
@@ -91,6 +93,20 @@ export default function CardContentList({
     card.style.transition = "transform 500ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 500ms ease"
   }
 
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (!id) return
+    // Allow standard browser tab opening with modifier keys
+    if (e.metaKey || e.ctrlKey || e.button !== 0) return
+    e.preventDefault()
+    startPreflight({
+      id,
+      title,
+      image,
+      mediaType: isMovie ? "movie" : "tv",
+      targetUrl: detailUrl,
+    })
+  }
+
   const isFullWidth = className?.includes("w-full")
 
   const cardContent = (
@@ -144,6 +160,7 @@ export default function CardContentList({
     return (
       <Link
         to={detailUrl}
+        onClick={handleLinkClick}
         className={cn("block no-underline focus:outline-none", isFullWidth ? "w-full" : "w-auto shrink-0")}
       >
         {cardContent}

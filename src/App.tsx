@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider, Outlet, ScrollRestoration } from "
 import Navbar from "./components/navbar"
 import { ThemeProvider } from "./components/theme-provider"
 import Footer from "./components/footer"
+import { ServerHealthProvider } from "./context/server-health-context"
+import PreflightServerModal from "./components/ui/preflight-server-modal"
 
 // Lazy-loaded routes for code-splitting and fast initial page load
 const HomePage = lazy(() => import("./components/pages/HomePage"))
@@ -56,16 +58,19 @@ function PageFallback() {
 
 function RootLayout() {
   return (
-    <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
-      <ScrollRestoration />
-      <Navbar />
-      <main className="w-full flex-grow flex flex-col">
-        <Suspense fallback={<PageFallback />}>
-          <Outlet />
-        </Suspense>
-      </main>
-      <Footer />
-    </div>
+    <ServerHealthProvider>
+      <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
+        <ScrollRestoration />
+        <Navbar />
+        <main className="w-full flex-grow flex flex-col">
+          <Suspense fallback={<PageFallback />}>
+            <Outlet />
+          </Suspense>
+        </main>
+        <Footer />
+        <PreflightServerModal />
+      </div>
+    </ServerHealthProvider>
   )
 }
 
@@ -115,28 +120,16 @@ const router = createBrowserRouter([
         element: <TvShows />,
       },
       {
-        path: "/popular-tv",
-        element: <TvShows />,
-      },
-      {
-        path: "/top-rated-tv",
-        element: <TvShows />,
-      },
-      {
-        path: "/airing-today-tv",
-        element: <TvShows />,
-      },
-      {
         path: "/anime",
         element: <Anime />,
       },
       {
-        path: "/popular-anime",
-        element: <Anime />,
+        path: "/people",
+        element: <People />,
       },
       {
-        path: "/top-rated-anime",
-        element: <Anime />,
+        path: "/person-details/:id",
+        element: <PersonDetails />,
       },
       {
         path: "/trending-all",
@@ -155,22 +148,6 @@ const router = createBrowserRouter([
         element: <SearchPage />,
       },
       {
-        path: "/people",
-        element: <People />,
-      },
-      {
-        path: "/person/:id",
-        element: <PersonDetails />,
-      },
-      {
-        path: "/person-details/:id",
-        element: <PersonDetails />,
-      },
-      {
-        path: "/people/:id",
-        element: <PersonDetails />,
-      },
-      {
         path: "*",
         element: <ErrorPage />,
       },
@@ -178,19 +155,15 @@ const router = createBrowserRouter([
   },
 ])
 
-function App() {
+export default function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="theme">
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
-        {import.meta.env.DEV && (
-          <Suspense fallback={null}>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </Suspense>
-        )}
-      </QueryClientProvider>
-    </ThemeProvider>
+        <Suspense fallback={null}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Suspense>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
-
-export default App

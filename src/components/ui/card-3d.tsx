@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import { cn } from "@/lib/utils"
+import { useServerHealth } from "@/context/server-health-context"
 
 export interface Card3DProps {
   id: number
@@ -62,6 +63,7 @@ export function Card3D({
 }: Card3DProps) {
   const isMovie = type === "movie"
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
+  const { startPreflight } = useServerHealth()
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget
@@ -93,12 +95,26 @@ export function Card3D({
     el.style.setProperty("--ease", "cubic-bezier(0.16, 1, 0.3, 1)")
   }
 
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (!id) return
+    if (e.metaKey || e.ctrlKey || e.button !== 0) return
+    e.preventDefault()
+    startPreflight({
+      id,
+      title,
+      image,
+      mediaType: isMovie ? "movie" : "tv",
+      targetUrl: detailUrl,
+    })
+  }
+
   return (
     <div className={cn("group/card flex items-center shrink-0", className)}>
       {rank !== undefined && <RankNumber rank={rank} />}
 
       <Link
         to={detailUrl}
+        onClick={handleLinkClick}
         className={cn("z-10 block space-y-2.5 focus:outline-none", widthClassName)}
       >
         {/* 3D Hover Card conforming to DaisyUI 5 hover-3d */}
@@ -137,34 +153,31 @@ export function Card3D({
           <div></div>
         </div>
 
-        {/* Info below card matching Screenshot 1, 2, 3 */}
+        {/* Card info below image */}
         <div className="space-y-1 px-1">
-          <h3 className="font-bold text-sm sm:text-base text-foreground truncate group-hover/card:text-purple-400 transition-colors">
-            {title}
-          </h3>
-          <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
             <div className="flex items-center gap-2">
-              <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/90 border border-white/10">
-                {isMovie ? "MOVIE" : "SERIES"}
-              </span>
-              {year && (
-                <span className="text-muted-foreground font-medium">
-                  {year}
-                </span>
-              )}
+              {year && <span>{year}</span>}
+              {year && type && <span>•</span>}
+              <span className="capitalize">{type}</span>
             </div>
             {rating && (
-              <div className="flex items-center gap-1 text-xs font-semibold text-foreground">
+              <div className="flex items-center gap-1 font-semibold text-foreground">
                 <span className="text-amber-400">★</span>
                 <span>{rating}</span>
               </div>
             )}
           </div>
+          <h3 className="font-bold text-sm text-foreground truncate group-hover/card:text-purple-400 transition-colors">
+            {title}
+          </h3>
         </div>
       </Link>
     </div>
   )
 }
+export default Card3D
+
 
 export function Card3DSkeleton({
   count = 5,

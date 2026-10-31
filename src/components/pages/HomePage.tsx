@@ -29,6 +29,7 @@ import {
 import { CarouselSkeleton } from "../skeleton"
 import { Card3D, Card3DSkeleton } from "../ui/card-3d"
 import { cn } from "@/lib/utils"
+import { useServerHealth } from "@/context/server-health-context"
 
 // TMDB Genre ID to Name Mapping
 const TMDB_GENRES: Record<number, string> = {
@@ -514,6 +515,7 @@ function HorizontalScrollRow({
 }
 
 export default function HomePage() {
+  const { startPreflight } = useServerHealth()
   // Hero Carousel State
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
@@ -865,14 +867,40 @@ export default function HomePage() {
 
                       {/* Action Buttons: Play, More Info, and Bookmark */}
                       <div className="flex items-center gap-2.5 sm:gap-3 pt-1">
-                        <Link to={`/movie-details/${activeMovie.id}?autoplay=true`}>
+                        <Link
+                          to={`/movie-details/${activeMovie.id}?autoplay=true`}
+                          onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+                            e.preventDefault()
+                            startPreflight({
+                              id: activeMovie.id,
+                              title: activeMovie.title,
+                              image: activeMovie.backdrop_path || activeMovie.poster_path,
+                              mediaType: "movie",
+                              targetUrl: `/movie-details/${activeMovie.id}?autoplay=true`,
+                            })
+                          }}
+                        >
                           <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-white px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-black shadow-xl transition-all duration-200 hover:bg-neutral-200 hover:scale-[1.03] active:scale-[0.98]">
                             <Play className="size-3.5 sm:size-4 fill-black text-black" />
                             <span>Play</span>
                           </button>
                         </Link>
 
-                        <Link to={`/movie-details/${activeMovie.id}`}>
+                        <Link
+                          to={`/movie-details/${activeMovie.id}`}
+                          onClick={(e) => {
+                            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+                            e.preventDefault()
+                            startPreflight({
+                              id: activeMovie.id,
+                              title: activeMovie.title,
+                              image: activeMovie.backdrop_path || activeMovie.poster_path,
+                              mediaType: "movie",
+                              targetUrl: `/movie-details/${activeMovie.id}`,
+                            })
+                          }}
+                        >
                           <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-white/20 hover:scale-[1.03] active:scale-[0.98]">
                             <Info className="size-3.5 sm:size-4" />
                             <span>More Info</span>

@@ -27,6 +27,7 @@ import VideoPlayerModal from "../video-player-modal"
 import StreamingServerSelector from "../streaming-server-selector"
 import { getStoredServerId } from "@/lib/streaming-servers"
 import { cn } from "@/lib/utils"
+import { useServerHealth } from "@/context/server-health-context"
 
 export default function MovieDetails() {
   const { id } = useParams<{ id: string }>()
@@ -39,6 +40,21 @@ export default function MovieDetails() {
   const [activeTrailerKey, setActiveTrailerKey] = useState<string | null>(null)
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
   const [selectedServerId, setSelectedServerId] = useState<string>(getStoredServerId)
+  const { bestServerId, healthMap, runHealthCheck } = useServerHealth()
+
+  // Sync selected server to the benchmark winner if identified
+  useEffect(() => {
+    if (bestServerId) {
+      setSelectedServerId(bestServerId)
+    }
+  }, [bestServerId])
+
+  // If user entered directly without preflight benchmark, run a silent probe
+  useEffect(() => {
+    if (Object.keys(healthMap).length === 0 && !isNaN(numericId)) {
+      runHealthCheck()
+    }
+  }, [healthMap, runHealthCheck])
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false)
 
   // Media section tabs state (sequence: most popular, videos, backdrops, posters)
