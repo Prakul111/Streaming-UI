@@ -2,7 +2,6 @@ import { useState } from "react"
 import {
   Sparkles,
   Zap,
-  Film,
   CheckCircle2,
   Calendar,
   Search,
@@ -23,10 +22,6 @@ interface ChangelogRelease {
   badge: "Latest" | "Major" | "Stable"
   highlights: string[]
   items: ChangelogItem[]
-  screenshot?: {
-    src: string
-    caption: string
-  }
 }
 
 const RELEASES: ChangelogRelease[] = [
@@ -42,10 +37,6 @@ const RELEASES: ChangelogRelease[] = [
       "Streamlined desktop navbar from 7 loose links down to 5 high-focus primary categories",
       "Cleaned unused imports and lambda parameters across build files for zero TypeScript warnings",
     ],
-    screenshot: {
-      src: "/screenshots/01-home-hero.png",
-      caption: "Streamlined navigation bar with consolidated 'More' dropdown and balanced header spacing",
-    },
     items: [
       {
         type: "ui",
@@ -89,10 +80,6 @@ const RELEASES: ChangelogRelease[] = [
       "Fixed layout spacing and margin collapse between Play, Trailer, and Server buttons",
       "Enhanced z-index layering and container isolation preventing hero element occlusion",
     ],
-    screenshot: {
-      src: "/screenshots/07-movie-details.png",
-      caption: "CinemaOS Movie Details showing official trailer preview card, unobstructed hero, and floating studio pill",
-    },
     items: [
       {
         type: "fix",
@@ -141,12 +128,8 @@ const RELEASES: ChangelogRelease[] = [
       "Dynamic server ranking engine pinning lowest-latency mirrors (<400ms) to Rank #1",
       "In-player on-demand 'Speed Test' button in dropdown and horizontal server strips",
       "Degraded and offline server detection marked with red status badges and muted opacity",
-      "New interactive in-app Changelog page (/changelog) with category filters and screenshot lightbox",
+      "New interactive in-app Changelog page (/changelog) with category filters and timeline search",
     ],
-    screenshot: {
-      src: "/screenshots/08-video-player-modal.png",
-      caption: "Live theater player modal with real-time latency badges and Speed Test re-benchmarking",
-    },
     items: [
       {
         type: "feat",
@@ -173,15 +156,8 @@ const RELEASES: ChangelogRelease[] = [
         type: "feat",
         title: "In-App Interactive Changelog Page (/changelog)",
         description:
-          "Created a comprehensive in-app release timeline covering all versions, equipped with real-time keyword search, category filter pills (Features, Speed, Fixes, UI), and visual lightbox previews.",
+          "Created a comprehensive in-app release timeline covering all versions, equipped with real-time keyword search and category filter pills (Features, Speed, Fixes, UI).",
         tag: "Changelog",
-      },
-      {
-        type: "ui",
-        title: "Visual Showcase Gallery & Screenshot Lightbox Zoom",
-        description:
-          "Integrated edge-to-edge click-to-expand lightbox modals for all high-resolution screenshots across desktop and mobile browsers.",
-        tag: "UI/UX",
       },
       {
         type: "perf",
@@ -203,10 +179,6 @@ const RELEASES: ChangelogRelease[] = [
       "3 toggleable episode view modes: Carousel Cards, Grid View, and Skim List",
       "Floating glass metadata pill with authentic studio & network logos",
     ],
-    screenshot: {
-      src: "/screenshots/04-tv-shows-catalog.png",
-      caption: "TV Shows catalog with comprehensive seasonSkim skim list and responsive grid view",
-    },
     items: [
       {
         type: "ui",
@@ -256,10 +228,6 @@ const RELEASES: ChangelogRelease[] = [
       "Dynamic URL template tokenizer: {tmdbId}, {imdbId}, {season}, {episode}",
       "Row Level Security (RLS) policies for secure community streaming contributions",
     ],
-    screenshot: {
-      src: "/screenshots/06-search-database.png",
-      caption: "Instant debounced multi-search database with concurrent media and creator lookups",
-    },
     items: [
       {
         type: "feat",
@@ -309,10 +277,6 @@ const RELEASES: ChangelogRelease[] = [
       "Row Level Security (RLS) on Supabase PostgreSQL tables",
       "Automated GitHub Actions CI/CD with Vercel deployment gate",
     ],
-    screenshot: {
-      src: "/screenshots/03-movies-catalog.png",
-      caption: "Popular Movies explorer with genre tags, release year filters, and rating badges",
-    },
     items: [
       {
         type: "feat",
@@ -362,10 +326,6 @@ const RELEASES: ChangelogRelease[] = [
       "Debounced instant multi-search across all media types with keyboard shortcuts (⌘K)",
       "TanStack React Query v5 caching optimization (5min fresh / 30min memory cache)",
     ],
-    screenshot: {
-      src: "/screenshots/02-top10-rankings.png",
-      caption: "Interactive 3D ranking cards with custom numbered typography and inertia hover tilt",
-    },
     items: [
       {
         type: "ui",
@@ -465,7 +425,6 @@ const RELEASES: ChangelogRelease[] = [
 export default function Changelog() {
   const [filterType, setFilterType] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState<string>("")
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   const filteredReleases = RELEASES.map((release) => {
     const matchesSearch =
@@ -581,48 +540,6 @@ export default function Changelog() {
         </div>
       </section>
 
-      {/* Visual Showcase Quick Strip */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 mb-16">
-        <div className="p-4 sm:p-6 rounded-2xl bg-[#0f131e]/70 border border-white/10 backdrop-blur-xl shadow-2xl space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Film className="size-4 text-purple-400" />
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-                Visual Showcase Highlights
-              </h2>
-            </div>
-            <span className="text-xs text-muted-foreground">Click any screenshot to zoom</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              { src: "/screenshots/01-home-hero.png", title: "CinemaOS Hero Banner" },
-              { src: "/screenshots/08-video-player-modal.png", title: "Ranked Server Player" },
-              { src: "/screenshots/07-movie-details.png", title: "Movie Details & Trailer" },
-              { src: "/screenshots/02-top10-rankings.png", title: "3D Perspective Cards" },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                onClick={() => setSelectedImage(item.src)}
-                className="group relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-black/60 cursor-pointer shadow-lg hover:border-purple-500/50 transition-all hover:scale-[1.02]"
-              >
-                <img
-                  src={item.src}
-                  alt={item.title}
-                  className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-                <div className="absolute bottom-2 inset-x-2 text-left">
-                  <span className="text-[11px] font-bold text-white drop-shadow truncate block">
-                    {item.title}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Releases Timeline Section */}
       <section className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
         {filteredReleases.map((release) => (
@@ -682,27 +599,6 @@ export default function Changelog() {
               </div>
             )}
 
-            {/* Optional Embedded Release Screenshot */}
-            {release.screenshot && (
-              <div
-                onClick={() => setSelectedImage(release.screenshot!.src)}
-                className="group relative rounded-2xl overflow-hidden border border-white/15 bg-black/60 shadow-2xl cursor-pointer hover:border-purple-500/50 transition-all"
-              >
-                <img
-                  src={release.screenshot.src}
-                  alt={release.screenshot.caption}
-                  className="w-full object-cover group-hover:scale-[1.01] transition-transform duration-500 max-h-96"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-3 inset-x-4 flex items-center justify-between text-xs text-white/90">
-                  <span className="font-medium drop-shadow">{release.screenshot.caption}</span>
-                  <span className="text-[11px] bg-black/60 px-2 py-0.5 rounded border border-white/15">
-                    Click to Expand
-                  </span>
-                </div>
-              </div>
-            )}
-
             {/* Detailed Items List */}
             {release.items && release.items.length > 0 && (
               <div className="space-y-3 pt-2">
@@ -754,31 +650,6 @@ export default function Changelog() {
           </div>
         )}
       </section>
-
-      {/* Lightbox Image Preview Modal */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 sm:p-8 animate-in fade-in duration-200"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div
-            className="relative max-w-6xl max-h-[92vh] flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute -top-10 right-0 text-white/80 hover:text-white text-xs font-semibold cursor-pointer"
-            >
-              Close (Esc) ✕
-            </button>
-            <img
-              src={selectedImage}
-              alt="Preview"
-              className="max-h-[85vh] max-w-full rounded-2xl border border-white/15 shadow-2xl object-contain"
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
