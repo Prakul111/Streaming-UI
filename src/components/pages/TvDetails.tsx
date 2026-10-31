@@ -41,6 +41,16 @@ export default function TvDetails() {
   const autoplay = searchParams.get("autoplay") === "true"
 
   const [isTrailerOpen, setIsTrailerOpen] = useState(false)
+  const [activeTrailerKey, setActiveTrailerKey] = useState<string | null>(null)
+
+  const openTrailerModal = (key?: string) => {
+    if (key) {
+      setActiveTrailerKey(key)
+    } else if (trailerVideo) {
+      setActiveTrailerKey(trailerVideo.key)
+    }
+    setIsTrailerOpen(true)
+  }
   const [isPlayerOpen, setIsPlayerOpen] = useState(false)
   const [selectedServerId, setSelectedServerId] = useState<string>(getStoredServerId)
   const { bestServerId, healthMap, runHealthCheck } = useServerHealth()
@@ -103,15 +113,26 @@ export default function TvDetails() {
     enabled: !isNaN(numericId),
   })
 
-  // Find trailer video
+  // Find official trailer and all YouTube videos
+  const youtubeVideos =
+    videos?.results?.filter((vid: any) => vid.site === "YouTube") || []
+
   const trailerVideo =
-    videos?.results?.find(
-      (vid: any) => vid.type === "Trailer" && vid.site === "YouTube"
-    ) || videos?.results?.find((vid: any) => vid.site === "YouTube")
+    youtubeVideos.find(
+      (vid: any) => vid.type === "Trailer" && vid.official
+    ) ||
+    youtubeVideos.find((vid: any) => vid.type === "Trailer") ||
+    youtubeVideos[0]
+
+  const allTrailers = youtubeVideos.filter((vid: any) =>
+    ["Trailer", "Teaser", "Clip", "Featurette"].includes(vid.type)
+  )
+  const displayTrailers = allTrailers.length > 0 ? allTrailers : youtubeVideos
 
   // Trigger autoplay trailer if specified in query param
   useEffect(() => {
     if (autoplay && trailerVideo) {
+      setActiveTrailerKey(trailerVideo.key)
       setIsTrailerOpen(true)
     }
   }, [autoplay, trailerVideo])
@@ -251,18 +272,7 @@ export default function TvDetails() {
     }
   }
 
-  const formatShortDate = (dateStr?: string) => {
-    if (!dateStr) return "N/A"
-    try {
-      return new Date(dateStr).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    } catch {
-      return dateStr
-    }
-  }
+
 
   return (
     <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
@@ -418,7 +428,7 @@ export default function TvDetails() {
               {/* Trailer Button */}
               {trailerVideo && (
                 <button
-                  onClick={() => setIsTrailerOpen(true)}
+                  onClick={() => openTrailerModal(trailerVideo.key)}
                   className="cursor-pointer flex items-center justify-center gap-2.5 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-2.5 text-sm backdrop-blur-md hover:scale-105 active:scale-95 transition-all"
                 >
                   <Film className="size-4 text-white" />
@@ -431,70 +441,54 @@ export default function TvDetails() {
 
           </div>
 
-          {/* Right Column: Hero Preview Card / Latest Episode Card (Desktop) */}
+          {/* Right Column: Hero Preview Trailer Card (Desktop) */}
           <div className="hidden lg:block w-80 xl:w-96 shrink-0">
             <div className="rounded-2xl bg-[#121620]/80 backdrop-blur-xl border border-white/10 p-4 shadow-2xl space-y-3.5">
-              {/* Preview Video / Latest Episode Thumbnail */}
+              {/* Preview Video / Official Trailer Thumbnail */}
               <div
-                onClick={() => {
-                  if (latestEpisode) {
-                    setPlayerSeason(latestEpisode.season_number)
-                    setPlayerEpisode(latestEpisode.episode_number)
-                    setIsPlayerOpen(true)
-                  } else if (trailerVideo) {
-                    setIsTrailerOpen(true)
-                  }
-                }}
+                onClick={() => trailerVideo && openTrailerModal(trailerVideo.key)}
                 className="relative aspect-video w-full rounded-xl overflow-hidden group cursor-pointer border border-white/10 bg-black/60 shadow-lg"
               >
                 <img
                   src={
-                    latestEpisode?.still_path
-                      ? `https://image.tmdb.org/t/p/w500${latestEpisode.still_path}`
+                    trailerVideo
+                      ? `https://img.youtube.com/vi/${trailerVideo.key}/hqdefault.jpg`
                       : backdropUrl
                   }
-                  alt={latestEpisode?.name || show.name}
+                  alt={trailerVideo?.name || show.name}
                   className="size-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
-                {/* Badge top-left */}
-                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-black uppercase text-white/90 tracking-widest shadow-md">
-                  LATEST EPISODE
+                {/* Purple Watermark badge */}
+                <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded bg-purple-600 text-[10px] font-black uppercase text-white tracking-widest shadow-md">
+                  OFFICIAL TRAILER
                 </div>
 
                 {/* Central Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="size-11 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-purple-600 group-hover:border-purple-500 transition-all shadow-xl">
+                  <div className="size-11 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-purple-600 group-hover:border-purple-500 transition-all shadow-xl">
                     <Play className="size-5 fill-white text-white ml-0.5" />
                   </div>
                 </div>
 
-                {/* Bottom title & info */}
+                {/* Bottom title & count */}
                 <div className="absolute bottom-2.5 inset-x-3 text-left">
                   <p className="text-xs font-bold text-white truncate drop-shadow">
-                    {latestEpisode?.name || "Latest Episode"}
+                    {trailerVideo?.name || "Official Trailer"}
                   </p>
                   <p className="text-[10px] text-white/70">
-                    {latestEpisode
-                      ? `S${latestEpisode.season_number} • E${latestEpisode.episode_number} • Aired ${formatShortDate(latestEpisode.air_date)} • ${latestEpisode.runtime ? `${latestEpisode.runtime}m` : "50m"}`
-                      : "Available to stream"}
+                    +{Math.max(0, displayTrailers.length - 1)} more videos
                   </p>
                 </div>
               </div>
 
-              {/* Link to watch latest episode */}
+              {/* Watch Trailer Link */}
               <button
-                onClick={() => {
-                  if (latestEpisode) {
-                    setPlayerSeason(latestEpisode.season_number)
-                    setPlayerEpisode(latestEpisode.episode_number)
-                    setIsPlayerOpen(true)
-                  }
-                }}
+                onClick={() => trailerVideo && openTrailerModal(trailerVideo.key)}
                 className="cursor-pointer w-full flex items-center justify-between text-xs font-semibold text-white/80 hover:text-white transition-colors pt-0.5"
               >
-                <span>Watch latest episode</span>
+                <span>Watch trailer</span>
                 <span className="text-sm">→</span>
               </button>
 
@@ -1208,7 +1202,7 @@ export default function TvDetails() {
       </div>
 
       {/* 5. Trailer Modal Overlay */}
-      {isTrailerOpen && trailerVideo && (
+      {isTrailerOpen && (activeTrailerKey || trailerVideo) && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in duration-300"
           onClick={() => setIsTrailerOpen(false)}
@@ -1228,7 +1222,7 @@ export default function TvDetails() {
 
             {/* Video Frame */}
             <iframe
-              src={`https://www.youtube.com/embed/${trailerVideo.key}?autoplay=1`}
+              src={`https://www.youtube.com/embed/${activeTrailerKey || trailerVideo?.key}?autoplay=1`}
               title={`${show.name} Official Trailer`}
               className="size-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
