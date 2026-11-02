@@ -92,7 +92,17 @@ export default function VideoPlayerModal({
   const activeServer =
     servers.find((s) => s.id === activeServerId) || getStreamingServer(activeServerId)
 
+  // Identify next ranked server for quick 1-click failover
+  const nextServer = useMemo(() => {
+    const currentIndex = sortedServers.findIndex((s) => s.id === activeServer.id)
+    if (currentIndex >= 0 && currentIndex < sortedServers.length - 1) {
+      return sortedServers[currentIndex + 1]
+    }
+    return sortedServers[0]
+  }, [sortedServers, activeServer.id])
+
   const [isLoading, setIsLoading] = useState(true)
+  const [loadTimeout, setLoadTimeout] = useState(false)
   const [reloadKey, setReloadKey] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -113,6 +123,16 @@ export default function VideoPlayerModal({
     }
     return embedUrl || ""
   })()
+
+  // Track slow loading or browser iframe blocking (e.g., Zen / Firefox strict mode / Cloudflare)
+  useEffect(() => {
+    setLoadTimeout(false)
+    setIsLoading(true)
+    const timer = setTimeout(() => {
+      setLoadTimeout(true)
+    }, 6500)
+    return () => clearTimeout(timer)
+  }, [currentEmbedUrl, reloadKey])
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -138,11 +158,13 @@ export default function VideoPlayerModal({
       onServerChange(newServerId)
     }
     setIsLoading(true)
+    setLoadTimeout(false)
     setReloadKey((k) => k + 1)
   }
 
   const handleReload = () => {
     setIsLoading(true)
+    setLoadTimeout(false)
     setReloadKey((k) => k + 1)
   }
 
@@ -160,6 +182,7 @@ export default function VideoPlayerModal({
     if (episode > 1 && onEpisodeChange) {
       onEpisodeChange(season, episode - 1)
       setIsLoading(true)
+      setLoadTimeout(false)
     }
   }
 
@@ -167,6 +190,7 @@ export default function VideoPlayerModal({
     if ((!totalEpisodes || episode < totalEpisodes) && onEpisodeChange) {
       onEpisodeChange(season, episode + 1)
       setIsLoading(true)
+      setLoadTimeout(false)
     }
   }
 
@@ -266,8 +290,8 @@ export default function VideoPlayerModal({
               <button
                 type="button"
                 onClick={handleExternalOpen}
-                className="hidden sm:flex size-8 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/15 hover:border-purple-400/50 transition-all cursor-pointer"
-                title="Open stream in new tab"
+                className="flex size-8 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/15 hover:border-purple-400/50 transition-all cursor-pointer"
+                title="Open stream in new tab (bypasses browser iframe restrictions)"
                 aria-label="Open in new tab"
               >
                 <ExternalLink className="size-3.5" />
@@ -428,28 +452,67 @@ export default function VideoPlayerModal({
                 src={currentEmbedUrl}
                 title={title}
                 className="size-full border-0"
+                referrerPolicy="no-referrer"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
-                onLoad={() => setIsLoading(false)}
+                onLoad={() => {
+                  setIsLoading(false)
+                  setLoadTimeout(false)
+                }}
               ></iframe>
             ) : (
               <div className="text-center text-white/50 text-sm">
                 No stream URL available.
               </div>
             )}
+
+            {/* Failover / Browser Security Helper Notification */}
+            {isLoading && loadTimeout && (
+              <div className="absolute inset-x-3 sm:inset-x-6 bottom-4 sm:bottom-6 z-30 flex flex-col sm:flex-row items-center justify-between gap-3 p-3 sm:p-4 bg-[#0e111a]/95 backdrop-blur-md border border-purple-500/40 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] text-xs animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="flex items-center gap-2.5 text-white/90">
+                  <div className="size-2.5 rounded-full bg-amber-400 animate-ping shrink-0" />
+                  <div>
+                    <p className="font-semibold text-white">Stream taking longer than expected to load?</p>
+                    <p className="text-[11px] text-white/60">
+                      Privacy-focused browsers (Zen, Firefox, Brave) may block third-party iframes.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {nextServer && nextServer.id !== activeServer.id && (
+                    <button
+                      type="button"
+                      onClick={() => handleServerSwitch(nextServer.id)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all cursor-pointer shadow-sm active:scale-95"
+                    >
+                      <Zap className="size-3.5" />
+                      <span>Switch to {nextServer.name}</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleExternalOpen}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium border border-white/10 transition-all cursor-pointer active:scale-95"
+                  >
+                    <ExternalLink className="size-3.5" />
+                    <span>Open in New Tab</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Bottom Helper Bar */}
-          <div className="relative z-10 flex items-center justify-between gap-2 px-4 py-2 border-t border-white/5 bg-[#090b12] rounded-b-2xl text-[11px] text-white/50 shrink-0">
-            <div className="flex items-center gap-2">
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 px-3 sm:px-5 py-2.5 border-t border-white/5 bg-[#090b12] rounded-b-2xl text-[11px] text-white/60 shrink-0">
+            <div className="flex items-center gap-2 min-w-0">
               <span
                 className={cn(
-                  "size-1.5 rounded-full shrink-0",
+                  "size-2 rounded-full shrink-0",
                   healthMap[activeServer.id]?.status === "offline"
                     ? "bg-red-500"
                     : healthMap[activeServer.id]?.status === "slow"
                     ? "bg-amber-400"
-                    : "bg-emerald-400 animate-ping"
+                    : "bg-emerald-400"
                 )}
               />
               <span className="truncate">
@@ -467,23 +530,45 @@ export default function VideoPlayerModal({
                     )}
                   >
                     {healthMap[activeServer.id]?.status === "offline"
-                      ? "⚠️ Degraded / Offline"
+                      ? "⚠️ Degraded"
                       : `⚡ ${healthMap[activeServer.id]?.latencyMs}ms`}
                   </span>
                 )}
               </span>
             </div>
-            <div className="flex items-center gap-3">
+
+            {/* Quick Actions for Browser Security / Failover Bypass */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleExternalOpen}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-purple-300 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/25 transition-all cursor-pointer font-medium"
+                title="If browser blocks embed (X-Frame-Options/CSP), open stream in a new tab"
+              >
+                <ExternalLink className="size-3" />
+                <span>Open in Tab</span>
+              </button>
+
+              {nextServer && nextServer.id !== activeServer.id && (
+                <button
+                  type="button"
+                  onClick={() => handleServerSwitch(nextServer.id)}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-white/70 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer font-medium"
+                  title={`Quick switch to next ranked server: ${nextServer.name}`}
+                >
+                  <ChevronRight className="size-3 text-purple-400" />
+                  <span className="hidden sm:inline">Try</span>
+                  <span>{nextServer.name}</span>
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => setIsSubmitModalOpen(true)}
-                className="text-purple-400 hover:text-purple-300 underline font-medium cursor-pointer"
+                className="hidden md:inline text-purple-400 hover:text-purple-300 underline font-medium cursor-pointer ml-1"
               >
-                Submit a new server
+                Submit Server
               </button>
-              <span className="hidden sm:inline text-white/40">
-                • If video stops, switch to another server
-              </span>
             </div>
           </div>
         </div>

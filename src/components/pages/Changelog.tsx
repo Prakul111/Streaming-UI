@@ -27,10 +27,68 @@ interface ChangelogRelease {
 
 const RELEASES: ChangelogRelease[] = [
   {
+    version: "v2.4.3",
+    date: "November 2, 2026",
+    tagline: "Streaming Server Health Overhaul, Browser Embed Security Fixes & Smart Failover",
+    badge: "Latest",
+    highlights: [
+      "Fixed Zen, Firefox, and Chrome iframe embed blocking by implementing referrerPolicy='no-referrer'",
+      "Resolved Cloudflare 403 'Blocked from service' on VixSrc by migrating to high-speed VidSrc PM mirror",
+      "Fixed AutoEmbed Cloudflare 521 Origin error by switching endpoints to high-speed autoembed.to CDN",
+      "Audited and purged 20+ dead, 404, or expired mirror domains, preserving 24 verified 1080p/4K servers",
+      "Promoted VidLink to default Server 1 (#1 rank) for zero-buffering instant JW Player playback",
+      "Added smart failover notification banner with 1-click 'Open in New Tab' bypass for browser security locks",
+    ],
+    items: [
+      {
+        type: "fix",
+        title: "Iframe Referrer-Policy Stripping for Strict Privacy Browsers",
+        description:
+          "Configured `referrerPolicy='no-referrer'` on the modal video player iframe. Prevents streaming CDN origin firewalls and Cloudflare WAF rules from issuing X-Frame-Options: SAMEORIGIN blocks on third-party referers in Zen, Firefox, and Chromium.",
+        tag: "Player Security",
+      },
+      {
+        type: "fix",
+        title: "VixSrc Cloudflare 403 'Blocked from Service' Resolution",
+        description:
+          "Migrated the VixSrc provider endpoint to VidSrc PM (`vidsrc.pm/embed/`), bypassing Cloudflare Under-Attack / IP-block restrictions while maintaining instant movie and TV episode streaming.",
+        tag: "Streaming Servers",
+      },
+      {
+        type: "fix",
+        title: "AutoEmbed Cloudflare 521 Origin Error Resolution",
+        description:
+          "Updated AutoEmbed from the dead `player.autoembed.app` (which triggered Zen's 'Zen Can't Open This Page' warning) to the active `autoembed.to` streaming API.",
+        tag: "Streaming Servers",
+      },
+      {
+        type: "perf",
+        title: "Dead Mirror Purge & 24 Verified Server Engine",
+        description:
+          "Conducted automated HTTP and frame-embeddability audits across all 44 server candidates. Purged 20 dead, 404, or DNS-failing mirrors (e.g. vidcorn, tryembed, streamvault, superembed) and calibrated the server fleet with 24 verified 1080p and 4K stream providers.",
+        tag: "Server Fleet",
+      },
+      {
+        type: "feat",
+        title: "Smart Failover & 1-Click 'Open in Tab' External Bypass",
+        description:
+          "Added an automated 6.5s load timeout detector in the video player modal. If browser security or adblockers stall the embed, users are provided with an inline failover banner recommending the next ranked server or a 1-click external window launch.",
+        tag: "UX",
+      },
+      {
+        type: "perf",
+        title: "Promoted VidLink as Default Primary Server",
+        description:
+          "Set VidLink as the default primary server (`DEFAULT_SERVER_ID = 'vidlink'`), delivering immediate responsive playback, adaptive bitrates, and multi-language subtitles without buffering.",
+        tag: "Performance",
+      },
+    ],
+  },
+  {
     version: "v2.4.2",
     date: "October 31, 2026",
     tagline: "Navbar 'More' Dropdown Consolidation & Navigation Streamlining",
-    badge: "Latest",
+    badge: "Stable",
     highlights: [
       "Consolidated Anime, People, Add Server, and Changelog into a unified 'More' dropdown menu",
       "Interactive 'Add Server' modal trigger integration from navigation menu with zero page reload",

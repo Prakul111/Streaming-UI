@@ -74,7 +74,7 @@ function getTargetProbeUrl(server: StreamingServer, tmdbId: number | string = 55
     // Test the exact embed URL directly
     return fullUrl
   } catch {
-    return 'https://cinesrc.st'
+    return 'https://vidlink.pro'
   }
 }
 
@@ -192,7 +192,7 @@ export async function probeServersBatch(
   })
 
   const bestServer = sorted[0] || servers[0]
-  const bestServerId = bestServer ? bestServer.id : 'cinesrc'
+  const bestServerId = bestServer ? bestServer.id : 'vidlink'
 
   // Persist best server as preferred
   if (typeof window !== 'undefined' && window.localStorage) {
