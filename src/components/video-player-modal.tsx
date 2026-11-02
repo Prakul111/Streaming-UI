@@ -430,6 +430,23 @@ export default function VideoPlayerModal({
 
           {/* Main Video Frame Container */}
           <div className="relative z-0 w-full aspect-video flex-1 bg-black overflow-hidden flex items-center justify-center">
+            {/* AutoEmbed v2 Direct Multi-Server Theater Pill */}
+            {activeServer.id === "autoembed" && (
+              <div className="absolute top-3 left-3 z-30 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0e111a]/90 backdrop-blur-md border border-purple-500/40 text-xs shadow-lg animate-in fade-in duration-200">
+                <span className="flex size-2 rounded-full bg-purple-400 animate-pulse" />
+                <span className="font-semibold text-purple-200">AutoEmbed v2 (30+ Servers)</span>
+                <button
+                  type="button"
+                  onClick={handleExternalOpen}
+                  className="flex items-center gap-1 ml-1 px-2 py-0.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-[11px] transition-all cursor-pointer shadow-sm active:scale-95"
+                  title="Launch AutoEmbed v2 multi-server player in a clean external window"
+                >
+                  <ExternalLink className="size-3" />
+                  <span>Open 30+ Server Theater</span>
+                </button>
+              </div>
+            )}
+
             {/* Loading overlay */}
             {isLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 z-20 gap-3 backdrop-blur-sm">

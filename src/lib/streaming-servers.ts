@@ -70,16 +70,16 @@ export const STREAMING_SERVERS: StreamingServer[] = [
   },
   {
     id: "autoembed",
-    name: "AutoEmbed",
-    displayName: "Server 5 • AutoEmbed",
-    badge: "4K • Adaptive",
+    name: "AutoEmbed v2",
+    displayName: "Server 5 • AutoEmbed v2",
+    badge: "4K • 30+ Servers",
     quality: "4K",
     speed: "Ultra",
-    description: "Adaptive multi-audio streaming CDN with instant playback and zero iframe restrictions",
-    getMovieUrl: ({ tmdbId }) =>
-      `https://autoembed.to/movie/tmdb/${tmdbId}`,
-    getTvUrl: ({ tmdbId, season, episode }) =>
-      `https://autoembed.to/tv/tmdb/${tmdbId}/${season}/${episode}`,
+    description: "Official AutoEmbed v2 multi-source theater with 30+ internal servers (Max, Vidpro, 4K, Netflix, Vidcore) & audio selection",
+    getMovieUrl: () =>
+      `https://watch-v2.autoembed.app/watch/movie`,
+    getTvUrl: ({ season, episode }) =>
+      `https://watch-v2.autoembed.app/watch/tv?season=${season}&episode=${episode}`,
   },
   {
     id: "videasy",
