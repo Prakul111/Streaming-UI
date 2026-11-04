@@ -21,9 +21,9 @@ const PROBE_TIMEOUT_MS = 6000
 // Curated seed sources and known embed providers to scan for new mirrors
 const DISCOVERY_CANDIDATES = [
   {
-    name: 'AutoEmbed Mirror',
-    movie_url_pattern: 'https://player.autoembed.app/embed/movie/{tmdbId}',
-    tv_url_pattern: 'https://player.autoembed.app/embed/tv/{tmdbId}/{season}/{episode}',
+    name: 'AutoEmbed v2 Theater',
+    movie_url_pattern: 'https://watch-v2.autoembed.app/movie/{tmdbId}/watch',
+    tv_url_pattern: 'https://watch-v2.autoembed.app/tv/{tmdbId}/watch?season={season}&episode={episode}',
     quality: '4K',
   },
   {

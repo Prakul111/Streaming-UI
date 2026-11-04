@@ -76,10 +76,10 @@ export const STREAMING_SERVERS: StreamingServer[] = [
     quality: "4K",
     speed: "Ultra",
     description: "Official AutoEmbed v2 multi-source theater with 30+ internal servers (Max, Vidpro, 4K, Netflix, Vidcore) & audio selection",
-    getMovieUrl: () =>
-      `https://watch-v2.autoembed.app/watch/movie`,
-    getTvUrl: ({ season, episode }) =>
-      `https://watch-v2.autoembed.app/watch/tv?season=${season}&episode=${episode}`,
+    getMovieUrl: ({ tmdbId, imdbId }) =>
+      `https://watch-v2.autoembed.app/movie/${tmdbId || imdbId}/watch`,
+    getTvUrl: ({ tmdbId, imdbId, season, episode }) =>
+      `https://watch-v2.autoembed.app/tv/${tmdbId || imdbId}/watch?season=${season}&episode=${episode}`,
   },
   {
     id: "videasy",

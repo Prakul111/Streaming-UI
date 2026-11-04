@@ -63,14 +63,14 @@ WITH CHECK (true);
 INSERT INTO public.streaming_servers (name, display_name, badge, quality, speed, description, movie_url_pattern, tv_url_pattern, status)
 VALUES 
 (
-  'AutoEmbed Prime',
-  'AutoEmbed Prime',
-  '4K • Ultra',
+  'AutoEmbed v2 Theater',
+  'AutoEmbed v2 Theater',
+  '4K • 30+ Servers',
   '4K',
   'Ultra',
-  'High speed multi-region CDN player',
-  'https://player.autoembed.app/embed/movie/{tmdbId}',
-  'https://player.autoembed.app/embed/tv/{tmdbId}/{season}/{episode}',
+  'Official AutoEmbed v2 multi-source theater with 30+ internal mirrors',
+  'https://watch-v2.autoembed.app/movie/{tmdbId}/watch',
+  'https://watch-v2.autoembed.app/tv/{tmdbId}/watch?season={season}&episode={episode}',
   'approved'
 ),
 (

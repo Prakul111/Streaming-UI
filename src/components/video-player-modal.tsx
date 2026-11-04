@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Play,
   Plus,
+  Tv,
 } from "lucide-react"
 import {
   getStreamingServer,
@@ -38,6 +39,44 @@ interface VideoPlayerModalProps {
   onServerChange?: (serverId: string) => void
 }
 
+const AUTOEMBED_SERVERS = [
+  { name: "Max", flag: "🇬🇧" },
+  { name: "Vidpro", flag: "🇬🇧" },
+  { name: "V2", flag: "🇬🇧" },
+  { name: "Premium", flag: "🇺🇸" },
+  { name: "4K", flag: "🇬🇧", highlight: true },
+  { name: "Vidfast", flag: "🇬🇧" },
+  { name: "Nxsha", flag: "🇺🇸" },
+  { name: "Super", flag: "🇬🇧" },
+  { name: "Vidcore", flag: "🇬🇧" },
+  { name: "Rock", flag: "🇬🇧" },
+  { name: "Primesrc", flag: "🇦🇺" },
+  { name: "2Embed", flag: "🇦🇺" },
+  { name: "Cinemaos", flag: "🇺🇸" },
+  { name: "Prime", flag: "🇺🇸" },
+  { name: "Netflix", flag: "🇺🇸" },
+  { name: "Hotstar", flag: "🇮🇳" },
+  { name: "Vidnest", flag: "🇬🇧" },
+  { name: "Tongo", flag: "🇺🇸" },
+  { name: "Echo", flag: "🇺🇸" },
+  { name: "Hdmovies", flag: "🇮🇳" },
+  { name: "NHD", flag: "🇮🇳" },
+  { name: "Mplay", flag: "🇮🇳" },
+  { name: "Xpass", flag: "🇺🇸" },
+  { name: "Bravo", flag: "🇬🇧" },
+  { name: "Vidking", flag: "🇺🇸" },
+  { name: "111", flag: "🇬🇧" },
+  { name: "Jade", flag: "🇵🇹" },
+  { name: "French", flag: "🇫🇷" },
+  { name: "Spanish", flag: "🇪🇸" },
+  { name: "Hindi", flag: "🇮🇳" },
+  { name: "Tamil", flag: "🇮🇳" },
+  { name: "Telugu", flag: "🇮🇳" },
+  { name: "Arab", flag: "🇸🇦" },
+  { name: "French 2", flag: "🇫🇷" },
+  { name: "Brazil", flag: "🇧🇷" },
+]
+
 export default function VideoPlayerModal({
   isOpen,
   onClose,
@@ -61,6 +100,7 @@ export default function VideoPlayerModal({
   const [reloadKey, setReloadKey] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [loadTimeout, setLoadTimeout] = useState(false)
+  const [forceIframe, setForceIframe] = useState(false)
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -140,21 +180,26 @@ export default function VideoPlayerModal({
   // Reset loading on URL or reload change
   useEffect(() => {
     if (isOpen) {
-      setIsLoading(true)
-      setLoadTimeout(false)
+      if (activeServer.id === "autoembed" && !forceIframe) {
+        setIsLoading(false)
+        setLoadTimeout(false)
+      } else {
+        setIsLoading(true)
+        setLoadTimeout(false)
+      }
     }
-  }, [currentEmbedUrl, reloadKey, isOpen])
+  }, [currentEmbedUrl, reloadKey, isOpen, activeServer.id, forceIframe])
 
   // Failover detector: after 6.5s if still loading, offer help
   useEffect(() => {
-    if (!isLoading || !isOpen) return
+    if (!isLoading || !isOpen || (activeServer.id === "autoembed" && !forceIframe)) return
 
     const timer = setTimeout(() => {
       setLoadTimeout(true)
     }, 6500)
 
     return () => clearTimeout(timer)
-  }, [isLoading, isOpen, currentEmbedUrl])
+  }, [isLoading, isOpen, currentEmbedUrl, activeServer.id, forceIframe])
 
   // ESC key listener & body scroll lock
   useEffect(() => {
@@ -196,6 +241,7 @@ export default function VideoPlayerModal({
   const handleServerSwitch = (serverId: string) => {
     setInternalServerId(serverId)
     setStoredServerId(serverId)
+    setForceIframe(false)
     setIsLoading(true)
     setLoadTimeout(false)
     if (onServerChange) {
@@ -245,8 +291,11 @@ export default function VideoPlayerModal({
     }
   }
 
+  const isAutoEmbedTheater = activeServer.id === "autoembed" && !forceIframe
+
   return (
     <>
+      {/* Backdrop */}
       <div
         className={cn(
           "fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl transition-all duration-300",
@@ -416,57 +465,142 @@ export default function VideoPlayerModal({
 
           {/* Main Video Frame Container */}
           <div className="relative z-0 w-full aspect-video flex-1 bg-black overflow-hidden flex items-center justify-center">
-            {/* AutoEmbed v2 Direct Multi-Server Theater Pill */}
-            {activeServer.id === "autoembed" && (
-              <div className="absolute top-3 left-3 z-30 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/90 backdrop-blur-md border border-white/15 text-xs shadow-lg animate-in fade-in duration-200">
-                <span className="flex size-2 rounded-full bg-emerald-400" />
-                <span className="font-semibold text-zinc-200">AutoEmbed v2 (Multi-Source Theater)</span>
-                <button
-                  type="button"
-                  onClick={handleExternalOpen}
-                  className="flex items-center gap-1 ml-1 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium text-[11px] border border-white/10 transition-all cursor-pointer shadow-sm active:scale-95"
-                  title="Launch AutoEmbed in external window"
-                >
-                  <ExternalLink className="size-3" />
-                  <span>Open Theater</span>
-                </button>
-              </div>
-            )}
-
-            {/* Loading overlay */}
-            {isLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 z-20 gap-3 backdrop-blur-sm">
-                <Loader2 className="size-8 animate-spin text-zinc-400" />
-                <div className="text-center space-y-1">
-                  <p className="text-sm font-semibold tracking-wide text-zinc-200">
-                    Connecting to {activeServer.name}...
-                  </p>
-                  <p className="text-xs text-zinc-500">
-                    {activeServer.quality} • {activeServer.speed} Stream
+            {/* AutoEmbed v2 Multi-Server Theater Interface */}
+            {isAutoEmbedTheater ? (
+              <div className="size-full flex flex-col items-center justify-between p-4 sm:p-6 overflow-y-auto no-scrollbar bg-gradient-to-b from-[#0b0c10] via-[#0e1017] to-black">
+                {/* Header Banner */}
+                <div className="w-full max-w-3xl flex flex-col items-center text-center gap-1.5 mt-1 sm:mt-2">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] text-zinc-300 font-medium">
+                    <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>AutoEmbed v2 • 36 High-Speed Streaming Mirrors</span>
+                  </div>
+                  <h2 className="text-base sm:text-xl font-bold text-white tracking-tight">
+                    Now Watching: {title}
+                  </h2>
+                  <p className="text-xs text-zinc-400 max-w-lg">
+                    Please switch to other servers if default server doesn&apos;t work. Supports 4K adaptive playback, multi-subs, and custom audio tracks.
                   </p>
                 </div>
-              </div>
-            )}
 
-            {/* Embed Frame */}
-            {currentEmbedUrl ? (
-              <iframe
-                key={`${currentEmbedUrl}-${reloadKey}`}
-                src={currentEmbedUrl}
-                title={title}
-                className="size-full border-0"
-                referrerPolicy="no-referrer"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                onLoad={() => {
-                  setIsLoading(false)
-                  setLoadTimeout(false)
-                }}
-              ></iframe>
-            ) : (
-              <div className="text-center text-white/50 text-sm">
-                No stream URL available.
+                {/* Primary Launch Action */}
+                <div className="my-3 sm:my-4 flex flex-col items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleExternalOpen}
+                    className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-white text-black font-bold text-sm sm:text-base hover:bg-zinc-200 transition-all cursor-pointer shadow-lg hover:shadow-white/20 active:scale-95 group"
+                  >
+                    <Play className="size-4 fill-black text-black group-hover:scale-110 transition-transform" />
+                    <span>Launch AutoEmbed v2 Player</span>
+                    <ExternalLink className="size-4 opacity-70" />
+                  </button>
+                  <span className="text-[11px] text-zinc-400">
+                    Opens watch-v2.autoembed.app with full player controls &amp; 36 server picker
+                  </span>
+                </div>
+
+                {/* 36-Server Matrix Preview */}
+                <div className="w-full max-w-3xl bg-[#13151e]/80 border border-white/10 rounded-2xl p-3 sm:p-4 backdrop-blur-md">
+                  <div className="flex items-center justify-between mb-2.5 px-1">
+                    <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                      <Tv className="size-3.5 text-zinc-400" />
+                      Integrated Mirrors ({AUTOEMBED_SERVERS.length})
+                    </span>
+                    <span className="text-[11px] text-zinc-400 font-mono">
+                      UK • US • AU • IN • EU
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1.5">
+                    {AUTOEMBED_SERVERS.map((srv) => (
+                      <button
+                        key={srv.name}
+                        type="button"
+                        onClick={handleExternalOpen}
+                        className={cn(
+                          "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-medium border transition-all cursor-pointer truncate",
+                          srv.highlight
+                            ? "bg-white text-black border-white font-bold shadow-sm"
+                            : "bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white border-white/10"
+                        )}
+                        title={`Stream with ${srv.name}`}
+                      >
+                        <span className="text-sm shrink-0">{srv.flag}</span>
+                        <span className="truncate">{srv.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* In-Modal Alternative & Bypass Options */}
+                <div className="w-full max-w-3xl flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/5 text-[11px] text-zinc-400">
+                  <div className="flex items-center gap-2">
+                    <span>Prefer watching directly inside this popup?</span>
+                    <button
+                      type="button"
+                      onClick={() => handleServerSwitch("vidlink")}
+                      className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-medium border border-white/10 transition-all cursor-pointer"
+                    >
+                      Switch to VidLink
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleServerSwitch("cinesrc")}
+                      className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-medium border border-white/10 transition-all cursor-pointer"
+                    >
+                      CineSRC
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForceIframe(true)
+                      setIsLoading(true)
+                    }}
+                    className="text-zinc-400 hover:text-zinc-200 underline transition-all cursor-pointer"
+                  >
+                    Try loading inside iframe anyway
+                  </button>
+                </div>
               </div>
+            ) : (
+              <>
+                {/* Loading overlay */}
+                {isLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/85 z-20 gap-3 backdrop-blur-sm">
+                    <Loader2 className="size-8 animate-spin text-zinc-400" />
+                    <div className="text-center space-y-1">
+                      <p className="text-sm font-semibold tracking-wide text-zinc-200">
+                        Connecting to {activeServer.name}...
+                      </p>
+                      <p className="text-xs text-zinc-500">
+                        {activeServer.quality} • {activeServer.speed} Stream
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Embed Frame */}
+                {currentEmbedUrl ? (
+                  <iframe
+                    key={`${currentEmbedUrl}-${reloadKey}`}
+                    src={currentEmbedUrl}
+                    title={title}
+                    className="size-full border-0"
+                    referrerPolicy="no-referrer"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                    allowFullScreen
+                    onLoad={() => {
+                      setIsLoading(false)
+                      setLoadTimeout(false)
+                    }}
+                  ></iframe>
+                ) : (
+                  <div className="text-center text-white/50 text-sm">
+                    No stream URL available.
+                  </div>
+                )}
+              </>
             )}
 
             {/* Failover / Browser Security Helper Notification */}
