@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router"
-import { ChevronDown, ChevronUp, Sparkles, Search } from "lucide-react"
+import { ChevronDown, ChevronUp, Search } from "lucide-react"
 import CardContentList from "../../card-content-list"
 import { SearchBar } from "../../ui/search-bar"
 import { MovieRowSkeleton } from "../../skeleton"
@@ -226,8 +226,8 @@ export default function PopularTv() {
               {isSearching ? "Search TV Shows" : getTvCategoryTitle(activeCategory)}
             </h1>
             {isSearching && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/30 text-xs font-bold text-purple-300">
-                <Sparkles className="size-3 text-purple-400" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-zinc-300">
+                <Search className="size-3 text-zinc-400" />
                 Search
               </span>
             )}

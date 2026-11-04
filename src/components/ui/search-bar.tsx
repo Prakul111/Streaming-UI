@@ -121,7 +121,7 @@ export function SearchBar({
           <button
             type="submit"
             className={cn(
-              "cursor-pointer rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium shadow-sm shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-150 active:scale-95 shrink-0",
+              "cursor-pointer rounded-full bg-white hover:bg-zinc-200 text-black font-semibold shadow-sm transition-all duration-150 active:scale-95 shrink-0",
               sizeClasses.button
             )}
           >

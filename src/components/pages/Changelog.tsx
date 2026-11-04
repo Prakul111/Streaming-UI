@@ -1,7 +1,5 @@
 import { useState } from "react"
 import {
-  Sparkles,
-  Zap,
   CheckCircle2,
   Calendar,
   Search,
@@ -27,10 +25,53 @@ interface ChangelogRelease {
 
 const RELEASES: ChangelogRelease[] = [
   {
+    version: "v2.5.0",
+    date: "November 4, 2026",
+    tagline: "Navigation Performance, Instant Playback & Interface Streamlining",
+    badge: "Latest",
+    highlights: [
+      "Removed preflight latency modal to restore instant, zero-delay click-to-play navigation",
+      "Replaced GPU mouse-tracking 3D tilt with hardware-accelerated CSS hover transitions",
+      "Curated video player modal and selector into focused primary sources (VidLink, CineSRC, VidSrc PM, AutoEmbed v2, Videasy, 2embed)",
+      "Removed redundant index prefixes (#1..#44) and AI decoration badges across headers, buttons, and navigation",
+      "Polished visual hierarchy with clean neutral dark surfaces matching professional streaming platforms",
+    ],
+    items: [
+      {
+        type: "perf",
+        title: "Direct Immediate Navigation on Card Clicks",
+        description:
+          "Removed preflight modal interception from movie and TV show cards. Clicking any card now immediately opens the target details or watch route with zero network delay.",
+        tag: "Navigation",
+      },
+      {
+        type: "ui",
+        title: "Hardware-Accelerated CSS Card Transitions",
+        description:
+          "Replaced heavy JavaScript mousemove matrix calculations and fake perspective tilt grids with fluid CSS transitions (scale, border-lift, and elevation shadow).",
+        tag: "Performance",
+      },
+      {
+        type: "ui",
+        title: "Curated Streaming Source Selection",
+        description:
+          "Redesigned the in-player source bar and selector to highlight top verified high-uptime streams without chaotic 44-button horizontal scrolling or numbered prefixes.",
+        tag: "Player",
+      },
+      {
+        type: "ui",
+        title: "Design Polish & Dark Surface Consistency",
+        description:
+          "Eliminated oversaturated purple glow meshes and decorative sparkle icon spam in favor of an authentic, clean dark aesthetic.",
+        tag: "Visuals",
+      },
+    ],
+  },
+  {
     version: "v2.4.3",
     date: "November 2, 2026",
     tagline: "Streaming Server Health Overhaul, Browser Embed Security Fixes & Smart Failover",
-    badge: "Latest",
+    badge: "Stable",
     highlights: [
       "Fixed Zen, Firefox, and Chrome iframe embed blocking by implementing referrerPolicy='no-referrer'",
       "Resolved Cloudflare 403 'Blocked from service' on VixSrc by migrating to high-speed VidSrc PM mirror",
@@ -512,7 +553,7 @@ export default function Changelog() {
   const getTypeColor = (type: ChangelogItem["type"]) => {
     switch (type) {
       case "feat":
-        return "bg-purple-500/15 text-purple-300 border-purple-500/30"
+        return "bg-white/10 text-zinc-200 border-white/15"
       case "perf":
         return "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
       case "fix":
@@ -540,31 +581,27 @@ export default function Changelog() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30 selection:text-purple-200">
+    <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-white/20 selection:text-white">
       {/* Top Ambient Glow Line */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-purple-900/15 via-transparent to-transparent blur-3xl" />
-
-      {/* Hero Header Section */}
-      <section className="relative z-10 pt-28 sm:pt-32 pb-12 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-xs font-bold tracking-wider uppercase mb-5 shadow-lg shadow-purple-500/5">
-          <Sparkles className="size-3.5 text-purple-400" />
-          <span>Product Updates & Releases</span>
+            {/* Hero Header Section */}
+      <section className="relative z-10 pt-28 sm:pt-32 pb-10 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-zinc-300 text-xs font-medium tracking-wide uppercase mb-4">
+          <span>Release Notes</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white uppercase drop-shadow-xl">
-          What&apos;s New in <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-200 bg-clip-text text-transparent">Streaming UI</span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+          Changelog
         </h1>
 
-        <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Explore our continuous journey of improvements, real-time performance upgrades,
-          multi-server streaming breakthroughs, and design polish.
+        <p className="mt-3 text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+          A continuous record of new features, performance updates, and bug fixes.
         </p>
 
         {/* Search & Filter Toolbar */}
         <div className="mt-10 max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-3">
           <div className="relative w-full group">
             {/* Guaranteed visible search icon with high z-index and purple accent */}
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20 text-purple-400 group-focus-within:text-purple-300 transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20 text-zinc-400 group-focus-within:text-white transition-colors">
               <Search className="size-4" />
             </div>
             <input
@@ -572,7 +609,7 @@ export default function Changelog() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search features, fixes, or versions..."
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 text-sm focus:outline-none focus:border-purple-500/60 focus:bg-white/10 transition-all backdrop-blur-md shadow-inner relative z-10"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 text-sm focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all backdrop-blur-md shadow-inner relative z-10"
             />
             {searchQuery && (
               <button
@@ -601,7 +638,7 @@ export default function Changelog() {
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
                   filterType === f.id
-                    ? "bg-purple-600 text-white shadow-sm"
+                    ? "bg-white text-black font-semibold shadow-sm"
                     : "text-muted-foreground hover:text-white hover:bg-white/5"
                 )}
               >
@@ -620,7 +657,7 @@ export default function Changelog() {
             className="relative pl-6 sm:pl-8 border-l border-white/15 space-y-6"
           >
             {/* Timeline Dot Indicator */}
-            <div className="absolute -left-[9px] top-1.5 size-4 rounded-full bg-purple-600 border-2 border-[#090b10] shadow-[0_0_12px_rgba(168,85,247,0.8)]" />
+            <div className="absolute -left-[7px] top-2 size-3.5 rounded-full bg-zinc-300 border-2 border-[#090b10]" />
 
             {/* Release Header */}
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -632,9 +669,9 @@ export default function Changelog() {
                   className={cn(
                     "text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border",
                     release.badge === "Latest"
-                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                      ? "bg-white text-black font-semibold border-white"
                       : release.badge === "Major"
-                      ? "bg-purple-500/20 text-purple-300 border-purple-500/40"
+                      ? "bg-white/10 text-white font-medium border-white/20"
                       : "bg-white/10 text-white/70 border-white/15"
                   )}
                 >
@@ -656,9 +693,8 @@ export default function Changelog() {
             {/* Highlights Card */}
             {release.highlights && release.highlights.length > 0 && (
               <div className="rounded-2xl bg-white/5 border border-white/10 p-4 sm:p-5 backdrop-blur-md shadow-lg space-y-2.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
-                  <Zap className="size-3.5 text-purple-400" />
-                  Key Highlights
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
+                  Highlights
                 </h3>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs sm:text-sm text-gray-300">
                   {release.highlights.map((h, i) => (

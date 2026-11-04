@@ -1,6 +1,5 @@
 import { Link } from "react-router"
 import { cn } from "@/lib/utils"
-import { useServerHealth } from "@/context/server-health-context"
 
 export interface Card3DProps {
   id: number
@@ -63,50 +62,6 @@ export function Card3D({
 }: Card3DProps) {
   const isMovie = type === "movie"
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
-  const { startPreflight } = useServerHealth()
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = e.currentTarget
-    const rect = el.getBoundingClientRect()
-    if (!rect.width || !rect.height) return
-    const x = (e.clientX - rect.left) / rect.width
-    const y = (e.clientY - rect.top) / rect.height
-    // Continuous proportional tilt (up to ±7deg for buttery smooth feel)
-    const rx = ((0.5 - y) * 14).toFixed(2)
-    const ry = ((x - 0.5) * 14).toFixed(2)
-    el.setAttribute("data-tracking", "true")
-    el.style.setProperty("--rx", `${rx}deg`)
-    el.style.setProperty("--ry", `${ry}deg`)
-    el.style.setProperty("--scale", "1.04")
-    el.style.setProperty("--shine", `${(x * 100).toFixed(1)}% ${(y * 100).toFixed(1)}%`)
-    el.style.setProperty("--shine-opacity", "1")
-    el.style.setProperty("--duration", "160ms")
-    el.style.setProperty("--ease", "cubic-bezier(0.25, 1, 0.5, 1)")
-  }
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = e.currentTarget
-    el.removeAttribute("data-tracking")
-    el.style.setProperty("--rx", "0deg")
-    el.style.setProperty("--ry", "0deg")
-    el.style.setProperty("--scale", "1")
-    el.style.setProperty("--shine-opacity", "0")
-    el.style.setProperty("--duration", "480ms")
-    el.style.setProperty("--ease", "cubic-bezier(0.16, 1, 0.3, 1)")
-  }
-
-  const handleLinkClick = (e: React.MouseEvent) => {
-    if (!id) return
-    if (e.metaKey || e.ctrlKey || e.button !== 0) return
-    e.preventDefault()
-    startPreflight({
-      id,
-      title,
-      image,
-      mediaType: isMovie ? "movie" : "tv",
-      targetUrl: detailUrl,
-    })
-  }
 
   return (
     <div className={cn("group/card flex items-center shrink-0", className)}>
@@ -114,44 +69,26 @@ export function Card3D({
 
       <Link
         to={detailUrl}
-        onClick={handleLinkClick}
         className={cn("z-10 block space-y-2.5 focus:outline-none", widthClassName)}
       >
-        {/* 3D Hover Card conforming to DaisyUI 5 hover-3d */}
-        <div
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="hover-3d w-full aspect-[16/9]"
-        >
-          <figure className="w-full h-full rounded-2xl overflow-hidden relative border border-white/10 bg-muted/20">
-            <img
-              src={image}
-              alt={title}
-              loading="lazy"
-              decoding="async"
-              className="size-full object-cover"
-              onError={(e) => {
-                ; (e.currentTarget as HTMLImageElement).src =
-                  "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600"
-              }}
-            />
-            {badge && (
-              <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full bg-white/95 text-black text-[10px] font-black uppercase tracking-wider shadow">
-                {badge}
-              </span>
-            )}
-          </figure>
-
-          {/* 8 empty divs needed for the 3D effect */}
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
+        <figure className="w-full aspect-[16/9] rounded-2xl overflow-hidden relative border border-white/10 bg-zinc-900/60 transition-all duration-300 ease-out group-hover/card:scale-[1.03] group-hover/card:border-white/30 group-hover/card:shadow-[0_20px_35px_-10px_rgba(0,0,0,0.8)]">
+          <img
+            src={image}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="size-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-105"
+            onError={(e) => {
+              ;(e.currentTarget as HTMLImageElement).src =
+                "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600"
+            }}
+          />
+          {badge && (
+            <span className="absolute top-2.5 right-2.5 z-10 px-2 py-0.5 rounded-full bg-white/95 text-black text-[10px] font-black uppercase tracking-wider shadow">
+              {badge}
+            </span>
+          )}
+        </figure>
 
         {/* Card info below image */}
         <div className="space-y-1 px-1">
@@ -168,7 +105,7 @@ export function Card3D({
               </div>
             )}
           </div>
-          <h3 className="font-bold text-sm text-foreground truncate group-hover/card:text-purple-400 transition-colors">
+          <h3 className="font-bold text-sm text-foreground truncate group-hover/card:text-white transition-colors">
             {title}
           </h3>
         </div>
@@ -177,7 +114,6 @@ export function Card3D({
   )
 }
 export default Card3D
-
 
 export function Card3DSkeleton({
   count = 5,

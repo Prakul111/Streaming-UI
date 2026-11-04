@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useSearchParams } from "react-router"
 import { useQuery } from "@tanstack/react-query"
-import { Search, Sparkles, Film, TrendingUp } from "lucide-react"
+import { Search, Film, TrendingUp } from "lucide-react"
 import CardContentList from "../card-content-list"
 import { MovieRowSkeleton } from "../skeleton"
 import { multiSearchQuery } from "@/api/fetch-search"
@@ -113,7 +113,6 @@ export default function SearchPage() {
           <div>
             <h1 className="font-extrabold text-2xl sm:text-4xl md:text-5xl tracking-tight flex items-center gap-3">
               <span>Search Database</span>
-              <Sparkles className="size-6 text-purple-400" />
             </h1>
             <p className="text-muted-foreground mt-1.5 text-xs sm:text-sm">
               Discover millions of movies, TV shows, and series across TMDB.

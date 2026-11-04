@@ -2,12 +2,11 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useNavigate } from 'react-router'
 import {
   type ServerHealthMap,
-  type ServerHealthResult,
   getCachedHealthMap,
   probeServersBatch,
   sortServersByHealth,
 } from '@/lib/server-prober'
-import { STREAMING_SERVERS, type StreamingServer, setStoredServerId } from '@/lib/streaming-servers'
+import { STREAMING_SERVERS, type StreamingServer } from '@/lib/streaming-servers'
 
 export interface PreflightModalState {
   isOpen: boolean
@@ -37,7 +36,7 @@ interface ServerHealthContextValue {
     targetUrl: string
   }) => void
   cancelPreflight: () => void
-  runHealthCheck: (servers?: StreamingServer[], force?: boolean) => Promise<string>
+  runHealthCheck: (servers?: StreamingServer[], _force?: boolean) => Promise<string>
   getRankedServers: (servers: StreamingServer[]) => StreamingServer[]
 }
 
@@ -49,43 +48,45 @@ export function ServerHealthProvider({ children }: { children: React.ReactNode }
   const [isProbing, setIsProbing] = useState(false)
   const [probingProgress, setProbingProgress] = useState(0)
   const [bestServerId, setBestServerId] = useState<string | null>(null)
-  const [preflightModal, setPreflightModal] = useState<PreflightModalState | null>(null)
 
-  // Run initial lightweight benchmark if cache is completely empty
+  // Lightweight background benchmark on app mount if cache empty
   useEffect(() => {
     const cached = getCachedHealthMap()
     if (Object.keys(cached).length === 0) {
-      // Background non-blocking warm up on first app visit
       probeServersBatch(STREAMING_SERVERS, {
         maxCandidates: 6,
-        timeoutMs: 1800,
-      }).then(({ healthMap: updated, bestServerId: best }) => {
-        setHealthMap(updated)
-        setBestServerId(best)
-      })
+        timeoutMs: 1400,
+      }).then((results) => {
+        setHealthMap(results.healthMap)
+        setBestServerId(results.bestServerId)
+      }).catch(() => {})
     }
   }, [])
 
   const runHealthCheck = useCallback(
-    async (servers: StreamingServer[] = STREAMING_SERVERS, force = false): Promise<string> => {
-      if (isProbing && !force) return bestServerId || 'cinesrc'
+    async (servers?: StreamingServer[], _force?: boolean): Promise<string> => {
+      if (isProbing) return bestServerId || 'vidlink'
 
       setIsProbing(true)
-      setProbingProgress(5)
+      setProbingProgress(0)
 
       try {
-        const { healthMap: updated, bestServerId: best } = await probeServersBatch(servers, {
-          maxCandidates: 14,
-          timeoutMs: 2000,
-          onProgress: (_res, completed, total) => {
+        const targetServers = servers && servers.length > 0 ? servers : STREAMING_SERVERS
+        const results = await probeServersBatch(targetServers, {
+          maxCandidates: 12,
+          timeoutMs: 1600,
+          onProgress: (_result, completed, total) => {
             setProbingProgress(Math.round((completed / total) * 100))
           },
         })
 
-        setHealthMap(updated)
-        setBestServerId(best)
-        setStoredServerId(best)
-        return best
+        setHealthMap(results.healthMap)
+        const sorted = sortServersByHealth(targetServers, results.healthMap)
+        const winner = sorted[0]?.id || results.bestServerId || 'vidlink'
+        setBestServerId(winner)
+        return winner
+      } catch {
+        return bestServerId || 'vidlink'
       } finally {
         setIsProbing(false)
         setProbingProgress(100)
@@ -94,6 +95,7 @@ export function ServerHealthProvider({ children }: { children: React.ReactNode }
     [isProbing, bestServerId]
   )
 
+  // Instant direct navigation without disruptive preflight interception
   const startPreflight = useCallback(
     (params: {
       id: number | string
@@ -102,80 +104,12 @@ export function ServerHealthProvider({ children }: { children: React.ReactNode }
       mediaType?: 'movie' | 'tv'
       targetUrl: string
     }) => {
-      const mediaType = params.mediaType || 'movie'
-
-      // Check if we already have fresh tested results (< 15 mins)
-      const cached = getCachedHealthMap()
-      const hasFreshResults = Object.keys(cached).length >= 4
-
-      // If already fresh, fast-track navigation
-      if (hasFreshResults) {
-        // Quick ranking check
-        const sorted = sortServersByHealth(STREAMING_SERVERS, cached)
-        const winner = sorted[0]?.id || 'cinesrc'
-        setStoredServerId(winner)
-        navigate(params.targetUrl)
-        return
-      }
-
-      // Otherwise, open the cinematic pre-flight testing modal
-      setPreflightModal({
-        isOpen: true,
-        id: params.id,
-        title: params.title,
-        image: params.image,
-        mediaType,
-        targetUrl: params.targetUrl,
-        testedCount: 0,
-        totalCount: 10,
-        latestTestedServer: 'Initializing...',
-      })
-
-      // Run live concurrent probe for top 10 servers
-      probeServersBatch(STREAMING_SERVERS, {
-        tmdbId: params.id,
-        mediaType,
-        maxCandidates: 10,
-        timeoutMs: 1800,
-        onProgress: (result: ServerHealthResult, completed: number, total: number) => {
-          setPreflightModal((prev) => {
-            if (!prev) return null
-            return {
-              ...prev,
-              testedCount: completed,
-              totalCount: total,
-              latestTestedServer: result.serverName,
-              latestLatency: result.latencyMs,
-              bestServerFound: result.status === 'optimal' || result.status === 'fast' ? result.serverName : prev.bestServerFound,
-            }
-          })
-        },
-      }).then(({ healthMap: updated, bestServerId: best }) => {
-        setHealthMap(updated)
-        setBestServerId(best)
-        setStoredServerId(best)
-
-        // Smooth transition to target page
-        setTimeout(() => {
-          setPreflightModal(null)
-          navigate(params.targetUrl)
-        }, 350)
-      }).catch(() => {
-        // Fallback on error
-        setPreflightModal(null)
-        navigate(params.targetUrl)
-      })
+      navigate(params.targetUrl)
     },
     [navigate]
   )
 
-  const cancelPreflight = useCallback(() => {
-    if (preflightModal) {
-      const target = preflightModal.targetUrl
-      setPreflightModal(null)
-      navigate(target)
-    }
-  }, [preflightModal, navigate])
+  const cancelPreflight = useCallback(() => {}, [])
 
   const getRankedServers = useCallback(
     (servers: StreamingServer[]): StreamingServer[] => {
@@ -190,7 +124,7 @@ export function ServerHealthProvider({ children }: { children: React.ReactNode }
       isProbing,
       probingProgress,
       bestServerId,
-      preflightModal,
+      preflightModal: null,
       startPreflight,
       cancelPreflight,
       runHealthCheck,
@@ -201,7 +135,6 @@ export function ServerHealthProvider({ children }: { children: React.ReactNode }
       isProbing,
       probingProgress,
       bestServerId,
-      preflightModal,
       startPreflight,
       cancelPreflight,
       runHealthCheck,

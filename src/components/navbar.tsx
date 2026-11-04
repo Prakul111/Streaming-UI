@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { NavLink, useNavigate, useLocation, useSearchParams } from "react-router"
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler"
-import { SparklesText } from "./ui/sparkles-text"
 import { SearchBar } from "./ui/search-bar"
 import {
   Server,
@@ -15,7 +14,6 @@ import {
   Home,
   ChevronRight,
   Users,
-  Sparkles,
   History,
 } from "lucide-react"
 import NavigationMenuDemo from "./shadcn-studio/navigation-menu/navigation-menu-09"
@@ -208,19 +206,16 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.02]"
             >
-              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-purple-500/15 border border-purple-500/25 shadow-sm shadow-purple-500/10 group-hover:border-purple-500/40 group-hover:bg-purple-500/20 transition-all">
+              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-white/10 border border-white/15 shadow-sm group-hover:border-white/30 group-hover:bg-white/15 transition-all">
                 <img
                   className="h-5 sm:h-6 w-auto transition-transform duration-300 group-hover:scale-110"
                   src={popcornLogo}
                   alt="Streaming UI Logo"
                 />
               </div>
-              <SparklesText
-                sparklesCount={2}
-                className="text-lg sm:text-xl font-black tracking-tight"
-              >
-                Streaming UI
-              </SparklesText>
+              <span className="text-lg sm:text-xl font-bold tracking-tight text-white">
+                Streaming <span className="text-zinc-400 font-medium">UI</span>
+              </span>
             </NavLink>
 
             {/* Desktop Navigation Links */}
@@ -357,13 +352,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
                       <Home className="size-4" />
                     </div>
                     <span className="font-medium">Home</span>
@@ -379,13 +374,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
                       <Film className="size-4" />
                     </div>
                     <span className="font-medium">Movies</span>
@@ -401,13 +396,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
                       <Tv className="size-4" />
                     </div>
                     <span className="font-medium">TV Shows</span>
@@ -423,14 +418,14 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
-                      <Sparkles className="size-4" />
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                      <Film className="size-4" />
                     </div>
                     <span className="font-medium">Anime</span>
                   </div>
@@ -445,13 +440,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
                       <Users className="size-4" />
                     </div>
                     <span className="font-medium">People</span>
@@ -467,18 +462,18 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-purple-500/15 text-purple-400 font-semibold border border-purple-500/30"
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
                         : "text-foreground hover:bg-muted/50 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
                       <History className="size-4" />
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Changelog</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-zinc-300 font-semibold border border-white/15">
                         v2.4
                       </span>
                     </div>
@@ -495,9 +490,9 @@ export default function Navbar() {
                     setIsMobileMenuOpen(false)
                     setIsSubmitModalOpen(true)
                   }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-purple-500/30 bg-purple-500/15 text-purple-300 hover:text-purple-200 text-xs font-semibold transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-white/15 bg-white/10 text-zinc-200 hover:text-white text-xs font-semibold transition-all cursor-pointer"
                 >
-                  <Server className="size-4 text-purple-400" />
+                  <Server className="size-4 text-zinc-400" />
                   <span>Submit or Add Server</span>
                 </button>
               </div>

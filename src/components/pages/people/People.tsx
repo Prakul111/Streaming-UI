@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useSearchParams, Link } from "react-router"
 import {
   User,
-  Sparkles,
   Flame,
   ExternalLink,
 } from "lucide-react"
@@ -144,8 +143,7 @@ export default function People() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-12 space-y-6 text-left">
           {/* Subtitle Badge */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-xs font-bold text-purple-300 tracking-wider uppercase">
-              <Sparkles className="size-3.5 text-purple-400" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-zinc-300 tracking-wider uppercase">
               INDUSTRY TALENT & CELEBRITIES
             </span>
             <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
@@ -188,7 +186,7 @@ export default function People() {
                   className={cn(
                     "cursor-pointer px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border",
                     selectedDept === dept.id
-                      ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-600/30 scale-102"
+                      ? "bg-white text-black font-semibold border-white shadow-sm scale-102"
                       : "bg-white/5 border-white/10 text-muted-foreground hover:text-white hover:bg-white/10"
                   )}
                 >
@@ -269,7 +267,7 @@ export default function People() {
                 <Link
                   key={person.id}
                   to={`/person/${person.id}`}
-                  className="group relative cursor-pointer flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-[#0d111a]/80 hover:border-purple-500/50 hover:bg-[#121622] transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-1 select-none text-left"
+                  className="group relative cursor-pointer flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-[#0d111a]/80 hover:border-white/30 hover:bg-[#121622] transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 select-none text-left"
                 >
                   {/* Portrait Image Container */}
                   <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted/20">

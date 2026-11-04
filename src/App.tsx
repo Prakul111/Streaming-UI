@@ -5,7 +5,6 @@ import Navbar from "./components/navbar"
 import { ThemeProvider } from "./components/theme-provider"
 import Footer from "./components/footer"
 import { ServerHealthProvider } from "./context/server-health-context"
-import PreflightServerModal from "./components/ui/preflight-server-modal"
 
 // Lazy-loaded routes for code-splitting and fast initial page load
 const HomePage = lazy(() => import("./components/pages/HomePage"))
@@ -49,7 +48,7 @@ const queryClient = new QueryClient({
 function PageFallback() {
   return (
     <div className="w-full flex-1 min-h-[70vh] flex flex-col items-center justify-center p-6 gap-3">
-      <div className="size-9 rounded-full border-2 border-purple-500/20 border-t-purple-500 animate-spin" />
+      <div className="size-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
       <span className="text-xs font-semibold text-muted-foreground animate-pulse tracking-wide">
         Loading...
       </span>
@@ -60,7 +59,7 @@ function PageFallback() {
 function RootLayout() {
   return (
     <ServerHealthProvider>
-      <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
+      <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-white/20 selection:text-white">
         <ScrollRestoration />
         <Navbar />
         <main className="w-full flex-grow flex flex-col">
@@ -69,7 +68,6 @@ function RootLayout() {
           </Suspense>
         </main>
         <Footer />
-        <PreflightServerModal />
       </div>
     </ServerHealthProvider>
   )
@@ -89,15 +87,7 @@ const router = createBrowserRouter([
         element: <MovieDetails />,
       },
       {
-        path: "/movie/:id",
-        element: <MovieDetails />,
-      },
-      {
         path: "/tv-details/:id",
-        element: <TvDetails />,
-      },
-      {
-        path: "/tv/:id",
         element: <TvDetails />,
       },
       {
@@ -105,24 +95,28 @@ const router = createBrowserRouter([
         element: <Movie />,
       },
       {
-        path: "/now-playing-movie",
-        element: <Movie />,
-      },
-      {
-        path: "/popular-movie",
-        element: <Movie />,
-      },
-      {
-        path: "/top-rated-movie",
-        element: <Movie />,
-      },
-      {
-        path: "/tv-shows",
+        path: "/tv-show",
         element: <TvShows />,
       },
       {
         path: "/anime",
         element: <Anime />,
+      },
+      {
+        path: "/trending/all",
+        element: <TrendingAll />,
+      },
+      {
+        path: "/trending/movies",
+        element: <TrendingMovie />,
+      },
+      {
+        path: "/trending/tv",
+        element: <TrendingTv />,
+      },
+      {
+        path: "/search",
+        element: <SearchPage />,
       },
       {
         path: "/people",
@@ -131,22 +125,6 @@ const router = createBrowserRouter([
       {
         path: "/person-details/:id",
         element: <PersonDetails />,
-      },
-      {
-        path: "/trending-all",
-        element: <TrendingAll />,
-      },
-      {
-        path: "/trending-movie",
-        element: <TrendingMovie />,
-      },
-      {
-        path: "/trending-tv",
-        element: <TrendingTv />,
-      },
-      {
-        path: "/search",
-        element: <SearchPage />,
       },
       {
         path: "/changelog",
@@ -160,15 +138,15 @@ const router = createBrowserRouter([
   },
 ])
 
-export default function App() {
+export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <RouterProvider router={router} />
-        <Suspense fallback={null}>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Suspense>
+        {ReactQueryDevtools && <ReactQueryDevtools initialIsOpen={false} />}
       </ThemeProvider>
     </QueryClientProvider>
   )
 }
+
+export default App

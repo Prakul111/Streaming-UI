@@ -2,7 +2,7 @@ import { useState, useId } from 'react'
 import {
   X,
   Server,
-  Sparkles,
+  Info,
   Globe,
   Laptop,
   CheckCircle2,
@@ -243,7 +243,7 @@ export default function SubmitServerModal({
         <div className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-5 sm:space-y-6 custom-scrollbar">
           {/* Mode Explainer Banner */}
           <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 flex items-start gap-3">
-            <Sparkles className="size-4 text-purple-400 shrink-0 mt-0.5" />
+            <Info className="size-4 text-zinc-400 shrink-0 mt-0.5" />
             <div>
               {mode === 'global' ? (
                 <>

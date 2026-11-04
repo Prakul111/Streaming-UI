@@ -466,7 +466,7 @@ export default function PersonDetails() {
                         to={detailUrl}
                         className="w-32 sm:w-36 md:w-40 shrink-0 snap-start group space-y-2 select-none"
                       >
-                        <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-lg group-hover:border-purple-500/50 group-hover:shadow-purple-500/10 transition-all duration-300">
+                        <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-lg group-hover:border-white/30 group-hover:shadow-xl transition-all duration-300">
                           <img
                             src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                             alt={itemTitle}

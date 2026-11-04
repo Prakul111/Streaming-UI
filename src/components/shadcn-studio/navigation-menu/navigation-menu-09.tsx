@@ -7,7 +7,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { NavLink, useLocation } from "react-router"
-import { TrendingUp, Film, Tv, Sparkles, Users, Server, History } from "lucide-react"
+import { TrendingUp, Film, Tv, Play, Users, Server, History } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavigationMenuDemoProps {
@@ -169,7 +169,7 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                     className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-foreground hover:bg-muted/70 dark:hover:bg-white/10 transition-colors"
                   >
                     <div className="flex size-7 items-center justify-center rounded-lg bg-pink-500/10 text-pink-400">
-                      <Sparkles className="size-4" />
+                      <Play className="size-3.5 fill-current" />
                     </div>
                     <div>
                       <div className="font-semibold text-foreground">Anime</div>

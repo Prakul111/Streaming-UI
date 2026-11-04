@@ -28,7 +28,7 @@ export default function ErrorPage() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full justify-center">
           <Link
             to="/"
-            className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-105 transition-all active:scale-95"
+            className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-white hover:bg-zinc-200 px-6 py-3 text-sm font-bold text-black shadow-lg hover:scale-105 transition-all active:scale-95"
           >
             <Home className="size-4" />
             Go back Home

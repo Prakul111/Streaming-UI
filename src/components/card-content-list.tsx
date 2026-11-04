@@ -1,8 +1,6 @@
-import { useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
 import starIcon from "@/assets/star-svgrepo-com.svg"
-import { useServerHealth } from "@/context/server-health-context"
 
 interface ContentListProps {
   id?: number
@@ -29,8 +27,6 @@ export default function CardContentList({
 }: ContentListProps) {
   const isMovie = mediaType ? mediaType === "movie" : type.toLowerCase().includes("movie")
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
-  const tiltRef = useRef<HTMLDivElement>(null)
-  const { startPreflight } = useServerHealth()
 
   const formattedDate = releaseDate
     ? (() => {
@@ -49,79 +45,16 @@ export default function CardContentList({
     })()
     : ""
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = tiltRef.current
-    if (!card) return
-
-    const rect = card.getBoundingClientRect()
-    if (!rect.width || !rect.height) return
-
-    // Mouse position relative to the card element
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
-
-    // Calculate rotation angles based on mouse position relative to center
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-
-    const deltaX = mouseX - centerX
-    const deltaY = mouseY - centerY
-
-    // Normalize to range [-1, 1]
-    const percentX = deltaX / centerX
-    const percentY = deltaY / centerY
-
-    // Max tilt angles (in degrees)
-    const maxTiltX = 12
-    const maxTiltY = 12
-
-    // Tilt calculations (X tilt is based on Y mouse movement, and vice-versa)
-    const tiltX = -percentY * maxTiltX
-    const tiltY = percentX * maxTiltY
-
-    card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale(1.05)`
-    card.style.boxShadow = "0 25px 35px -5px rgba(0, 0, 0, 0.4), 0 12px 20px -8px rgba(0, 0, 0, 0.4)"
-    card.style.transition = "transform 150ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 150ms ease"
-  }
-
-  const handleMouseLeave = () => {
-    const card = tiltRef.current
-    if (!card) return
-
-    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)"
-    card.style.boxShadow = "none"
-    card.style.transition = "transform 500ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 500ms ease"
-  }
-
-  const handleLinkClick = (e: React.MouseEvent) => {
-    if (!id) return
-    // Allow standard browser tab opening with modifier keys
-    if (e.metaKey || e.ctrlKey || e.button !== 0) return
-    e.preventDefault()
-    startPreflight({
-      id,
-      title,
-      image,
-      mediaType: isMovie ? "movie" : "tv",
-      targetUrl: detailUrl,
-    })
-  }
-
   const isFullWidth = className?.includes("w-full")
 
   const cardContent = (
     <div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className={cn("w-40 shrink-0 select-none p-1 sm:p-1.5 cursor-pointer group/card", className)}
     >
-      <div
-        ref={tiltRef}
-        className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md transform-gpu"
-      >
-        <figure className="w-full">
+      <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 transition-all duration-300 ease-out group-hover/card:scale-[1.04] group-hover/card:border-white/30 group-hover/card:shadow-[0_20px_35px_-10px_rgba(0,0,0,0.8)]">
+        <figure className="w-full overflow-hidden">
           <img
-            className="aspect-[2/3] w-full rounded-2xl object-cover pointer-events-none"
+            className="aspect-[2/3] w-full rounded-2xl object-cover pointer-events-none transition-transform duration-500 ease-out group-hover/card:scale-105"
             src={image}
             alt={title}
             loading="lazy"
@@ -145,7 +78,7 @@ export default function CardContentList({
         <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap">{year}</span>
         <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap truncate max-w-[65px] sm:max-w-none">{type}</span>
       </div>
-      <div className="font-semibold px-0.5 sm:px-1 text-xs sm:text-sm leading-snug line-clamp-2 wrap-anywhere group-hover/card:text-purple-400 transition-colors">
+      <div className="font-semibold px-0.5 sm:px-1 text-xs sm:text-sm leading-snug line-clamp-2 wrap-anywhere group-hover/card:text-white transition-colors">
         {title}
       </div>
       {formattedDate && (
@@ -160,7 +93,6 @@ export default function CardContentList({
     return (
       <Link
         to={detailUrl}
-        onClick={handleLinkClick}
         className={cn("block no-underline focus:outline-none", isFullWidth ? "w-full" : "w-auto shrink-0")}
       >
         {cardContent}
