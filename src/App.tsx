@@ -40,7 +40,7 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 30,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      retry: 1,
+      retry: 2,
     },
   },
 })
@@ -95,7 +95,15 @@ const router = createBrowserRouter([
         element: <Movie />,
       },
       {
+        path: "/movies",
+        element: <Movie />,
+      },
+      {
         path: "/tv-show",
+        element: <TvShows />,
+      },
+      {
+        path: "/tv-shows",
         element: <TvShows />,
       },
       {
@@ -107,11 +115,31 @@ const router = createBrowserRouter([
         element: <TrendingAll />,
       },
       {
+        path: "/trending-all",
+        element: <TrendingAll />,
+      },
+      {
         path: "/trending/movies",
         element: <TrendingMovie />,
       },
       {
+        path: "/trending/movie",
+        element: <TrendingMovie />,
+      },
+      {
+        path: "/trending-movie",
+        element: <TrendingMovie />,
+      },
+      {
+        path: "/trending-movies",
+        element: <TrendingMovie />,
+      },
+      {
         path: "/trending/tv",
+        element: <TrendingTv />,
+      },
+      {
+        path: "/trending-tv",
         element: <TrendingTv />,
       },
       {

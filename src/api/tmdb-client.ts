@@ -1,6 +1,40 @@
-const TMDB_BASE_URL =
-  import.meta.env.VITE_TMDB_BASE_URL ||
-  (import.meta.env.DEV ? "/api/tmdb" : "https://api.themoviedb.org/3")
+// Candidate TMDB API endpoints in fallback order:
+// 1. VITE_TMDB_BASE_URL (if custom proxy provided in .env)
+// 2. /api/tmdb - Proxied by Vite server (dev/preview) or Vercel edge rewrite; completely immune to ISP blocks
+// 3. https://api.tmdb.org/3 - TMDB's official alternate domain (unblocked by Indian ISPs like Jio/Airtel)
+// 4. https://api.themoviedb.org/3 - Primary TMDB domain
+const CANDIDATE_BASE_URLS: string[] = [
+  ...(import.meta.env.VITE_TMDB_BASE_URL ? [import.meta.env.VITE_TMDB_BASE_URL] : []),
+  "/api/tmdb",
+  "https://api.tmdb.org/3",
+  "https://api.themoviedb.org/3",
+]
+
+const STORAGE_ENDPOINT_KEY = "tmdb_active_endpoint"
+
+function getStoredEndpoint(): string {
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      const saved = window.localStorage.getItem(STORAGE_ENDPOINT_KEY)
+      if (saved && CANDIDATE_BASE_URLS.includes(saved)) {
+        return saved
+      }
+    } catch {}
+  }
+  // Default to /api/tmdb if in browser/dev, otherwise api.tmdb.org
+  return CANDIDATE_BASE_URLS[0]
+}
+
+let activeBaseUrl = getStoredEndpoint()
+
+function setWorkingEndpoint(url: string) {
+  activeBaseUrl = url
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      window.localStorage.setItem(STORAGE_ENDPOINT_KEY, url)
+    } catch {}
+  }
+}
 
 export interface FetchOptions extends RequestInit {
   params?: Record<string, string | number | boolean>
@@ -36,7 +70,6 @@ function getCachedData<T>(key: string): { data: T; isFresh: boolean } | null {
       if (stored) {
         const parsed = JSON.parse(stored)
         if (parsed && parsed.timestamp && now - parsed.timestamp < MAX_CACHE_AGE) {
-          // Re-populate memory cache
           memoryCache.set(key, parsed)
           const isFresh = now - parsed.timestamp < FRESH_CACHE_TTL
           return { data: parsed.data as T, isFresh }
@@ -54,7 +87,6 @@ function setCachedData(key: string, data: any): void {
   const record = { data, timestamp: Date.now() }
   memoryCache.set(key, record)
 
-  // Keep in-memory cache pruned
   if (memoryCache.size > 200) {
     const firstKey = memoryCache.keys().next().value
     if (firstKey) memoryCache.delete(firstKey)
@@ -65,7 +97,6 @@ function setCachedData(key: string, data: any): void {
       window.sessionStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(record))
     }
   } catch {
-    // If quota exceeded, clear older tmdb cache entries
     try {
       if (typeof window !== "undefined" && window.sessionStorage) {
         Object.keys(window.sessionStorage).forEach((k) => {
@@ -78,40 +109,44 @@ function setCachedData(key: string, data: any): void {
   }
 }
 
-export async function tmdbFetch<T>(
-  endpoint: string,
-  options: FetchOptions = {}
-): Promise<T> {
-  const { params, headers, skipCache = false, ...restOptions } = options
-
-  // Build URL with query params
-  const baseUrl = TMDB_BASE_URL.replace(/\/$/, "")
-  const cleanEndpoint = endpoint.replace(/^\//, "")
+function buildTargetUrl(
+  base: string,
+  cleanEndpoint: string,
+  params?: Record<string, string | number | boolean>
+): URL {
   const baseOrigin =
     typeof window !== "undefined" && window.location?.origin
       ? window.location.origin
       : "http://localhost:5173"
-  const url = new URL(`${baseUrl}/${cleanEndpoint}`, baseOrigin)
+  const url = new URL(`${base.replace(/\/$/, "")}/${cleanEndpoint.replace(/^\//, "")}`, baseOrigin)
   url.searchParams.set("language", "en-US")
   if (params) {
     Object.entries(params).forEach(([key, val]) => {
       url.searchParams.set(key, String(val))
     })
   }
+  return url
+}
 
-  const cacheKey = url.pathname + url.search
+export async function tmdbFetch<T>(
+  endpoint: string,
+  options: FetchOptions = {}
+): Promise<T> {
+  const { params, headers, skipCache = false, ...restOptions } = options
+  const cleanEndpoint = endpoint.replace(/^\//, "")
+
+  // Consistent logical cache key independent of which base URL endpoint is used
+  const sampleUrl = buildTargetUrl("/api/tmdb", cleanEndpoint, params)
+  const cacheKey = sampleUrl.pathname + sampleUrl.search
 
   // Check cache unless explicitly skipped
   if (!skipCache) {
     const cached = getCachedData<T>(cacheKey)
     if (cached) {
-      // If fresh, return immediately with 0 network latency!
       if (cached.isFresh) {
         return cached.data
       }
-
-      // If stale, return cached data immediately and revalidate in background
-      backgroundRevalidate(url.toString(), cacheKey, headers, restOptions)
+      backgroundRevalidate(cleanEndpoint, params, cacheKey, headers, restOptions)
       return cached.data
     }
   }
@@ -123,42 +158,62 @@ export async function tmdbFetch<T>(
   }
 
   const fetchPromise = (async () => {
-    // Set an 8-second timeout for slow network resilience
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 8000)
+    // Endpoints to try: active endpoint first, followed by remaining candidates
+    const endpointsToTry = [
+      activeBaseUrl,
+      ...CANDIDATE_BASE_URLS.filter((u) => u !== activeBaseUrl),
+    ]
 
-    try {
-      const response = await fetch(url.toString(), {
-        ...restOptions,
-        signal: controller.signal,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API}`,
-          ...headers,
-        },
-      })
+    let lastError: any = null
 
-      clearTimeout(timeoutId)
+    for (const base of endpointsToTry) {
+      const targetUrl = buildTargetUrl(base, cleanEndpoint, params)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 6500)
 
-      if (!response.ok) {
-        throw new Error(`TMDB API error: ${response.status} ${response.statusText}`)
+      try {
+        const response = await fetch(targetUrl.toString(), {
+          ...restOptions,
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API}`,
+            ...headers,
+          },
+        })
+
+        clearTimeout(timeoutId)
+
+        if (response.ok) {
+          const json = (await response.json()) as T
+          setCachedData(cacheKey, json)
+          if (activeBaseUrl !== base) {
+            setWorkingEndpoint(base)
+          }
+          return json
+        } else if (response.status === 404 && base === "/api/tmdb") {
+          // Proxy endpoint not mounted on current static host; silently failover to api.tmdb.org
+          continue
+        } else {
+          lastError = new Error(`TMDB API error: ${response.status} ${response.statusText}`)
+        }
+      } catch (err: any) {
+        clearTimeout(timeoutId)
+        lastError = err
+        // Network error, DNS block, or timeout: proceed to next candidate endpoint
       }
-
-      const json = (await response.json()) as T
-      setCachedData(cacheKey, json)
-      return json
-    } catch (err) {
-      clearTimeout(timeoutId)
-      // If network fails or times out on slow network, fallback to any cached data
-      const staleFallback = getCachedData<T>(cacheKey)
-      if (staleFallback) {
-        return staleFallback.data
-      }
-      throw err
-    } finally {
-      pendingRequests.delete(cacheKey)
     }
-  })()
+
+    // If all candidate endpoints failed, fallback to stale cache if present
+    const staleFallback = getCachedData<T>(cacheKey)
+    if (staleFallback) {
+      return staleFallback.data
+    }
+
+    throw lastError || new Error("Failed to reach TMDB API on any endpoint")
+  })().finally(() => {
+    pendingRequests.delete(cacheKey)
+  })
 
   pendingRequests.set(cacheKey, fetchPromise)
   return fetchPromise
@@ -166,7 +221,8 @@ export async function tmdbFetch<T>(
 
 // Background revalidation without blocking caller
 function backgroundRevalidate(
-  urlString: string,
+  cleanEndpoint: string,
+  params: Record<string, string | number | boolean> | undefined,
   cacheKey: string,
   headers: HeadersInit | undefined,
   restOptions: RequestInit
@@ -174,29 +230,42 @@ function backgroundRevalidate(
   if (pendingRequests.has(cacheKey)) return
 
   const p = (async () => {
-    try {
+    const endpointsToTry = [
+      activeBaseUrl,
+      ...CANDIDATE_BASE_URLS.filter((u) => u !== activeBaseUrl),
+    ]
+
+    for (const base of endpointsToTry) {
+      const targetUrl = buildTargetUrl(base, cleanEndpoint, params)
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000)
-      const res = await fetch(urlString, {
-        ...restOptions,
-        signal: controller.signal,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API}`,
-          ...headers,
-        },
-      })
-      clearTimeout(timeoutId)
-      if (res.ok) {
-        const json = await res.json()
-        setCachedData(cacheKey, json)
+      const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+      try {
+        const res = await fetch(targetUrl.toString(), {
+          ...restOptions,
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API}`,
+            ...headers,
+          },
+        })
+        clearTimeout(timeoutId)
+        if (res.ok) {
+          const json = await res.json()
+          setCachedData(cacheKey, json)
+          if (activeBaseUrl !== base) {
+            setWorkingEndpoint(base)
+          }
+          break
+        }
+      } catch {
+        clearTimeout(timeoutId)
       }
-    } catch {
-      // Silently ignore background revalidation errors
-    } finally {
-      pendingRequests.delete(cacheKey)
     }
-  })()
+  })().finally(() => {
+    pendingRequests.delete(cacheKey)
+  })
 
   pendingRequests.set(cacheKey, p)
 }

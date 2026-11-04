@@ -1,3 +1,4 @@
+import { useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Link } from "react-router"
 import starIcon from "@/assets/star-svgrepo-com.svg"
@@ -27,6 +28,7 @@ export default function CardContentList({
 }: ContentListProps) {
   const isMovie = mediaType ? mediaType === "movie" : type.toLowerCase().includes("movie")
   const detailUrl = isMovie ? `/movie-details/${id}` : `/tv-details/${id}`
+  const tiltRef = useRef<HTMLDivElement>(null)
 
   const formattedDate = releaseDate
     ? (() => {
@@ -45,16 +47,60 @@ export default function CardContentList({
     })()
     : ""
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = tiltRef.current
+    if (!card) return
+
+    const rect = card.getBoundingClientRect()
+    if (!rect.width || !rect.height) return
+
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+
+    const deltaX = mouseX - centerX
+    const deltaY = mouseY - centerY
+
+    const percentX = deltaX / centerX
+    const percentY = deltaY / centerY
+
+    const maxTiltX = 12
+    const maxTiltY = 12
+
+    const tiltX = -percentY * maxTiltX
+    const tiltY = percentX * maxTiltY
+
+    card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale(1.05)`
+    card.style.boxShadow = "0 25px 35px -5px rgba(0, 0, 0, 0.4), 0 12px 20px -8px rgba(0, 0, 0, 0.4)"
+    card.style.transition = "transform 150ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 150ms ease"
+  }
+
+  const handleMouseLeave = () => {
+    const card = tiltRef.current
+    if (!card) return
+
+    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)"
+    card.style.boxShadow = "none"
+    card.style.transition = "transform 500ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 500ms ease"
+  }
+
   const isFullWidth = className?.includes("w-full")
 
   const cardContent = (
     <div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={cn("w-40 shrink-0 select-none p-1 sm:p-1.5 cursor-pointer group/card", className)}
     >
-      <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900/60 transition-all duration-300 ease-out group-hover/card:scale-[1.04] group-hover/card:border-white/30 group-hover/card:shadow-[0_20px_35px_-10px_rgba(0,0,0,0.8)]">
-        <figure className="w-full overflow-hidden">
+      <div
+        ref={tiltRef}
+        className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md transform-gpu"
+      >
+        <figure className="w-full">
           <img
-            className="aspect-[2/3] w-full rounded-2xl object-cover pointer-events-none transition-transform duration-500 ease-out group-hover/card:scale-105"
+            className="aspect-[2/3] w-full rounded-2xl object-cover pointer-events-none"
             src={image}
             alt={title}
             loading="lazy"

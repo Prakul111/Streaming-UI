@@ -31,6 +31,14 @@ const agent = new https.Agent({
   },
 })
 
+const tmdbProxyConfig = {
+  target: "https://api.tmdb.org/3",
+  changeOrigin: true,
+  rewrite: (path: string) => path.replace(/^\/api\/tmdb/, ""),
+  agent,
+  secure: true,
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -41,13 +49,12 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api/tmdb": {
-        target: "https://api.themoviedb.org/3",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/tmdb/, ""),
-        agent,
-        secure: true,
-      },
+      "/api/tmdb": tmdbProxyConfig,
+    },
+  },
+  preview: {
+    proxy: {
+      "/api/tmdb": tmdbProxyConfig,
     },
   },
   build: {
@@ -58,17 +65,13 @@ export default defineConfig({
       output: {
         manualChunks(id: string) {
           if (id.includes("node_modules")) {
-            if (
-              id.includes("react-router") ||
-              id.includes("react-dom") ||
-              id.includes("/react/")
-            ) {
+            if (id.includes("react") || id.includes("react-dom") || id.includes("react-router")) {
               return "vendor-react"
             }
             if (id.includes("@tanstack/react-query")) {
               return "vendor-query"
             }
-            if (id.includes("motion")) {
+            if (id.includes("framer-motion") || id.includes("motion")) {
               return "vendor-motion"
             }
             if (id.includes("lucide-react")) {
