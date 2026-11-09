@@ -23,6 +23,8 @@ import SubmitServerModal from "./submit-server-modal"
 import { cn } from "@/lib/utils"
 import { useServerHealth } from "@/context/server-health-context"
 
+import { saveWatchHistoryItem } from "@/lib/watch-history"
+
 interface VideoPlayerModalProps {
   isOpen: boolean
   onClose: () => void
@@ -37,6 +39,11 @@ interface VideoPlayerModalProps {
   onEpisodeChange?: (season: number, episode: number) => void
   selectedServerId?: string
   onServerChange?: (serverId: string) => void
+  posterPath?: string | null
+  backdropPath?: string | null
+  overview?: string
+  voteAverage?: number
+  releaseDate?: string
 }
 
 const AUTOEMBED_SERVERS = [
@@ -91,6 +98,11 @@ export default function VideoPlayerModal({
   onEpisodeChange,
   selectedServerId: propServerId,
   onServerChange,
+  posterPath,
+  backdropPath,
+  overview,
+  voteAverage,
+  releaseDate,
 }: VideoPlayerModalProps) {
   const [internalServerId, setInternalServerId] = useState<string>(() => {
     return propServerId || getStoredServerId()
@@ -106,6 +118,44 @@ export default function VideoPlayerModal({
 
   const { servers } = useStreamingServers()
   const { healthMap, getRankedServers } = useServerHealth()
+
+  // Track playback in watch history when modal is active
+  useEffect(() => {
+    if (isOpen && tmdbId) {
+      const parsedId = typeof tmdbId === "string" ? parseInt(tmdbId, 10) : tmdbId
+      if (!isNaN(parsedId)) {
+        saveWatchHistoryItem({
+          tmdbId: parsedId,
+          mediaType,
+          title,
+          posterPath: posterPath ?? null,
+          backdropPath: backdropPath ?? null,
+          overview,
+          voteAverage,
+          releaseDate,
+          season: mediaType === "tv" ? season : undefined,
+          episode: mediaType === "tv" ? episode : undefined,
+          totalEpisodes: mediaType === "tv" ? totalEpisodes : undefined,
+          serverId: propServerId || internalServerId,
+        })
+      }
+    }
+  }, [
+    isOpen,
+    tmdbId,
+    mediaType,
+    title,
+    posterPath,
+    backdropPath,
+    overview,
+    voteAverage,
+    releaseDate,
+    season,
+    episode,
+    totalEpisodes,
+    propServerId,
+    internalServerId,
+  ])
 
   // Use prop if provided, otherwise internal state
   const activeServerId = propServerId || internalServerId

@@ -1316,7 +1316,6 @@ export default function MovieDetails() {
         </div>
       )}
 
-      {/* 2. Streaming Movie Video Player Modal */}
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
@@ -1326,6 +1325,11 @@ export default function MovieDetails() {
         imdbId={movie.imdb_id}
         selectedServerId={selectedServerId}
         onServerChange={setSelectedServerId}
+        posterPath={movie.poster_path}
+        backdropPath={movie.backdrop_path}
+        overview={movie.overview}
+        voteAverage={movie.vote_average}
+        releaseDate={movie.release_date}
       />
 
       {/* 3. Image Fullscreen Lightbox Modal (Backdrops & Posters) */}

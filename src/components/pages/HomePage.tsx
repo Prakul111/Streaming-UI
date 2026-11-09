@@ -28,6 +28,7 @@ import {
 } from "@/api/fetch-trending"
 import { CarouselSkeleton } from "../skeleton"
 import { Card3D, Card3DSkeleton } from "../ui/card-3d"
+import ContinueWatchingRow from "../continue-watching-row"
 import { cn } from "@/lib/utils"
 
 // TMDB Genre ID to Name Mapping
@@ -970,8 +971,11 @@ export default function HomePage() {
         ) : null}
       </section>
 
+      {/* Continue Watching History Shelf */}
+      <ContinueWatchingRow />
+
       {/* Main Content Layout with 4 Key Sections in Exact Sequence */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-12 pt-8 sm:pt-12 space-y-12 sm:space-y-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-12 pt-4 sm:pt-6 space-y-12 sm:space-y-16">
 
         {/* ========================================================= */}
         {/* 1. TOP 10 MOVIES (Matching Screenshot 1)                  */}

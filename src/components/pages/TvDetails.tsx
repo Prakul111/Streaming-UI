@@ -1231,7 +1231,6 @@ export default function TvDetails() {
           </div>
         </div>
       )}
-      {/* 6. TV Show Player Modal Overlay */}
       <VideoPlayerModal
         isOpen={isPlayerOpen}
         onClose={() => setIsPlayerOpen(false)}
@@ -1248,6 +1247,11 @@ export default function TvDetails() {
         }}
         selectedServerId={selectedServerId}
         onServerChange={setSelectedServerId}
+        posterPath={show.poster_path}
+        backdropPath={show.backdrop_path}
+        overview={show.overview}
+        voteAverage={show.vote_average}
+        releaseDate={show.first_air_date}
       />
     </div>
   )

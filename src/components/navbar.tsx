@@ -410,6 +410,28 @@ export default function Navbar() {
                   <ChevronRight className="size-4 text-muted-foreground/60" />
                 </NavLink>
 
+                {/* Watch History */}
+                <NavLink
+                  to="/history"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
+                      isActive
+                        ? "bg-white/10 text-white font-semibold border border-white/15"
+                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                    )
+                  }
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                      <History className="size-4" />
+                    </div>
+                    <span className="font-medium">Watch History</span>
+                  </div>
+                  <ChevronRight className="size-4 text-muted-foreground/60" />
+                </NavLink>
+
                 {/* Anime */}
                 <NavLink
                   to="/anime"

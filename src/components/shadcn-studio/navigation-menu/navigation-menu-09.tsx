@@ -82,6 +82,23 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
             </NavLink>
           </NavigationMenuItem>
 
+          {/* Watch History Link */}
+          <NavigationMenuItem>
+            <NavLink
+              to="/history"
+              className={({ isActive }) =>
+                cn(
+                  linkBaseClasses,
+                  isActive
+                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                )
+              }
+            >
+              History
+            </NavLink>
+          </NavigationMenuItem>
+
           {/* Trending Dropdown */}
           <NavigationMenuItem>
             <NavigationMenuTrigger
@@ -197,18 +214,9 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
 
                 {/* Add Server */}
                 <li>
-                  <NavigationMenuLink
-                    closeOnClick
-                    render={(linkProps) => (
-                      <button
-                        {...linkProps}
-                        type="button"
-                        onClick={(e) => {
-                          linkProps.onClick?.(e)
-                          onOpenSubmitServer?.()
-                        }}
-                      />
-                    )}
+                  <button
+                    type="button"
+                    onClick={() => onOpenSubmitServer?.()}
                     className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-foreground hover:bg-muted/70 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     <div className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400">
@@ -223,7 +231,7 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                       </div>
                       <div className="text-[11px] text-muted-foreground">Submit custom stream</div>
                     </div>
-                  </NavigationMenuLink>
+                  </button>
                 </li>
 
                 {/* Changelog */}
