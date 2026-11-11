@@ -7,10 +7,14 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { NavLink, useLocation } from "react-router"
-import { TrendingUp, Film, Tv, Play, Users, History } from "lucide-react"
+import { TrendingUp, Film, Tv, Play, Users, Server, History } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const NavigationMenuDemo = () => {
+interface NavigationMenuDemoProps {
+  onOpenSubmitServer?: () => void
+}
+
+const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => {
   const location = useLocation()
   const isTrendingActive = location.pathname.startsWith("/trending")
   const isMoreActive =
@@ -206,6 +210,28 @@ const NavigationMenuDemo = () => {
                       <div className="text-[11px] text-muted-foreground">Actors & directors</div>
                     </div>
                   </NavigationMenuLink>
+                </li>
+
+                {/* Add Server */}
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => onOpenSubmitServer?.()}
+                    className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-foreground hover:bg-muted/70 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    <div className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400">
+                      <Server className="size-4" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-foreground flex items-center gap-1.5">
+                        <span>Add Server</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
+                          Custom
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-muted-foreground">Submit custom stream</div>
+                    </div>
+                  </button>
                 </li>
 
                 {/* Changelog */}

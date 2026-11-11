@@ -16,6 +16,7 @@ import {
   History,
 } from "lucide-react"
 import NavigationMenuDemo from "./shadcn-studio/navigation-menu/navigation-menu-09"
+import SubmitServerModal from "./submit-server-modal"
 import popcornLogo from "@/assets/popcorn-svgrepo-com.svg"
 import { useDebounce } from "@/hooks/use-debounce"
 import { cn } from "@/lib/utils"
@@ -24,6 +25,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
@@ -217,7 +219,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center">
-              <NavigationMenuDemo />
+              <NavigationMenuDemo onOpenSubmitServer={() => setIsSubmitModalOpen(true)} />
             </div>
           </div>
 
@@ -302,6 +304,12 @@ export default function Navbar() {
         </div>
       )}
 
+
+      {/* Submit Server Modal */}
+      <SubmitServerModal
+        isOpen={isSubmitModalOpen}
+        onClose={() => setIsSubmitModalOpen(false)}
+      />
 
       {/* Mobile & Tablet Menu Drawer */}
       {isMobileMenuOpen && (
