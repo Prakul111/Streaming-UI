@@ -126,7 +126,7 @@ export default function People() {
   }
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
+    <div className="min-h-screen bg-background text-foreground pb-24 selection:bg-purple-500/30">
       {/* 1. Header / Hero Banner */}
       <section className="relative overflow-hidden border-b border-white/5 pt-24 sm:pt-28 pb-10 sm:pb-14">
         {/* Ambient Gradient Glows */}

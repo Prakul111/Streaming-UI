@@ -770,8 +770,8 @@ export default function HomePage() {
 
             {/* Dark gradient mask overlays for legibility */}
             <div className="absolute inset-x-0 top-0 h-28 sm:h-36 z-10 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/80 via-35% md:via-background/40 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-r from-background via-background/75 via-45% to-transparent pointer-events-none" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/60 via-40% md:via-black/30 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/95 via-black/70 via-50% to-transparent pointer-events-none" />
 
             {/* Far right vertical watermark */}
             <div

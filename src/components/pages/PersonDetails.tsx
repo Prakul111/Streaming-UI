@@ -199,7 +199,7 @@ export default function PersonDetails() {
 
   if (isPending) {
     return (
-      <div className="min-h-screen bg-[#090b10] text-foreground pt-28 pb-20 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto space-y-8 animate-pulse">
+      <div className="min-h-screen bg-background text-foreground pt-28 pb-20 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto space-y-8 animate-pulse">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-4 space-y-4">
             <div className="w-full aspect-[2/3] rounded-2xl bg-white/5 border border-white/10" />
@@ -222,7 +222,7 @@ export default function PersonDetails() {
 
   if (error || !person) {
     return (
-      <div className="min-h-screen bg-[#090b10] text-foreground pt-36 pb-20 px-4 text-center space-y-4">
+      <div className="min-h-screen bg-background text-foreground pt-36 pb-20 px-4 text-center space-y-4">
         <User className="size-16 text-muted-foreground mx-auto" />
         <h2 className="text-2xl font-bold text-foreground">Person Not Found</h2>
         <p className="text-sm text-muted-foreground">
@@ -245,7 +245,7 @@ export default function PersonDetails() {
   const formattedBirthday = formatBirthdayAndAge(person.birthday, person.deathday)
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-foreground pt-24 sm:pt-28 pb-24 selection:bg-purple-500/30">
+    <div className="min-h-screen bg-background text-foreground pt-24 sm:pt-28 pb-24 selection:bg-purple-500/30">
       {/* Background ambient lighting */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-purple-600/10 via-indigo-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
 

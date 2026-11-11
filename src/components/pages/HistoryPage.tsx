@@ -363,22 +363,22 @@ export default function HistoryPage() {
           onClick={() => setIsConfirmClearOpen(false)}
         >
           <div
-            className="w-full max-w-md bg-[#12141c] border border-white/15 rounded-2xl p-6 shadow-2xl space-y-4"
+            className="w-full max-w-md bg-card border border-border rounded-2xl p-6 shadow-2xl space-y-4 text-foreground"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-3 text-amber-400">
+            <div className="flex items-center gap-3 text-amber-500">
               <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20">
                 <AlertTriangle className="size-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Clear Watch History?</h3>
-                <p className="text-xs text-zinc-400">
+                <h3 className="text-base font-bold text-foreground">Clear Watch History?</h3>
+                <p className="text-xs text-muted-foreground">
                   This will remove all {history.length} recorded items from this browser.
                 </p>
               </div>
             </div>
 
-            <p className="text-xs text-zinc-300">
+            <p className="text-xs text-muted-foreground">
               Your &quot;Continue Watching&quot; recommendations will also be cleared. This action cannot be undone.
             </p>
 
@@ -386,7 +386,7 @@ export default function HistoryPage() {
               <button
                 type="button"
                 onClick={() => setIsConfirmClearOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:bg-white/10 transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-all cursor-pointer border border-border"
               >
                 Cancel
               </button>

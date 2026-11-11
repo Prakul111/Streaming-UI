@@ -33,12 +33,11 @@ function RankNumber({ rank }: { rank: number }) {
           dominantBaseline="central"
           fill="none"
           stroke="currentColor"
-          strokeWidth="3.2"
+          strokeWidth="3.6"
           strokeLinejoin="round"
-          className="text-foreground/25 dark:text-white/35 font-black text-[96px] italic tracking-tighter"
+          className="text-neutral-400/90 dark:text-white/35 font-black text-[96px] italic tracking-tighter drop-shadow-none dark:drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
           style={{
             fontFamily: "Inter, system-ui, -apple-system, sans-serif",
-            filter: "drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5))",
           }}
         >
           {rank}

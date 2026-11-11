@@ -225,7 +225,7 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                     <div>
                       <div className="font-semibold text-foreground flex items-center gap-1.5">
                         <span>Add Server</span>
-                        <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
+                        <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold border border-purple-500/30">
                           Custom
                         </span>
                       </div>
@@ -247,7 +247,7 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                     <div>
                       <div className="font-semibold text-foreground flex items-center gap-1.5">
                         <span>Changelog</span>
-                        <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
+                        <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-500/30">
                           v2.5
                         </span>
                       </div>
