@@ -70,7 +70,7 @@ export default function Navbar() {
     } else {
       document.body.style.overflow = ""
     }
-    return () => {
+  return () => {
       document.body.style.overflow = ""
     }
   }, [isMobileMenuOpen])
@@ -185,6 +185,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const isHomePage = location.pathname === "/"
+  const isHeroPage = isHomePage || location.pathname.startsWith("/movie-details/") || location.pathname.startsWith("/tv-details/")
+  const isOverHero = isHeroPage && !isScrolled && !isMobileMenuOpen && !isMobileSearchOpen
+
   return (
     <>
       {/* Fixed Header */}
@@ -205,21 +209,41 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.02]"
             >
-              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-muted/80 dark:bg-white/10 border border-border/60 dark:border-white/15 shadow-sm group-hover:border-border dark:group-hover:border-white/30 group-hover:bg-muted dark:group-hover:bg-white/15 transition-all">
+              <div
+                className={cn(
+                  "relative flex size-9 sm:size-10 items-center justify-center rounded-xl shadow-sm transition-all",
+                  isOverHero
+                    ? "bg-white/10 border border-white/20 group-hover:bg-white/20 group-hover:border-white/30"
+                    : "bg-muted/80 dark:bg-white/10 border border-border/60 dark:border-white/15 group-hover:border-border dark:group-hover:border-white/30 group-hover:bg-muted dark:group-hover:bg-white/15"
+                )}
+              >
                 <img
                   className="h-5 sm:h-6 w-auto transition-transform duration-300 group-hover:scale-110"
                   src={popcornLogo}
                   alt="Streaming UI Logo"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
-                Streaming <span className="text-muted-foreground font-medium">UI</span>
+              <span
+                className={cn(
+                  "text-lg sm:text-xl font-bold tracking-tight transition-colors",
+                  isOverHero ? "text-white drop-shadow-sm" : "text-foreground"
+                )}
+              >
+                Streaming{" "}
+                <span
+                  className={cn(
+                    "font-medium transition-colors",
+                    isOverHero ? "text-white/70" : "text-muted-foreground"
+                  )}
+                >
+                  UI
+                </span>
               </span>
             </NavLink>
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center">
-              <NavigationMenuDemo onOpenSubmitServer={() => setIsSubmitModalOpen(true)} />
+              <NavigationMenuDemo onOpenSubmitServer={() => setIsSubmitModalOpen(true)} isOverHero={isOverHero} />
             </div>
           </div>
 
@@ -238,6 +262,7 @@ export default function Navbar() {
                 placeholder="Search movies, shows..."
                 size="sm"
                 shortcutKey="⌘K"
+                isOverHero={isOverHero}
               />
             </div>
 
@@ -247,7 +272,12 @@ export default function Navbar() {
                 setIsMobileSearchOpen(!isMobileSearchOpen)
                 setIsMobileMenuOpen(false)
               }}
-              className="md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground backdrop-blur-md transition-colors"
+              className={cn(
+                "md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full backdrop-blur-md transition-colors",
+                isOverHero
+                  ? "border border-white/20 bg-white/10 hover:bg-white/20 text-white"
+                  : "border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground"
+              )}
               title="Search"
               aria-label="Search"
             >
@@ -256,9 +286,16 @@ export default function Navbar() {
 
 
             {/* Theme Toggler */}
-            <div className="flex items-center justify-center size-10 rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 backdrop-blur-md transition-all">
+            <div
+              className={cn(
+                "flex items-center justify-center size-10 rounded-full backdrop-blur-md transition-all",
+                isOverHero
+                  ? "border border-white/20 bg-white/10 hover:bg-white/20 text-white"
+                  : "border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground"
+              )}
+            >
               <AnimatedThemeToggler
-                className="p-2 transition text-foreground"
+                className="p-2 transition text-current"
                 variant="circle"
                 duration={400}
               />
@@ -270,7 +307,12 @@ export default function Navbar() {
                 setIsMobileMenuOpen(!isMobileMenuOpen)
                 setIsMobileSearchOpen(false)
               }}
-              className="md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground backdrop-blur-md transition-colors"
+              className={cn(
+                "md:hidden cursor-pointer flex size-10 items-center justify-center rounded-full backdrop-blur-md transition-colors",
+                isOverHero
+                  ? "border border-white/20 bg-white/10 hover:bg-white/20 text-white"
+                  : "border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 text-foreground"
+              )}
               title={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}

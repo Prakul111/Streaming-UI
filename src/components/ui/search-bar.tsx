@@ -17,6 +17,7 @@ export interface SearchBarProps {
   onBlur?: () => void
   inputRef?: React.Ref<HTMLInputElement>
   shortcutKey?: string
+  isOverHero?: boolean
 }
 
 export function SearchBar({
@@ -35,6 +36,7 @@ export function SearchBar({
   onBlur,
   inputRef,
   shortcutKey,
+  isOverHero = false,
 }: SearchBarProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -75,7 +77,8 @@ export function SearchBar({
       {/* Left Search Icon with Guaranteed z-10 Stacking */}
       <Search
         className={cn(
-          "absolute top-1/2 -translate-y-1/2 text-muted-foreground/70 pointer-events-none z-10 transition-colors group-focus-within:text-purple-400",
+          "absolute top-1/2 -translate-y-1/2 pointer-events-none z-10 transition-colors",
+          isOverHero ? "text-white/70 group-focus-within:text-white" : "text-muted-foreground/70 group-focus-within:text-purple-400",
           sizeClasses.icon
         )}
       />
@@ -91,9 +94,10 @@ export function SearchBar({
         onBlur={onBlur}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "w-full rounded-full border border-border/60 bg-muted/30 text-foreground placeholder:text-muted-foreground/60 shadow-inner backdrop-blur-md transition-all duration-200",
-          "hover:border-border hover:bg-muted/40",
-          "focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20 focus:bg-muted/50",
+          "w-full rounded-full shadow-inner backdrop-blur-md transition-all duration-200",
+          isOverHero
+            ? "border border-white/20 bg-white/10 text-white placeholder:text-white/60 hover:border-white/30 hover:bg-white/15 focus:outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20 focus:bg-black/40"
+            : "border border-border/60 bg-muted/30 text-foreground placeholder:text-muted-foreground/60 hover:border-border hover:bg-muted/40 focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20 focus:bg-muted/50",
           sizeClasses.input,
           shortcutKey && !value && !showSubmitButton ? "pr-12" : sizeClasses.paddingRight,
           inputClassName
@@ -121,7 +125,10 @@ export function SearchBar({
           <button
             type="submit"
             className={cn(
-              "cursor-pointer rounded-full bg-foreground text-background hover:bg-foreground/85 dark:bg-white dark:text-black dark:hover:bg-zinc-200 font-semibold shadow-sm transition-all duration-150 active:scale-95 shrink-0",
+              "cursor-pointer rounded-full font-semibold shadow-sm transition-all duration-150 active:scale-95 shrink-0",
+              isOverHero
+                ? "bg-white text-black hover:bg-neutral-200"
+                : "bg-foreground text-background hover:bg-foreground/85 dark:bg-white dark:text-black dark:hover:bg-zinc-200",
               sizeClasses.button
             )}
           >

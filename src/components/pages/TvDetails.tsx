@@ -275,7 +275,7 @@ export default function TvDetails() {
 
 
   return (
-    <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-purple-500/30">
+    <div className="w-full min-h-screen bg-background text-foreground pb-24 selection:bg-purple-500/30">
       {/* 1. HERO SECTION (CinemaOS Hero Layout matching HomePage) */}
       <section className="relative w-full min-h-[75vh] sm:min-h-[82vh] lg:min-h-[88vh] max-h-[960px] bg-black overflow-hidden select-none flex flex-col justify-end">
         {/* Cinematic Backdrop Image - Crystal clear on mobile and desktop */}
@@ -289,8 +289,9 @@ export default function TvDetails() {
 
         {/* Dark gradient mask overlays for legibility - matching HomePage */}
         <div className="absolute inset-x-0 top-0 h-28 sm:h-36 z-10 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#090b10] via-[#090b10]/80 via-35% md:via-[#090b10]/40 to-transparent pointer-events-none" />
-        <div className="hidden md:block absolute inset-0 z-10 bg-gradient-to-r from-[#090b10] via-[#090b10]/75 via-45% to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/50 via-35% md:via-black/25 to-transparent pointer-events-none" />
+        <div className="hidden md:block absolute inset-0 z-10 bg-gradient-to-r from-black/90 via-black/60 via-45% to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-16 sm:h-24 z-15 bg-gradient-to-t from-background to-transparent dark:hidden pointer-events-none" />
 
         {/* Far right vertical watermark matching HomePage */}
         <div

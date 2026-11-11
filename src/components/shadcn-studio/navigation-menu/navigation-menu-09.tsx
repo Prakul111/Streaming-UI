@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils"
 
 interface NavigationMenuDemoProps {
   onOpenSubmitServer?: () => void
+  isOverHero?: boolean
 }
 
-const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => {
+const NavigationMenuDemo = ({ onOpenSubmitServer, isOverHero = false }: NavigationMenuDemoProps) => {
   const location = useLocation()
   const isTrendingActive = location.pathname.startsWith("/trending")
   const isMoreActive =
@@ -39,8 +40,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 cn(
                   linkBaseClasses,
                   isActive
-                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                    ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : isOverHero ? "text-white/80 hover:text-white hover:bg-white/10 border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
                 )
               }
             >
@@ -56,8 +57,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 cn(
                   linkBaseClasses,
                   isActive
-                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                    ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : isOverHero ? "text-white/80 hover:text-white hover:bg-white/10 border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
                 )
               }
             >
@@ -73,8 +74,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 cn(
                   linkBaseClasses,
                   isActive
-                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                    ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : isOverHero ? "text-white/80 hover:text-white hover:bg-white/10 border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
                 )
               }
             >
@@ -89,8 +90,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 linkBaseClasses,
                 "h-auto bg-transparent hover:bg-muted/50 dark:hover:bg-white/10",
                 isTrendingActive
-                  ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                  : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white border-transparent"
+                  ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                  : isOverHero ? "text-white/80 hover:text-white border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white border-transparent"
               )}
             >
               Trending
@@ -154,8 +155,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 cn(
                   linkBaseClasses,
                   isActive
-                    ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                    : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
+                    ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                    : isOverHero ? "text-white/80 hover:text-white hover:bg-white/10 border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white hover:bg-muted/50 dark:hover:bg-white/10 border-transparent"
                 )
               }
             >
@@ -170,8 +171,8 @@ const NavigationMenuDemo = ({ onOpenSubmitServer }: NavigationMenuDemoProps) => 
                 linkBaseClasses,
                 "h-auto bg-transparent hover:bg-muted/50 dark:hover:bg-white/10",
                 isMoreActive
-                  ? "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
-                  : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white border-transparent"
+                  ? isOverHero ? "bg-white/20 text-white font-semibold border-white/25 shadow-sm" : "bg-muted dark:bg-white/15 text-foreground dark:text-white font-semibold border-border/50 dark:border-white/15 shadow-sm"
+                  : isOverHero ? "text-white/80 hover:text-white border-transparent" : "text-muted-foreground dark:text-white/75 hover:text-foreground dark:hover:text-white border-transparent"
               )}
             >
               More
