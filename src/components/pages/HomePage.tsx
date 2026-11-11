@@ -726,7 +726,7 @@ export default function HomePage() {
         role="region"
         aria-roledescription="carousel"
         aria-label="Featured Movies"
-        className="relative group w-full h-[80vh] min-h-[580px] sm:h-[84vh] sm:min-h-[620px] md:h-[88vh] md:min-h-[680px] max-h-[960px] bg-black overflow-hidden select-none"
+        className="relative group w-full h-[80vh] min-h-[580px] sm:h-[84vh] sm:min-h-[620px] md:h-[88vh] md:min-h-[680px] max-h-[960px] bg-background dark:bg-black overflow-hidden select-none"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -768,17 +768,17 @@ export default function HomePage() {
               </AnimatePresence>
             </div>
 
-            {/* Dark gradient mask overlays for legibility */}
-            <div className="absolute inset-x-0 top-0 h-28 sm:h-36 z-10 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/95 via-black/60 via-40% md:via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/95 via-black/70 via-50% to-transparent pointer-events-none" />
+            {/* Soft edge scrims only - keeping backdrop photo completely visible & colorful */}
+            <div className="absolute inset-x-0 top-0 h-24 sm:h-32 z-10 bg-gradient-to-b from-background/70 via-background/20 to-transparent dark:from-black/80 dark:via-black/30 dark:to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-20 sm:h-28 z-10 bg-gradient-to-t from-background via-background/50 to-transparent dark:from-black/95 dark:via-black/50 dark:to-transparent pointer-events-none" />
+            <div className="hidden dark:block absolute inset-0 z-10 bg-gradient-to-r from-black/85 via-black/40 via-45% to-transparent pointer-events-none" />
 
             {/* Far right vertical watermark */}
             <div
               aria-hidden="true"
               className="hidden xl:flex absolute right-5 top-1/2 -translate-y-1/2 z-20 pointer-events-none select-none"
             >
-              <span className="[writing-mode:vertical-rl] text-[10px] tracking-[0.45em] text-white/20 uppercase font-bold">
+              <span className="[writing-mode:vertical-rl] text-[10px] tracking-[0.45em] text-foreground/15 dark:text-white/20 uppercase font-bold">
                 Streaming-ui
               </span>
             </div>
@@ -787,7 +787,7 @@ export default function HomePage() {
             {activeMovie && (
               <div className="absolute inset-x-4 sm:inset-x-8 md:inset-x-12 lg:inset-x-16 bottom-8 sm:bottom-10 lg:bottom-12 z-20 flex flex-col justify-end">
                 {/* Overlaid Movie Details */}
-                <div className="max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4">
+                <div className="max-w-xl lg:max-w-2xl rounded-3xl bg-background/85 dark:bg-black/50 backdrop-blur-2xl border border-border/60 dark:border-white/10 p-5 sm:p-7 shadow-2xl space-y-3 sm:space-y-4">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeMovie.id}
@@ -799,14 +799,14 @@ export default function HomePage() {
                     >
                       {/* Top Badge: Pill + Trending rank */}
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
-                        <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md px-3 py-1 shadow-sm">
-                          <Popcorn className="size-3.5 text-white/90" />
-                          <span className="text-[11px] font-extrabold tracking-wider text-white uppercase">
+                        <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 dark:border-white/20 bg-card/80 dark:bg-black/40 backdrop-blur-md px-3 py-1 shadow-sm">
+                          <Popcorn className="size-3.5 text-primary dark:text-white/90" />
+                          <span className="text-[11px] font-extrabold tracking-wider text-foreground dark:text-white uppercase">
                             Streaming-ui
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-white/80 tracking-wide uppercase">
-                          <span className="text-white/40">•</span>
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold text-muted-foreground dark:text-white/80 tracking-wide uppercase">
+                          <span className="text-border dark:text-white/40">•</span>
                           <span>
                             #{activeIndex + 1} TRENDING · MOVIE · {activeMovie.year}
                           </span>
@@ -815,7 +815,7 @@ export default function HomePage() {
 
                       {/* Title with Camera Viewfinder Framing Brackets */}
                       <div className="relative inline-block pr-6 pb-2">
-                        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-[1.05] drop-shadow-2xl font-sans">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight text-foreground dark:text-white leading-[1.08] drop-shadow-xs dark:drop-shadow-2xl font-sans">
                           {activeMovie.title}
                         </h1>
                       </div>
@@ -823,7 +823,7 @@ export default function HomePage() {
                       {/* Rating Stars, Percentage & Genre Badges */}
                       <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
                         {/* 5-Star Rating */}
-                        <div className="flex items-center gap-0.5 sm:gap-1 text-amber-400">
+                        <div className="flex items-center gap-0.5 sm:gap-1 text-amber-500">
                           {[1, 2, 3, 4, 5].map((starNum) => {
                             const starScore = Number(activeMovie.rating) / 2
                             const isFilled = starScore >= starNum - 0.25
@@ -833,8 +833,8 @@ export default function HomePage() {
                                 className={cn(
                                   "size-3.5 sm:size-4",
                                   isFilled
-                                    ? "fill-amber-400 text-amber-400"
-                                    : "fill-white/10 text-white/30"
+                                    ? "fill-amber-500 text-amber-500"
+                                    : "fill-muted text-muted-foreground/30 dark:fill-white/10 dark:text-white/30"
                                 )}
                               />
                             )
@@ -842,7 +842,7 @@ export default function HomePage() {
                         </div>
 
                         {/* Match Percentage */}
-                        <span className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                        <span className="text-xs sm:text-sm font-bold text-foreground dark:text-white tracking-tight">
                           {activeMovie.percentage}%
                         </span>
 
@@ -851,7 +851,7 @@ export default function HomePage() {
                           {activeMovie.genres.map((genre) => (
                             <span
                               key={genre}
-                              className="rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-3 py-0.5 text-[11px] sm:text-xs font-medium text-white/90 shadow-sm"
+                              className="rounded-full border border-border/70 dark:border-white/20 bg-card/80 dark:bg-white/10 backdrop-blur-md px-3 py-0.5 text-[11px] sm:text-xs font-semibold text-foreground dark:text-white/90 shadow-xs shadow-sm"
                             >
                               {genre}
                             </span>
@@ -860,21 +860,21 @@ export default function HomePage() {
                       </div>
 
                       {/* Description */}
-                      <p className="text-xs sm:text-sm md:text-base text-gray-200/90 leading-relaxed font-normal max-w-xl line-clamp-3 drop-shadow">
+                      <p className="text-xs sm:text-sm md:text-base text-muted-foreground dark:text-gray-200/90 leading-relaxed font-normal max-w-xl line-clamp-3">
                         {activeMovie.overview}
                       </p>
 
                       {/* Action Buttons: Play, More Info, and Bookmark */}
                       <div className="flex items-center gap-2.5 sm:gap-3 pt-1">
                         <Link to={`/movie-details/${activeMovie.id}?autoplay=true`}>
-                          <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-white px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-black shadow-xl transition-all duration-200 hover:bg-neutral-200 hover:scale-[1.03] active:scale-[0.98]">
-                            <Play className="size-3.5 sm:size-4 fill-black text-black" />
+                          <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full bg-foreground text-background hover:bg-foreground/85 dark:bg-white dark:text-black dark:hover:bg-neutral-200 px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold shadow-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]">
+                            <Play className="size-3.5 sm:size-4 fill-current text-current" />
                             <span>Play</span>
                           </button>
                         </Link>
 
                         <Link to={`/movie-details/${activeMovie.id}`}>
-                          <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-white/20 hover:scale-[1.03] active:scale-[0.98]">
+                          <button className="cursor-pointer flex items-center justify-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-card/80 dark:bg-white/10 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-foreground dark:text-white shadow-md transition-all duration-200 hover:bg-muted dark:hover:bg-white/20 hover:scale-[1.03] active:scale-[0.98]">
                             <Info className="size-3.5 sm:size-4" />
                             <span>More Info</span>
                           </button>
@@ -904,8 +904,8 @@ export default function HomePage() {
                               className={cn(
                                 "h-1 rounded-full transition-all duration-300",
                                 isActive
-                                  ? "w-8 sm:w-10 bg-white shadow-[0_0_8px_rgba(255,255,255,0.7)]"
-                                  : "w-4 sm:w-5 bg-white/30 hover:bg-white/50"
+                                  ? "w-8 sm:w-10 bg-foreground dark:bg-white shadow-[0_0_8px_rgba(0,0,0,0.25)] dark:shadow-[0_0_8px_rgba(255,255,255,0.7)]"
+                                  : "w-4 sm:w-5 bg-foreground/20 hover:bg-foreground/40 dark:bg-white/30 dark:hover:bg-white/50"
                               )}
                             />
                           </button>
@@ -917,14 +917,14 @@ export default function HomePage() {
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={handlePrev}
-                        className="cursor-pointer size-7 sm:size-8 rounded-full border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center text-white/80 hover:text-white hover:bg-white/25 active:scale-95 transition-all"
+                        className="cursor-pointer size-7 sm:size-8 rounded-full border border-border/80 dark:border-white/20 bg-card/80 dark:bg-white/10 backdrop-blur-md flex items-center justify-center text-foreground/80 dark:text-white/80 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/25 shadow-xs active:scale-95 transition-all"
                         aria-label="Previous slide"
                       >
                         <ChevronLeft className="size-3.5 sm:size-4" />
                       </button>
                       <button
                         onClick={handleNext}
-                        className="cursor-pointer size-7 sm:size-8 rounded-full border border-white/20 bg-white/10 backdrop-blur-md flex items-center justify-center text-white/80 hover:text-white hover:bg-white/25 active:scale-95 transition-all"
+                        className="cursor-pointer size-7 sm:size-8 rounded-full border border-border/80 dark:border-white/20 bg-card/80 dark:bg-white/10 backdrop-blur-md flex items-center justify-center text-foreground/80 dark:text-white/80 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/25 shadow-xs active:scale-95 transition-all"
                         aria-label="Next slide"
                       >
                         <ChevronRight className="size-3.5 sm:size-4" />
@@ -935,8 +935,8 @@ export default function HomePage() {
                   {/* Right: UP NEXT preview cards */}
                   {upNextMovies.length > 0 && (
                     <div className="hidden md:block">
-                      <div className="flex items-center gap-2 mb-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white/80">
-                        <span className="h-3 w-0.5 bg-white rounded-full" />
+                      <div className="flex items-center gap-2 mb-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-foreground/80 dark:text-white/80">
+                        <span className="h-3 w-0.5 bg-foreground dark:bg-white rounded-full" />
                         <span>UP NEXT</span>
                       </div>
                       <div className="flex items-center gap-3">
@@ -946,7 +946,7 @@ export default function HomePage() {
                             onClick={() => setActiveIndex(item.carouselIndex)}
                             className="group/thumb text-left cursor-pointer transition-all duration-300 focus:outline-none"
                           >
-                            <div className="w-28 sm:w-32 lg:w-36 aspect-[16/9] rounded-xl overflow-hidden border border-white/15 bg-neutral-900 shadow-xl transition-all duration-300 group-hover/thumb:border-white/50 group-hover/thumb:scale-105 active:scale-95 relative">
+                            <div className="w-28 sm:w-32 lg:w-36 aspect-[16/9] rounded-xl overflow-hidden border border-border/80 dark:border-white/15 bg-card dark:bg-neutral-900 shadow-md transition-all duration-300 group-hover/thumb:border-foreground/40 dark:group-hover/thumb:border-white/50 group-hover/thumb:scale-105 active:scale-95 relative">
                               <img
                                 src={item.thumbnail}
                                 alt={item.title}
@@ -956,7 +956,7 @@ export default function HomePage() {
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-60 group-hover/thumb:opacity-20 transition-opacity" />
                             </div>
-                            <p className="mt-1.5 text-[11px] sm:text-xs font-medium text-white/80 group-hover/thumb:text-white truncate max-w-[112px] sm:max-w-[128px] lg:max-w-[144px] transition-colors">
+                            <p className="mt-1.5 text-[11px] sm:text-xs font-medium text-muted-foreground group-hover/thumb:text-foreground dark:text-white/80 dark:group-hover/thumb:text-white truncate max-w-[112px] sm:max-w-[128px] lg:max-w-[144px] transition-colors">
                               {item.title}
                             </p>
                           </button>

@@ -193,7 +193,7 @@ export default function Navbar() {
           "fixed top-0 inset-x-0 z-50 transition-all duration-300",
           isScrolled || isMobileMenuOpen || isMobileSearchOpen
             ? "bg-background/85 shadow-sm backdrop-blur-xl border-b border-border/40"
-            : "bg-background/70 dark:bg-transparent backdrop-blur-md dark:backdrop-blur-none border-b border-border/30 dark:border-transparent"
+            : "bg-transparent"
         )}
       >
         <div className="mx-auto flex h-16 sm:h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
