@@ -3,7 +3,6 @@ import { NavLink, useNavigate, useLocation, useSearchParams } from "react-router
 import { AnimatedThemeToggler } from "./ui/animated-theme-toggler"
 import { SearchBar } from "./ui/search-bar"
 import {
-  Server,
   Menu,
   X,
   Search,
@@ -17,7 +16,6 @@ import {
   History,
 } from "lucide-react"
 import NavigationMenuDemo from "./shadcn-studio/navigation-menu/navigation-menu-09"
-import SubmitServerModal from "./submit-server-modal"
 import popcornLogo from "@/assets/popcorn-svgrepo-com.svg"
 import { useDebounce } from "@/hooks/use-debounce"
 import { cn } from "@/lib/utils"
@@ -26,7 +24,6 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
-  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
@@ -220,7 +217,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center">
-              <NavigationMenuDemo onOpenSubmitServer={() => setIsSubmitModalOpen(true)} />
+              <NavigationMenuDemo />
             </div>
           </div>
 
@@ -255,16 +252,6 @@ export default function Navbar() {
               <Search className="size-4.5" />
             </button>
 
-            {/* Add Server Modal Trigger */}
-            <button
-              type="button"
-              onClick={() => setIsSubmitModalOpen(true)}
-              className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] shrink-0"
-              title="Submit or add custom streaming server"
-            >
-              <Server className="size-3.5 text-purple-400" />
-              <span>Add Server</span>
-            </button>
 
             {/* Theme Toggler */}
             <div className="flex items-center justify-center size-10 rounded-full border border-border/40 dark:border-white/10 bg-muted/30 dark:bg-white/5 hover:bg-muted/60 dark:hover:bg-white/15 backdrop-blur-md transition-all">
@@ -315,11 +302,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Submit Server Modal */}
-      <SubmitServerModal
-        isOpen={isSubmitModalOpen}
-        onClose={() => setIsSubmitModalOpen(false)}
-      />
 
       {/* Mobile & Tablet Menu Drawer */}
       {isMobileMenuOpen && (
@@ -504,20 +486,6 @@ export default function Navbar() {
                 </NavLink>
               </div>
 
-              {/* Add Server Button for Mobile */}
-              <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false)
-                    setIsSubmitModalOpen(true)
-                  }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-white/15 bg-white/10 text-zinc-200 hover:text-white text-xs font-semibold transition-all cursor-pointer"
-                >
-                  <Server className="size-4 text-zinc-400" />
-                  <span>Submit or Add Server</span>
-                </button>
-              </div>
 
               {/* Trending Section */}
               <div className="flex flex-col space-y-2 pt-2 border-t border-border/30">
