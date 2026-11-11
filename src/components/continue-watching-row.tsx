@@ -101,7 +101,7 @@ export default function ContinueWatchingRow() {
             ? `https://image.tmdb.org/t/p/w780${item.backdropPath}`
             : item.posterPath
             ? `https://image.tmdb.org/t/p/w500${item.posterPath}`
-            : "/public/screenshots/01-home-hero.png"
+            : "/screenshots/01-home-hero.png"
 
           const detailUrl =
             item.mediaType === "tv"
