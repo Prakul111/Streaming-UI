@@ -73,8 +73,8 @@ export default function HistoryPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border/60">
         <div>
           <div className="flex items-center gap-2.5 mb-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-white/10 border border-white/15 text-white shadow-sm">
-              <Clock className="size-5 text-white" />
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary dark:bg-white/10 dark:border-white/15 dark:text-white shadow-sm">
+              <Clock className="size-5 text-primary dark:text-white" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
               Watch History
@@ -240,7 +240,7 @@ export default function HistoryPage() {
             return (
               <div
                 key={item.id}
-                className="group relative flex flex-col rounded-2xl overflow-hidden bg-[#12141c] border border-white/10 shadow-lg hover:border-white/30 hover:shadow-2xl transition-all duration-300"
+                className="group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/80 dark:bg-[#12141c] dark:border-white/10 shadow-md hover:border-primary/40 dark:hover:border-white/30 hover:shadow-xl transition-all duration-300"
               >
                 {/* Visual Thumbnail */}
                 <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/60">
@@ -306,17 +306,17 @@ export default function HistoryPage() {
                 </div>
 
                 {/* Card Content & Action Bar */}
-                <div className="p-3.5 flex flex-col flex-1 justify-between gap-2.5 bg-[#0e1017]">
+                <div className="p-3.5 flex flex-col flex-1 justify-between gap-2.5 bg-card dark:bg-[#0e1017]">
                   <div>
                     <Link
                       to={detailUrl}
-                      className="text-sm font-bold text-white hover:underline line-clamp-1"
+                      className="text-sm font-bold text-foreground hover:underline line-clamp-1"
                       title={item.title}
                     >
                       {item.title}
                     </Link>
 
-                    <div className="flex items-center gap-2 text-[11px] text-zinc-400 mt-1">
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-1">
                       <span>Watched {formatRelativeTime(item.lastWatchedAt)}</span>
                       {item.voteAverage && (
                         <>
@@ -330,11 +330,11 @@ export default function HistoryPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                  <div className="flex items-center gap-2 pt-2 border-t border-border/50 dark:border-white/5">
                     <button
                       type="button"
                       onClick={() => setActivePlayItem(item)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-98"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-zinc-200 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-98"
                     >
                       <Play className="size-3 fill-black text-black" />
                       <span>Resume</span>
@@ -342,7 +342,7 @@ export default function HistoryPage() {
 
                     <Link
                       to={detailUrl}
-                      className="flex size-8 items-center justify-center rounded-xl bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white border border-white/10 transition-all"
+                      className="flex size-8 items-center justify-center rounded-xl bg-muted/80 hover:bg-muted text-foreground border border-border dark:bg-white/5 dark:hover:bg-white/15 dark:text-zinc-300 dark:hover:text-white dark:border-white/10 transition-all"
                       title="View Details"
                       aria-label="View Details"
                     >

@@ -154,10 +154,10 @@ export default function People() {
 
           {/* Heading */}
           <div className="space-y-2">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-white drop-shadow-xl">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-foreground drop-shadow-sm">
               Popular People
             </h1>
-            <p className="text-sm sm:text-base text-gray-400 max-w-2xl leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
               Explore acclaimed actors, visionary directors, and emerging talents
               shaping cinematic and television entertainment around the globe.
             </p>
@@ -186,8 +186,8 @@ export default function People() {
                   className={cn(
                     "cursor-pointer px-3.5 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border",
                     selectedDept === dept.id
-                      ? "bg-white text-black font-semibold border-white shadow-sm scale-102"
-                      : "bg-white/5 border-white/10 text-muted-foreground hover:text-white hover:bg-white/10"
+                      ? "bg-primary text-primary-foreground font-semibold border-primary shadow-sm scale-102 dark:bg-white dark:text-black dark:border-white"
+                      : "bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground border-border/60 dark:bg-white/5 dark:border-white/10 dark:hover:text-white dark:hover:bg-white/10"
                   )}
                 >
                   {dept.label}
@@ -204,13 +204,13 @@ export default function People() {
         className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-8 sm:pt-12 space-y-10"
       >
         {/* Results Counter / Filter Indicator */}
-        <div className="flex items-center justify-between text-left border-b border-white/5 pb-3">
+        <div className="flex items-center justify-between text-left border-b border-border/50 dark:border-white/5 pb-3">
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
             <span>
               {isSearching ? `Search results for "${activeQuery}"` : "Trending Stars"}
             </span>
             <span>•</span>
-            <span className="text-white font-bold">
+            <span className="text-foreground font-bold">
               Page {page} of {totalPages}
             </span>
             {selectedDept !== "all" && (
@@ -267,7 +267,7 @@ export default function People() {
                 <Link
                   key={person.id}
                   to={`/person/${person.id}`}
-                  className="group relative cursor-pointer flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-[#0d111a]/80 hover:border-white/30 hover:bg-[#121622] transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 select-none text-left"
+                  className="group relative cursor-pointer flex flex-col rounded-2xl overflow-hidden border border-border/80 bg-card hover:border-primary/40 hover:bg-card/90 dark:border-white/10 dark:bg-[#0d111a]/80 dark:hover:border-white/30 dark:hover:bg-[#121622] transition-all duration-300 hover:shadow-xl hover:-translate-y-1 select-none text-left"
                 >
                   {/* Portrait Image Container */}
                   <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted/20">
@@ -312,7 +312,7 @@ export default function People() {
 
                   {/* Card Info Footer */}
                   <div className="p-3.5 space-y-1">
-                    <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                    <h3 className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors truncate">
                       {person.name}
                     </h3>
 
@@ -328,9 +328,9 @@ export default function People() {
           </div>
         ) : (
           /* Empty State */
-          <div className="py-20 rounded-3xl border border-dashed border-white/10 bg-white/5 text-center space-y-3">
+          <div className="py-20 rounded-3xl border border-dashed border-border/50 bg-muted/10 text-center space-y-3">
             <User className="size-10 text-muted-foreground mx-auto" />
-            <h3 className="text-base font-bold text-white">No talent found</h3>
+            <h3 className="text-base font-bold text-foreground">No talent found</h3>
             <p className="text-xs text-muted-foreground max-w-sm mx-auto">
               We couldn't find any people matching your criteria. Try adjusting
               your search query or department filter.

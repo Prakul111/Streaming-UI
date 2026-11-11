@@ -47,17 +47,17 @@ export default function ContinueWatchingRow() {
       {/* Section Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="flex size-8 items-center justify-center rounded-xl bg-white/10 border border-white/15 text-white shadow-sm">
-            <Clock className="size-4 text-white" />
+          <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary dark:bg-white/10 dark:border-white/15 dark:text-white shadow-sm">
+            <Clock className="size-4 text-primary dark:text-white" />
           </div>
           <div>
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
               <span>Continue Watching</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/10">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted dark:bg-white/10 text-muted-foreground dark:text-zinc-300 border border-border dark:border-white/10">
                 {history.length}
               </span>
             </h2>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-muted-foreground">
               Pick up right where you left off
             </p>
           </div>
@@ -66,7 +66,7 @@ export default function ContinueWatchingRow() {
         <div className="flex items-center gap-2">
           <Link
             to="/history"
-            className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-zinc-300 hover:text-white transition-colors mr-2 hover:underline"
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors mr-2 hover:underline"
           >
             <span>View all</span>
             <ChevronRight className="size-3.5" />
@@ -75,7 +75,7 @@ export default function ContinueWatchingRow() {
           <button
             type="button"
             onClick={() => handleScroll("left")}
-            className="flex size-8 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/15 transition-all cursor-pointer"
+            className="flex size-8 items-center justify-center rounded-full bg-muted/80 hover:bg-muted border border-border text-foreground dark:bg-white/5 dark:border-white/10 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/15 transition-all cursor-pointer shadow-xs"
             aria-label="Scroll left"
           >
             <ChevronLeft className="size-4" />
@@ -83,7 +83,7 @@ export default function ContinueWatchingRow() {
           <button
             type="button"
             onClick={() => handleScroll("right")}
-            className="flex size-8 items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/15 transition-all cursor-pointer"
+            className="flex size-8 items-center justify-center rounded-full bg-muted/80 hover:bg-muted border border-border text-foreground dark:bg-white/5 dark:border-white/10 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/15 transition-all cursor-pointer shadow-xs"
             aria-label="Scroll right"
           >
             <ChevronRight className="size-4" />
@@ -111,7 +111,7 @@ export default function ContinueWatchingRow() {
           return (
             <div
               key={item.id}
-              className="group relative flex-none w-[270px] sm:w-[310px] md:w-[340px] aspect-[16/9] rounded-2xl overflow-hidden bg-[#12141c] border border-white/10 shadow-lg snap-start transition-all duration-300 hover:border-white/30 hover:shadow-2xl hover:scale-[1.02]"
+              className="group relative flex-none w-[270px] sm:w-[310px] md:w-[340px] aspect-[16/9] rounded-2xl overflow-hidden bg-card border border-border/80 dark:bg-[#12141c] dark:border-white/10 shadow-md snap-start transition-all duration-300 hover:border-primary/40 dark:hover:border-white/30 hover:shadow-xl hover:scale-[1.02]"
             >
               {/* Media Thumbnail */}
               <img

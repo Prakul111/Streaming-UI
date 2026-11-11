@@ -62,7 +62,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* Feature 1 */}
             <div className="group flex items-start gap-3.5 rounded-2xl border border-border/30 bg-card/40 p-4 transition-all duration-300 hover:border-white/20 hover:bg-card/70 hover:shadow-lg">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white group-hover:scale-110 transition-transform duration-300">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted dark:bg-white/10 text-foreground dark:text-white border border-border/40 dark:border-white/10 group-hover:scale-110 transition-transform duration-300">
                 <Film className="size-5" />
               </div>
               <div className="space-y-1">
@@ -77,7 +77,7 @@ export default function Footer() {
 
             {/* Feature 2 */}
             <div className="group flex items-start gap-3.5 rounded-2xl border border-border/30 bg-card/40 p-4 transition-all duration-300 hover:border-white/20 hover:bg-card/70 hover:shadow-lg">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white group-hover:scale-110 transition-transform duration-300">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted dark:bg-white/10 text-foreground dark:text-white border border-border/40 dark:border-white/10 group-hover:scale-110 transition-transform duration-300">
                 <MonitorPlay className="size-5" />
               </div>
               <div className="space-y-1">
@@ -92,7 +92,7 @@ export default function Footer() {
 
             {/* Feature 3 */}
             <div className="group flex items-start gap-3.5 rounded-2xl border border-border/30 bg-card/40 p-4 transition-all duration-300 hover:border-white/20 hover:bg-card/70 hover:shadow-lg">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white group-hover:scale-110 transition-transform duration-300">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted dark:bg-white/10 text-foreground dark:text-white border border-border/40 dark:border-white/10 group-hover:scale-110 transition-transform duration-300">
                 <Flame className="size-5 text-amber-400" />
               </div>
               <div className="space-y-1">
@@ -107,8 +107,8 @@ export default function Footer() {
 
             {/* Feature 4 */}
             <div className="group flex items-start gap-3.5 rounded-2xl border border-border/30 bg-card/40 p-4 transition-all duration-300 hover:border-white/20 hover:bg-card/70 hover:shadow-lg">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white group-hover:scale-110 transition-transform duration-300">
-                <Tv className="size-5 text-zinc-300" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted dark:bg-white/10 text-foreground dark:text-white border border-border/40 dark:border-white/10 group-hover:scale-110 transition-transform duration-300">
+                <Tv className="size-5 text-foreground/80 dark:text-zinc-300" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-sm font-bold text-foreground tracking-tight">
@@ -136,8 +136,8 @@ export default function Footer() {
                   src={popcornLogo}
                   alt="Streaming UI Logo"
                 />
-                <span className="text-xl font-bold tracking-tight text-white">
-                  Streaming <span className="text-zinc-400 font-medium">UI</span>
+                <span className="text-xl font-bold tracking-tight text-foreground">
+                  Streaming <span className="text-muted-foreground font-medium">UI</span>
                 </span>
               </Link>
             </div>
@@ -160,7 +160,7 @@ export default function Footer() {
                 <Link
                   to="/movie"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Discover Movies
                 </Link>
@@ -169,7 +169,7 @@ export default function Footer() {
                 <Link
                   to="/now-playing-movie"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Now Playing
                 </Link>
@@ -178,7 +178,7 @@ export default function Footer() {
                 <Link
                   to="/popular-movie"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Popular Movies
                 </Link>
@@ -187,7 +187,7 @@ export default function Footer() {
                 <Link
                   to="/top-rated-movie"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Top Rated Movies
                 </Link>
@@ -196,7 +196,7 @@ export default function Footer() {
                 <Link
                   to="/trending-movie"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Trending Movies
                 </Link>
@@ -215,7 +215,7 @@ export default function Footer() {
                 <Link
                   to="/tv-shows"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Discover Shows
                 </Link>
@@ -224,7 +224,7 @@ export default function Footer() {
                 <Link
                   to="/airing-today-tv"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Airing Today
                 </Link>
@@ -233,7 +233,7 @@ export default function Footer() {
                 <Link
                   to="/popular-tv"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Popular TV Series
                 </Link>
@@ -242,7 +242,7 @@ export default function Footer() {
                 <Link
                   to="/top-rated-tv"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Top Rated Shows
                 </Link>
@@ -251,7 +251,7 @@ export default function Footer() {
                 <Link
                   to="/trending-tv"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Trending TV
                 </Link>
@@ -270,7 +270,7 @@ export default function Footer() {
                 <Link
                   to="/anime"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Discover Anime
                 </Link>
@@ -279,7 +279,7 @@ export default function Footer() {
                 <Link
                   to="/anime?category=popular"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Popular Anime
                 </Link>
@@ -288,7 +288,7 @@ export default function Footer() {
                 <Link
                   to="/anime?category=top-rated"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Top Rated Anime
                 </Link>
@@ -297,7 +297,7 @@ export default function Footer() {
                 <Link
                   to="/anime?category=airing"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Currently Airing
                 </Link>
@@ -306,7 +306,7 @@ export default function Footer() {
                 <Link
                   to="/anime?category=movies"
                   onClick={scrollToTop}
-                  className="text-muted-foreground hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  className="text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   Anime Movies
                 </Link>
@@ -354,7 +354,7 @@ export default function Footer() {
                 key={g.id}
                 to={`/movie`}
                 onClick={scrollToTop}
-                className="rounded-lg border border-border/40 bg-card/40 px-2.5 py-1 text-xs text-muted-foreground hover:border-purple-500/40 hover:bg-purple-500/10 hover:text-white transition-all hover:scale-[1.02]"
+                className="rounded-lg border border-border/40 bg-card/40 px-2.5 py-1 text-xs text-muted-foreground hover:border-purple-500/40 hover:bg-purple-500/10 hover:text-foreground dark:hover:text-white transition-all hover:scale-[1.02]"
               >
                 {g.name}
               </Link>
@@ -420,7 +420,7 @@ export default function Footer() {
             {/* Back to top button */}
             <button
               onClick={scrollToTop}
-              className="cursor-pointer group flex items-center gap-1.5 rounded-full border border-border/50 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:border-purple-500/50 hover:bg-purple-500/10 hover:text-white transition-all active:scale-95"
+              className="cursor-pointer group flex items-center gap-1.5 rounded-full border border-border/50 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:border-purple-500/50 hover:bg-purple-500/10 hover:text-foreground dark:hover:text-white transition-all active:scale-95"
               title="Back to top of page"
             >
               <span>Top</span>

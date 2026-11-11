@@ -224,7 +224,7 @@ export default function PersonDetails() {
     return (
       <div className="min-h-screen bg-[#090b10] text-foreground pt-36 pb-20 px-4 text-center space-y-4">
         <User className="size-16 text-muted-foreground mx-auto" />
-        <h2 className="text-2xl font-bold text-white">Person Not Found</h2>
+        <h2 className="text-2xl font-bold text-foreground">Person Not Found</h2>
         <p className="text-sm text-muted-foreground">
           We couldn't retrieve the requested artist information.
         </p>
@@ -328,16 +328,16 @@ export default function PersonDetails() {
             </div>
 
             {/* Personal Info Heading */}
-            <div className="space-y-5 pt-2 border-t border-white/5">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+            <div className="space-y-5 pt-2 border-t border-border/50 dark:border-white/5">
+              <h2 className="text-xl font-bold text-foreground tracking-tight">
                 Personal Info
               </h2>
 
               {/* Stage Name / Native Name */}
               {person.original_name && person.original_name !== person.name && (
                 <div className="space-y-0.5">
-                  <h3 className="text-sm font-semibold text-white">Stage Name</h3>
-                  <p className="text-sm text-gray-300 font-medium">
+                  <h3 className="text-sm font-semibold text-foreground">Stage Name</h3>
+                  <p className="text-sm text-muted-foreground font-medium">
                     {person.original_name}
                   </p>
                 </div>
@@ -345,24 +345,24 @@ export default function PersonDetails() {
 
               {/* Known For */}
               <div className="space-y-0.5">
-                <h3 className="text-sm font-semibold text-white">Known For</h3>
-                <p className="text-sm text-gray-300">
+                <h3 className="text-sm font-semibold text-foreground">Known For</h3>
+                <p className="text-sm text-muted-foreground">
                   {person.known_for_department || "Acting"}
                 </p>
               </div>
 
               {/* Known Credits */}
               <div className="space-y-0.5">
-                <h3 className="text-sm font-semibold text-white">Known Credits</h3>
-                <p className="text-sm text-gray-300">
+                <h3 className="text-sm font-semibold text-foreground">Known Credits</h3>
+                <p className="text-sm text-muted-foreground">
                   {totalKnownCredits}
                 </p>
               </div>
 
               {/* Gender */}
               <div className="space-y-0.5">
-                <h3 className="text-sm font-semibold text-white">Gender</h3>
-                <p className="text-sm text-gray-300">
+                <h3 className="text-sm font-semibold text-foreground">Gender</h3>
+                <p className="text-sm text-muted-foreground">
                   {getGenderLabel(person.gender)}
                 </p>
               </div>
@@ -370,8 +370,8 @@ export default function PersonDetails() {
               {/* Birthday */}
               {formattedBirthday && (
                 <div className="space-y-0.5">
-                  <h3 className="text-sm font-semibold text-white">Birthday</h3>
-                  <p className="text-sm text-gray-300 leading-snug">
+                  <h3 className="text-sm font-semibold text-foreground">Birthday</h3>
+                  <p className="text-sm text-muted-foreground leading-snug">
                     {formattedBirthday}
                   </p>
                 </div>
@@ -380,8 +380,8 @@ export default function PersonDetails() {
               {/* Place of Birth */}
               {person.place_of_birth && (
                 <div className="space-y-0.5">
-                  <h3 className="text-sm font-semibold text-white">Place of Birth</h3>
-                  <p className="text-sm text-gray-300 leading-snug">
+                  <h3 className="text-sm font-semibold text-foreground">Place of Birth</h3>
+                  <p className="text-sm text-muted-foreground leading-snug">
                     {person.place_of_birth}
                   </p>
                 </div>
@@ -390,10 +390,10 @@ export default function PersonDetails() {
               {/* Also Known As */}
               {person.also_known_as && person.also_known_as.length > 0 && (
                 <div className="space-y-1.5 pt-1">
-                  <h3 className="text-sm font-semibold text-white">Also Known As</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Also Known As</h3>
                   <div className="space-y-1">
                     {person.also_known_as.map((alias, idx) => (
-                      <p key={idx} className="text-sm text-gray-300 leading-snug">
+                      <p key={idx} className="text-sm text-muted-foreground leading-snug">
                         {alias}
                       </p>
                     ))}
@@ -409,21 +409,21 @@ export default function PersonDetails() {
           <section className="lg:col-span-8 xl:col-span-8.5 space-y-10 min-w-0">
             {/* Person Name Heading */}
             <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight">
                 {person.name}
               </h1>
             </div>
 
             {/* Biography */}
             <div className="space-y-2.5">
-              <h2 className="text-lg sm:text-xl font-bold text-white">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">
                 Biography
               </h2>
               {person.biography ? (
                 <div className="space-y-2">
                   <p
                     className={cn(
-                      "text-sm sm:text-base text-gray-300/95 leading-relaxed font-normal whitespace-pre-line",
+                      "text-sm sm:text-base text-foreground/90 leading-relaxed font-normal whitespace-pre-line",
                       !isBioExpanded && "line-clamp-6"
                     )}
                   >
@@ -448,7 +448,7 @@ export default function PersonDetails() {
             {/* Known For Horizontal Carousel */}
             {knownForItems.length > 0 && (
               <div className="space-y-3.5">
-                <h2 className="text-lg sm:text-xl font-bold text-white">
+                <h2 className="text-lg sm:text-xl font-bold text-foreground">
                   Known For
                 </h2>
 
@@ -501,9 +501,9 @@ export default function PersonDetails() {
 
             {/* Filmography Section with Department Heading, Search & Filter Dropdowns */}
             <div className="space-y-4 pt-2">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 dark:border-white/10 pb-4">
                 {/* Active Department Title */}
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                   {activeDepartment}
                 </h2>
 
@@ -660,9 +660,9 @@ export default function PersonDetails() {
               </div>
 
               {/* Filmography Timeline Table matching exact design */}
-              <div className="rounded-2xl border border-white/10 bg-[#0c1017]/90 shadow-xl overflow-hidden">
+              <div className="rounded-2xl border border-border/80 bg-card dark:border-white/10 dark:bg-[#0c1017]/90 shadow-lg overflow-hidden">
                 {filmographyItems.length > 0 ? (
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-border/60 dark:divide-white/5">
                     {filmographyItems.map((credit, idx) => {
                       const date = credit.release_date || credit.first_air_date
                       const year = date ? date.slice(0, 4) : "—"
@@ -675,7 +675,7 @@ export default function PersonDetails() {
                       return (
                         <div
                           key={`${credit.credit_id || credit.id}-${idx}`}
-                          className="flex items-start gap-4 sm:gap-6 px-4 sm:px-6 py-3.5 hover:bg-white/[0.03] transition-colors group"
+                          className="flex items-start gap-4 sm:gap-6 px-4 sm:px-6 py-3.5 hover:bg-muted/50 dark:hover:bg-white/[0.03] transition-colors group"
                         >
                           {/* Year column */}
                           <div className="w-12 sm:w-14 shrink-0 pt-0.5 text-sm font-semibold text-gray-300 tabular-nums">
@@ -691,7 +691,7 @@ export default function PersonDetails() {
                           <div className="flex-1 min-w-0 space-y-0.5">
                             <Link
                               to={detailUrl}
-                              className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors inline-block"
+                              className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors inline-block"
                             >
                               {title}
                             </Link>

@@ -35,7 +35,7 @@ function RankNumber({ rank }: { rank: number }) {
           stroke="currentColor"
           strokeWidth="3.2"
           strokeLinejoin="round"
-          className="text-white/40 dark:text-white/35 font-black text-[96px] italic tracking-tighter"
+          className="text-foreground/25 dark:text-white/35 font-black text-[96px] italic tracking-tighter"
           style={{
             fontFamily: "Inter, system-ui, -apple-system, sans-serif",
             filter: "drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5))",
@@ -107,7 +107,7 @@ export function Card3D({
           onMouseLeave={handleMouseLeave}
           className="hover-3d w-full aspect-[16/9]"
         >
-          <figure className="w-full h-full rounded-2xl overflow-hidden relative border border-white/10 bg-muted/20">
+          <figure className="w-full h-full rounded-2xl overflow-hidden relative border border-border/70 dark:border-white/10 bg-muted/30">
             <img
               src={image}
               alt={title}
@@ -152,7 +152,7 @@ export function Card3D({
               </div>
             )}
           </div>
-          <h3 className="font-bold text-sm text-foreground truncate group-hover/card:text-white transition-colors">
+          <h3 className="font-bold text-sm text-foreground truncate group-hover/card:text-primary dark:group-hover/card:text-white transition-colors">
             {title}
           </h3>
         </div>

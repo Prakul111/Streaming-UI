@@ -581,19 +581,19 @@ export default function Changelog() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#090b10] text-foreground pb-24 selection:bg-white/20 selection:text-white">
+    <div className="w-full min-h-screen bg-background text-foreground pb-24">
       {/* Top Ambient Glow Line */}
             {/* Hero Header Section */}
       <section className="relative z-10 pt-28 sm:pt-32 pb-10 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-zinc-300 text-xs font-medium tracking-wide uppercase mb-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted dark:bg-white/10 border border-border dark:border-white/15 text-muted-foreground dark:text-zinc-300 text-xs font-medium tracking-wide uppercase mb-4">
           <span>Release Notes</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground">
           Changelog
         </h1>
 
-        <p className="mt-3 text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+        <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
           A continuous record of new features, performance updates, and bug fixes.
         </p>
 
@@ -601,7 +601,7 @@ export default function Changelog() {
         <div className="mt-10 max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-3">
           <div className="relative w-full group">
             {/* Guaranteed visible search icon with high z-index and purple accent */}
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20 text-zinc-400 group-focus-within:text-white transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-20 text-muted-foreground group-focus-within:text-primary transition-colors">
               <Search className="size-4" />
             </div>
             <input
@@ -609,13 +609,13 @@ export default function Changelog() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search features, fixes, or versions..."
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-gray-400 text-sm focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all backdrop-blur-md shadow-inner relative z-10"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-muted/40 border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:border-primary/50 focus:bg-muted/60 dark:bg-white/5 dark:border-white/10 dark:text-white dark:focus:border-white/30 dark:focus:bg-white/10 transition-all backdrop-blur-md shadow-inner relative z-10"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer z-20"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer z-20"
                 title="Clear search"
               >
                 <X className="size-3.5" />
@@ -624,7 +624,7 @@ export default function Changelog() {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0 overflow-x-auto w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-muted/50 border border-border dark:bg-white/5 dark:border-white/10 backdrop-blur-md shrink-0 overflow-x-auto w-full sm:w-auto">
             {[
               { id: "all", label: "All" },
               { id: "feat", label: "Features" },
@@ -638,8 +638,8 @@ export default function Changelog() {
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
                   filterType === f.id
-                    ? "bg-white text-black font-semibold shadow-sm"
-                    : "text-muted-foreground hover:text-white hover:bg-white/5"
+                    ? "bg-primary text-primary-foreground font-semibold shadow-sm dark:bg-white dark:text-black"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:text-white dark:hover:bg-white/5"
                 )}
               >
                 {f.label}
@@ -654,25 +654,25 @@ export default function Changelog() {
         {filteredReleases.map((release) => (
           <article
             key={release.version}
-            className="relative pl-6 sm:pl-8 border-l border-white/15 space-y-6"
+            className="relative pl-6 sm:pl-8 border-l border-border dark:border-white/15 space-y-6"
           >
             {/* Timeline Dot Indicator */}
-            <div className="absolute -left-[7px] top-2 size-3.5 rounded-full bg-zinc-300 border-2 border-[#090b10]" />
+            <div className="absolute -left-[7px] top-2 size-3.5 rounded-full bg-primary dark:bg-zinc-300 border-2 border-background" />
 
             {/* Release Header */}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                <span className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                   {release.version}
                 </span>
                 <span
                   className={cn(
                     "text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border",
                     release.badge === "Latest"
-                      ? "bg-white text-black font-semibold border-white"
+                      ? "bg-primary text-primary-foreground font-semibold border-primary dark:bg-white dark:text-black dark:border-white"
                       : release.badge === "Major"
-                      ? "bg-white/10 text-white font-medium border-white/20"
-                      : "bg-white/10 text-white/70 border-white/15"
+                      ? "bg-purple-500/10 text-purple-600 dark:text-purple-300 font-medium border-purple-500/20"
+                      : "bg-muted text-muted-foreground font-medium border-border dark:bg-white/10 dark:text-white/70 dark:border-white/15"
                   )}
                 >
                   {release.badge}
@@ -686,17 +686,17 @@ export default function Changelog() {
             </div>
 
             {/* Tagline */}
-            <p className="text-base sm:text-lg font-semibold text-gray-200">
+            <p className="text-base sm:text-lg font-semibold text-foreground/90">
               {release.tagline}
             </p>
 
             {/* Highlights Card */}
             {release.highlights && release.highlights.length > 0 && (
-              <div className="rounded-2xl bg-white/5 border border-white/10 p-4 sm:p-5 backdrop-blur-md shadow-lg space-y-2.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
+              <div className="rounded-2xl bg-muted/40 border border-border dark:bg-white/5 dark:border-white/10 p-4 sm:p-5 backdrop-blur-md shadow-sm space-y-2.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
                   Highlights
                 </h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs sm:text-sm text-gray-300">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs sm:text-sm text-muted-foreground">
                   {release.highlights.map((h, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -717,7 +717,7 @@ export default function Changelog() {
                   {release.items.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-xl bg-[#121622]/60 border border-white/10 hover:border-white/20 transition-colors space-y-1.5"
+                      className="p-3.5 rounded-xl bg-card border border-border/80 hover:border-border dark:bg-[#121622]/60 dark:border-white/10 dark:hover:border-white/20 transition-colors space-y-1.5"
                     >
                       <div className="flex items-center gap-2">
                         <span
@@ -733,11 +733,11 @@ export default function Changelog() {
                             {item.tag}
                           </span>
                         )}
-                        <h5 className="text-xs sm:text-sm font-bold text-white">
+                        <h5 className="text-xs sm:text-sm font-bold text-foreground">
                           {item.title}
                         </h5>
                       </div>
-                      <p className="text-xs text-gray-300 leading-relaxed pl-1">
+                      <p className="text-xs text-muted-foreground leading-relaxed pl-1">
                         {item.description}
                       </p>
                     </div>
@@ -749,9 +749,9 @@ export default function Changelog() {
         ))}
 
         {filteredReleases.length === 0 && (
-          <div className="p-12 text-center rounded-2xl bg-white/5 border border-white/10 space-y-3">
+          <div className="p-12 text-center rounded-2xl bg-muted/10 border border-dashed border-border space-y-3">
             <Search className="size-8 text-muted-foreground mx-auto" />
-            <h3 className="text-base font-bold text-white">No releases match your query</h3>
+            <h3 className="text-base font-bold text-foreground">No releases match your query</h3>
             <p className="text-xs text-muted-foreground">
               Try adjusting your search terms or clearing the filter type.
             </p>

@@ -49,7 +49,7 @@ const queryClient = new QueryClient({
 function PageFallback() {
   return (
     <div className="w-full flex-1 min-h-[70vh] flex flex-col items-center justify-center p-6 gap-3">
-      <div className="size-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+      <div className="size-8 rounded-full border-2 border-border border-t-primary dark:border-white/20 dark:border-t-white animate-spin" />
       <span className="text-xs font-semibold text-muted-foreground animate-pulse tracking-wide">
         Loading...
       </span>
@@ -60,7 +60,7 @@ function PageFallback() {
 function RootLayout() {
   return (
     <ServerHealthProvider>
-      <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-white/20 selection:text-white">
+      <div className="bg-background text-foreground min-h-screen flex flex-col selection:bg-primary/20 selection:text-primary dark:selection:bg-white/20 dark:selection:text-white">
         <ScrollRestoration />
         <Navbar />
         <main className="w-full flex-grow flex flex-col">

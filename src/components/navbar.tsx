@@ -192,7 +192,7 @@ export default function Navbar() {
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300",
           isScrolled || isMobileMenuOpen || isMobileSearchOpen
-            ? "bg-background/80 shadow-lg shadow-black/10 backdrop-blur-xl"
+            ? "bg-background/85 shadow-sm backdrop-blur-xl border-b border-border/40"
             : "bg-transparent"
         )}
       >
@@ -205,15 +205,15 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.02]"
             >
-              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-white/10 border border-white/15 shadow-sm group-hover:border-white/30 group-hover:bg-white/15 transition-all">
+              <div className="relative flex size-9 sm:size-10 items-center justify-center rounded-xl bg-muted/80 dark:bg-white/10 border border-border/60 dark:border-white/15 shadow-sm group-hover:border-border dark:group-hover:border-white/30 group-hover:bg-muted dark:group-hover:bg-white/15 transition-all">
                 <img
                   className="h-5 sm:h-6 w-auto transition-transform duration-300 group-hover:scale-110"
                   src={popcornLogo}
                   alt="Streaming UI Logo"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-bold tracking-tight text-white">
-                Streaming <span className="text-zinc-400 font-medium">UI</span>
+              <span className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                Streaming <span className="text-muted-foreground font-medium">UI</span>
               </span>
             </NavLink>
 
@@ -342,13 +342,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <Home className="size-4" />
                     </div>
                     <span className="font-medium">Home</span>
@@ -364,13 +364,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <Film className="size-4" />
                     </div>
                     <span className="font-medium">Movies</span>
@@ -386,13 +386,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <Tv className="size-4" />
                     </div>
                     <span className="font-medium">TV Shows</span>
@@ -408,13 +408,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <History className="size-4" />
                     </div>
                     <span className="font-medium">Watch History</span>
@@ -430,13 +430,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <Film className="size-4" />
                     </div>
                     <span className="font-medium">Anime</span>
@@ -452,13 +452,13 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <Users className="size-4" />
                     </div>
                     <span className="font-medium">People</span>
@@ -474,18 +474,18 @@ export default function Navbar() {
                     cn(
                       "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all",
                       isActive
-                        ? "bg-white/10 text-white font-semibold border border-white/15"
-                        : "text-foreground hover:bg-muted/50 border border-transparent"
+                        ? "bg-primary/10 text-primary dark:bg-white/15 dark:text-white font-semibold border border-primary/20 dark:border-white/15"
+                        : "text-foreground hover:bg-muted/60 dark:hover:bg-white/5 border border-transparent"
                     )
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+                    <div className="size-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center text-foreground dark:text-white border border-border/40 dark:border-white/10">
                       <History className="size-4" />
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Changelog</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-zinc-300 font-semibold border border-white/15">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted dark:bg-white/10 text-muted-foreground dark:text-zinc-300 font-semibold border border-border/50 dark:border-white/15">
                         v2.4
                       </span>
                     </div>

@@ -528,14 +528,14 @@ export default function TvDetails() {
 
       {/* Floating Status / Network Metadata Bar below Hero */}
       <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 mt-4 sm:mt-6 mb-8">
-        <div className="rounded-2xl bg-[#0d121c]/80 backdrop-blur-xl border border-white/10 px-6 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-xl">
+        <div className="rounded-2xl bg-card border border-border/80 dark:bg-[#0d121c]/80 dark:border-white/10 px-6 py-3.5 flex flex-wrap items-center justify-between gap-6 shadow-md">
             {/* Left metadata points */}
             <div className="flex flex-wrap items-center gap-6 sm:gap-10 text-left">
               <div className="space-y-0.5">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   STATUS
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {show.status || "Returning Series"}
                 </div>
               </div>
@@ -544,7 +544,7 @@ export default function TvDetails() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   LANGUAGE
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {show.original_language?.toUpperCase() || "EN"}
                 </div>
               </div>
@@ -553,7 +553,7 @@ export default function TvDetails() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   FIRST AIRED
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {formatLongDate(show.first_air_date)}
                 </div>
               </div>
@@ -562,7 +562,7 @@ export default function TvDetails() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   LAST AIRED
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {formatLongDate(show.last_air_date || latestEpisode?.air_date)}
                 </div>
               </div>
@@ -571,7 +571,7 @@ export default function TvDetails() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   SEASONS
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {show.number_of_seasons || seasons.length}
                 </div>
               </div>
@@ -580,7 +580,7 @@ export default function TvDetails() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   EPISODES
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-white">
+                <div className="text-xs sm:text-sm font-bold text-foreground">
                   {show.number_of_episodes || 0}
                 </div>
               </div>
@@ -621,7 +621,7 @@ export default function TvDetails() {
         {seasons.length > 0 && (
           <section ref={episodesSectionRef} className="space-y-5 text-left">
             {/* Header & Controls */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border/50 dark:border-white/5 pb-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
                   <div className="w-1 h-3.5 bg-purple-500 rounded-full" />
@@ -629,7 +629,7 @@ export default function TvDetails() {
                     SEASON {selectedSeason} • {sortedEpisodes.length} EPISODES
                   </span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                   Episodes
                 </h2>
               </div>
@@ -643,11 +643,11 @@ export default function TvDetails() {
                     <button
                       type="button"
                       onClick={() => setIsSeasonDropdownOpen(!isSeasonDropdownOpen)}
-                      className="cursor-pointer flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs sm:text-sm font-bold text-white transition-all shadow-sm"
+                      className="cursor-pointer flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-xl bg-muted/80 border border-border hover:bg-muted text-xs sm:text-sm font-bold text-foreground dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:text-white transition-all shadow-sm"
                       aria-expanded={isSeasonDropdownOpen}
                       aria-haspopup="true"
                     >
-                      <div className="size-5 rounded-full bg-white/15 flex items-center justify-center text-[10px] font-black text-white">
+                      <div className="size-5 rounded-full bg-primary/10 dark:bg-white/15 flex items-center justify-center text-[10px] font-black text-primary dark:text-white">
                         S{selectedSeason}
                       </div>
                       <span>Season {selectedSeason}</span>
@@ -671,7 +671,7 @@ export default function TvDetails() {
                     )}
 
                     {isSeasonDropdownOpen && (
-                      <div className="absolute left-0 top-full mt-2 z-40 w-48 sm:w-52 rounded-xl bg-[#121620]/95 backdrop-blur-xl border border-white/15 p-1.5 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-200">
+                      <div className="absolute left-0 top-full mt-2 z-40 w-48 sm:w-52 rounded-xl bg-popover border border-border text-popover-foreground dark:bg-[#121620]/95 dark:border-white/15 p-1.5 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-200">
                         {seasons.map((season: any) => (
                           <button
                             key={season.id}
@@ -683,8 +683,8 @@ export default function TvDetails() {
                             className={cn(
                               "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                               selectedSeason === season.season_number
-                                ? "bg-purple-600 text-white"
-                                : "text-white/80 hover:bg-white/10 hover:text-white"
+                                ? "bg-primary text-primary-foreground font-bold"
+                                : "text-foreground/80 hover:bg-muted dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white"
                             )}
                           >
                             <span>Season {season.season_number}</span>
@@ -709,15 +709,15 @@ export default function TvDetails() {
                 {/* 2. Secondary View Controls Cluster (View Mode Toggles + Scroll Arrows) */}
                 <div className="flex items-center gap-1.5 shrink-0 ml-auto sm:ml-0">
                   {/* 3 View Mode Toggles: Cards (Carousel), Grid, List */}
-                  <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shrink-0">
+                  <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/70 border border-border dark:bg-white/5 dark:border-white/10 backdrop-blur-md shrink-0">
                     <button
                       type="button"
                       onClick={() => setEpisodeViewMode("cards")}
                       className={cn(
                         "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
                         episodeViewMode === "cards"
-                          ? "bg-white text-black shadow-md font-bold"
-                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                          ? "bg-background text-foreground shadow-sm font-bold dark:bg-white dark:text-black"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:text-white dark:hover:bg-white/5"
                       )}
                       title="Carousel Cards View"
                       aria-label="Carousel Cards View"
@@ -731,8 +731,8 @@ export default function TvDetails() {
                       className={cn(
                         "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
                         episodeViewMode === "grid"
-                          ? "bg-white text-black shadow-md font-bold"
-                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                          ? "bg-background text-foreground shadow-sm font-bold dark:bg-white dark:text-black"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:text-white dark:hover:bg-white/5"
                       )}
                       title="Grid View"
                       aria-label="Grid View"
@@ -746,8 +746,8 @@ export default function TvDetails() {
                       className={cn(
                         "cursor-pointer p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5",
                         episodeViewMode === "list"
-                          ? "bg-white text-black shadow-md font-bold"
-                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                          ? "bg-background text-foreground shadow-sm font-bold dark:bg-white dark:text-black"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:text-white dark:hover:bg-white/5"
                       )}
                       title="List View"
                       aria-label="List View"
@@ -762,7 +762,7 @@ export default function TvDetails() {
                       <button
                         type="button"
                         onClick={() => scrollEpisodes("left")}
-                        className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                        className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                         aria-label="Scroll left"
                       >
                         <ChevronLeft className="size-4" />
@@ -770,7 +770,7 @@ export default function TvDetails() {
                       <button
                         type="button"
                         onClick={() => scrollEpisodes("right")}
-                        className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                        className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                         aria-label="Scroll right"
                       >
                         <ChevronRight className="size-4" />
@@ -856,7 +856,7 @@ export default function TvDetails() {
 
                           {/* Episode Title & Overview below */}
                           <div className="space-y-1 text-left">
-                            <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                            <h3 className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors truncate">
                               {episode.name}
                             </h3>
                             <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
@@ -928,7 +928,7 @@ export default function TvDetails() {
                           </div>
 
                           <div className="space-y-1 text-left">
-                            <h3 className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                            <h3 className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors truncate">
                               {episode.name}
                             </h3>
                             <p className="text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed">
@@ -957,7 +957,7 @@ export default function TvDetails() {
                             setPlayerEpisode(episode.episode_number)
                             setIsPlayerOpen(true)
                           }}
-                          className="group flex flex-col sm:flex-row gap-4 items-start p-3 sm:p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer w-full select-none"
+                          className="group flex flex-col sm:flex-row gap-4 items-start p-3 sm:p-4 rounded-2xl border border-border/80 bg-card hover:bg-muted/50 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 transition-all cursor-pointer w-full select-none"
                         >
                           <div className="relative aspect-video w-full sm:w-48 md:w-56 shrink-0 rounded-xl overflow-hidden shadow-md border border-white/10 bg-black/60">
                             <img
@@ -977,7 +977,7 @@ export default function TvDetails() {
 
                           <div className="flex-grow space-y-1 text-left">
                             <div className="flex items-center justify-between gap-2">
-                              <h3 className="text-base font-bold text-white group-hover:text-purple-400 transition-colors">
+                              <h3 className="text-base font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors">
                                 {episode.name}
                               </h3>
                               <span className="text-xs text-muted-foreground font-semibold flex items-center gap-1">
@@ -985,7 +985,7 @@ export default function TvDetails() {
                                 {episode.runtime ? `${episode.runtime}m` : "50m"}
                               </span>
                             </div>
-                            <p className="text-xs sm:text-sm text-gray-300/80 font-normal leading-relaxed line-clamp-2">
+                            <p className="text-xs sm:text-sm text-muted-foreground font-normal leading-relaxed line-clamp-2">
                               {episode.overview || "No description available for this episode."}
                             </p>
                           </div>
@@ -1006,15 +1006,15 @@ export default function TvDetails() {
         {/* =======================================================================
             3. CAST & CREW SECTION (Screenshot Reference)
         ======================================================================= */}
-        <section className="rounded-3xl border border-white/10 bg-[#0c1017]/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl space-y-6 text-left">
+        <section className="rounded-3xl border border-border/80 bg-card dark:border-white/10 dark:bg-[#0c1017]/80 backdrop-blur-xl p-6 sm:p-8 shadow-xl space-y-6 text-left">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="flex items-center justify-between border-b border-border/50 dark:border-white/10 pb-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
                 <div className="w-1 h-3.5 bg-purple-500 rounded-full" />
                 <span>FEATURING</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                 Cast & crew
               </h2>
             </div>
@@ -1051,7 +1051,7 @@ export default function TvDetails() {
                       loading="lazy"
                     />
                     <div className="space-y-0.5 min-w-0">
-                      <p className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors truncate">
+                      <p className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors truncate">
                         {actor.name}
                       </p>
                       <p className="text-xs text-muted-foreground truncate">

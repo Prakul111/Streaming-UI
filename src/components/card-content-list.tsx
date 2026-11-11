@@ -96,7 +96,7 @@ export default function CardContentList({
     >
       <div
         ref={tiltRef}
-        className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-md transform-gpu"
+        className="relative rounded-2xl overflow-hidden border border-border/70 dark:border-white/10 bg-muted/30 dark:bg-black/40 backdrop-blur-md transform-gpu"
       >
         <figure className="w-full">
           <img
@@ -124,7 +124,7 @@ export default function CardContentList({
         <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap">{year}</span>
         <span className="rounded-full bg-muted text-foreground px-1.5 sm:px-2 py-0.5 sm:py-1 whitespace-nowrap truncate max-w-[65px] sm:max-w-none">{type}</span>
       </div>
-      <div className="font-semibold px-0.5 sm:px-1 text-xs sm:text-sm leading-snug line-clamp-2 wrap-anywhere group-hover/card:text-white transition-colors">
+      <div className="font-semibold px-0.5 sm:px-1 text-xs sm:text-sm leading-snug line-clamp-2 wrap-anywhere group-hover/card:text-primary dark:group-hover/card:text-white transition-colors">
         {title}
       </div>
       {formattedDate && (

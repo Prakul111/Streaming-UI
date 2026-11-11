@@ -176,8 +176,8 @@ export default function StreamingServerSelector({
             className={cn(
               "flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all text-xs font-semibold backdrop-blur-md cursor-pointer",
               isOpen
-                ? "bg-zinc-800 border-white/30 text-white shadow-lg"
-                : "bg-white/10 hover:bg-white/15 border-white/15 text-white/90"
+                ? "bg-muted border-border text-foreground shadow-lg dark:bg-zinc-800 dark:border-white/30 dark:text-white"
+                : "bg-muted/70 hover:bg-muted border-border/70 text-foreground dark:bg-white/10 dark:hover:bg-white/15 dark:border-white/15 dark:text-white/90"
             )}
             title="Select Streaming Server"
             aria-expanded={isOpen}
@@ -225,11 +225,11 @@ export default function StreamingServerSelector({
           {isOpen && (
             <div
               style={menuStyle}
-              className="absolute z-[100] rounded-2xl bg-[#0f1118] border border-white/15 p-2.5 shadow-2xl ring-1 ring-black/50 animate-in fade-in zoom-in-95 duration-150"
+              className="absolute z-[100] rounded-2xl bg-popover border border-border text-popover-foreground dark:bg-[#0f1118] dark:border-white/15 p-2.5 shadow-2xl ring-1 ring-black/10 dark:ring-black/50 animate-in fade-in zoom-in-95 duration-150"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="px-2.5 py-2 border-b border-white/10 mb-2 flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
+              <div className="px-2.5 py-2 border-b border-border/50 dark:border-white/10 mb-2 flex items-center justify-between">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-foreground dark:text-zinc-300 flex items-center gap-1.5">
                   <Server className="size-3 text-zinc-400" />
                   Streaming Servers
                 </span>
@@ -239,7 +239,7 @@ export default function StreamingServerSelector({
                     type="button"
                     onClick={() => runHealthCheck(rawAvailable, true)}
                     disabled={isProbing}
-                    className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-200 border border-white/10 text-[10px] font-semibold cursor-pointer transition-all disabled:opacity-50"
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground border border-border dark:bg-white/10 dark:hover:bg-white/20 dark:text-zinc-200 dark:border-white/10 text-[10px] font-semibold cursor-pointer transition-all disabled:opacity-50"
                     title="Check latency"
                   >
                     <RefreshCw className={cn("size-2.5", isProbing && "animate-spin")} />
@@ -270,15 +270,15 @@ export default function StreamingServerSelector({
                       className={cn(
                         "w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all cursor-pointer group",
                         isSelected
-                          ? "bg-white/15 border border-white/25 text-white"
+                          ? "bg-primary/10 border border-primary/20 text-primary dark:bg-white/15 dark:border-white/25 dark:text-white"
                           : isOffline
-                          ? "opacity-60 hover:opacity-100 hover:bg-white/5 text-zinc-400 border border-transparent"
-                          : "hover:bg-white/10 text-zinc-200 hover:text-white border border-transparent"
+                          ? "opacity-60 hover:opacity-100 hover:bg-muted/50 text-muted-foreground border border-transparent"
+                          : "hover:bg-muted text-foreground dark:text-zinc-200 dark:hover:bg-white/10 dark:hover:text-white border border-transparent"
                       )}
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-xs font-semibold text-white truncate flex items-center gap-1">
+                          <span className="text-xs font-semibold text-foreground dark:text-white truncate flex items-center gap-1">
                             {server.name}
                             {isCommunity && (
                               <span title="Community Server" className="inline-flex">
@@ -360,13 +360,13 @@ export default function StreamingServerSelector({
         {showLabel && (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded-lg bg-white/10 text-white border border-white/15 shadow-sm">
+              <span className="flex size-6 items-center justify-center rounded-lg bg-muted dark:bg-white/10 text-foreground dark:text-white border border-border dark:border-white/15 shadow-sm">
                 <Server className="size-3.5" />
               </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground">
                 Streaming Sources
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-white/10 text-zinc-300 border border-white/10">
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-muted dark:bg-white/10 text-muted-foreground dark:text-zinc-300 border border-border dark:border-white/10">
                 Active: {activeServer.name}
               </span>
             </div>
@@ -376,7 +376,7 @@ export default function StreamingServerSelector({
                 type="button"
                 onClick={() => runHealthCheck(rawAvailable, true)}
                 disabled={isProbing}
-                className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
               >
                 <RefreshCw className={cn("size-3", isProbing && "animate-spin")} />
                 <span>{isProbing ? "Testing..." : "Speed Test"}</span>
@@ -385,7 +385,7 @@ export default function StreamingServerSelector({
               <button
                 type="button"
                 onClick={handleOpenAddModal}
-                className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
               >
                 <Plus className="size-3" />
                 <span>Add Server</span>
@@ -407,8 +407,8 @@ export default function StreamingServerSelector({
                 className={cn(
                   "group relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer active:scale-95 border",
                   isSelected
-                    ? "bg-white text-black font-semibold border-white shadow-sm"
-                    : "bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border-white/10"
+                    ? "bg-primary text-primary-foreground font-semibold border-primary shadow-sm dark:bg-white dark:text-black dark:border-white"
+                    : "bg-muted/70 hover:bg-muted text-foreground border-border/70 dark:bg-white/5 dark:hover:bg-white/10 dark:text-zinc-300 dark:hover:text-white dark:border-white/10"
                 )}
               >
                 <span>{server.name}</span>
@@ -432,7 +432,7 @@ export default function StreamingServerSelector({
               <button
                 type="button"
                 onClick={() => setIsOpen((prev) => !prev)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/10 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground border border-border/70 dark:bg-white/5 dark:hover:bg-white/10 dark:text-zinc-400 dark:hover:text-white dark:border-white/10 transition-all cursor-pointer"
               >
                 <span>More Mirrors ({secondaryServers.length})</span>
                 <ChevronDown className={cn("size-3 transition-transform", isOpen && "rotate-180")} />
@@ -440,7 +440,7 @@ export default function StreamingServerSelector({
 
               {isOpen && (
                 <div
-                  className="absolute left-0 mt-2 z-50 w-64 rounded-2xl bg-[#0f1118] border border-white/15 p-2 shadow-2xl max-h-64 overflow-y-auto custom-scrollbar"
+                  className="absolute left-0 mt-2 z-50 w-64 rounded-2xl bg-popover border border-border text-popover-foreground dark:bg-[#0f1118] dark:border-white/15 p-2 shadow-2xl max-h-64 overflow-y-auto custom-scrollbar"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {secondaryServers.map((server) => (
@@ -452,7 +452,7 @@ export default function StreamingServerSelector({
                         "w-full flex items-center justify-between p-2 rounded-xl text-xs text-left transition-colors cursor-pointer",
                         server.id === activeServer.id
                           ? "bg-white/15 text-white font-semibold"
-                          : "text-zinc-300 hover:bg-white/10 hover:text-white"
+                          : "text-foreground/80 hover:bg-muted dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
                       )}
                     >
                       <span className="truncate">{server.name}</span>

@@ -172,25 +172,25 @@ export default function SubmitServerModal({
       aria-labelledby={`${modalId}-title`}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-[#0c0e18] border border-white/15 rounded-3xl shadow-[0_0_80px_rgba(168,85,247,0.25)] overflow-hidden"
+        className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-card text-card-foreground border border-border/80 dark:bg-[#0c0e18] dark:border-white/15 rounded-3xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-b border-white/10 bg-[#101321] shrink-0 gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-b border-border bg-muted/40 dark:border-white/10 dark:bg-[#101321] shrink-0 gap-3">
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <div className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
               <Server className="size-4 sm:size-5" />
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <h2 id={`${modalId}-title`} className="text-sm sm:text-base font-bold text-white truncate">
+                <h2 id={`${modalId}-title`} className="text-sm sm:text-base font-bold text-foreground truncate">
                   Add Streaming Server
                 </h2>
                 <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 shrink-0">
                   Global & Local
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-white/50 line-clamp-1 sm:line-clamp-none">
+              <p className="text-[11px] sm:text-xs text-muted-foreground line-clamp-1 sm:line-clamp-none">
                 Share a new streaming API with the community or save it to your browser
               </p>
             </div>
@@ -199,7 +199,7 @@ export default function SubmitServerModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+            className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-muted/80 hover:bg-muted border border-border text-foreground dark:bg-white/5 dark:border-white/10 dark:text-white/70 dark:hover:text-white transition-all cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="size-4" />
@@ -207,7 +207,7 @@ export default function SubmitServerModal({
         </div>
 
         {/* Mode Selector Tabs (Global Community vs Instant Local) */}
-        <div className="grid grid-cols-2 gap-2 p-2 px-3 sm:px-7 bg-[#080a12] border-b border-white/10 shrink-0">
+        <div className="grid grid-cols-2 gap-2 p-2 px-3 sm:px-7 bg-muted/20 border-b border-border/60 dark:bg-[#080a12] dark:border-white/10 shrink-0">
           <button
             type="button"
             onClick={() => setMode('global')}
@@ -215,7 +215,7 @@ export default function SubmitServerModal({
               'h-11 sm:h-10 flex items-center justify-center gap-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border',
               mode === 'global'
                 ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.35)]'
-                : 'bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10'
+                : 'bg-muted/50 border-border/60 text-muted-foreground hover:text-foreground hover:bg-muted dark:bg-white/5 dark:border-white/5 dark:text-white/60 dark:hover:text-white'
             )}
           >
             <Globe className="size-4 shrink-0" />
@@ -230,7 +230,7 @@ export default function SubmitServerModal({
               'h-11 sm:h-10 flex items-center justify-center gap-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer select-none border',
               mode === 'local'
                 ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.35)]'
-                : 'bg-white/5 border-white/5 text-white/60 hover:text-white hover:bg-white/10'
+                : 'bg-muted/50 border-border/60 text-muted-foreground hover:text-foreground hover:bg-muted dark:bg-white/5 dark:border-white/5 dark:text-white/60 dark:hover:text-white'
             )}
           >
             <Laptop className="size-4 shrink-0" />
@@ -242,7 +242,7 @@ export default function SubmitServerModal({
         {/* Modal Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-5 sm:space-y-6 custom-scrollbar">
           {/* Mode Explainer Banner */}
-          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 flex items-start gap-3">
+          <div className="p-3.5 rounded-2xl bg-muted/30 border border-border text-xs text-muted-foreground flex items-start gap-3 dark:bg-white/5 dark:border-white/10 dark:text-white/80">
             <Info className="size-4 text-zinc-400 shrink-0 mt-0.5" />
             <div>
               {mode === 'global' ? (
@@ -283,7 +283,7 @@ export default function SubmitServerModal({
             {/* Server Name & Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-1 space-y-1.5">
-                <label className="text-xs font-bold text-white/90">
+                <label className="text-xs font-bold text-foreground">
                   Server Name <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -292,13 +292,13 @@ export default function SubmitServerModal({
                   placeholder="e.g. VidSrc Pro"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-muted/30 border border-border text-foreground text-xs placeholder:text-muted-foreground dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder:text-white/30 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
                 />
               </div>
 
               {/* Quality Selector */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-white/90">Quality</label>
+                <label className="text-xs font-bold text-foreground">Quality</label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {(['4K', '1080p', 'HD'] as const).map((q) => (
                     <button
@@ -309,7 +309,7 @@ export default function SubmitServerModal({
                         'h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer border select-none',
                         quality === q
                           ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_14px_rgba(168,85,247,0.35)]'
-                          : 'bg-white/5 border-white/10 text-white/65 hover:bg-white/10 hover:text-white'
+                          : 'bg-muted/50 border-border text-muted-foreground hover:bg-muted hover:text-foreground dark:bg-white/5 dark:border-white/10 dark:text-white/65 dark:hover:text-white'
                       )}
                     >
                       {q}
@@ -320,7 +320,7 @@ export default function SubmitServerModal({
 
               {/* Speed Selector */}
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-white/90">Speed Rating</label>
+                <label className="text-xs font-bold text-foreground">Speed Rating</label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {(['Ultra', 'Fast', 'Stable'] as const).map((s) => (
                     <button
@@ -331,7 +331,7 @@ export default function SubmitServerModal({
                         'h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all cursor-pointer border select-none',
                         speed === s
                           ? 'bg-purple-600 text-white border-purple-400 shadow-[0_0_14px_rgba(168,85,247,0.35)]'
-                          : 'bg-white/5 border-white/10 text-white/65 hover:bg-white/10 hover:text-white'
+                          : 'bg-muted/50 border-border text-muted-foreground hover:bg-muted hover:text-foreground dark:bg-white/5 dark:border-white/10 dark:text-white/65 dark:hover:text-white'
                       )}
                     >
                       {s}
@@ -344,7 +344,7 @@ export default function SubmitServerModal({
             {/* Movie Embed URL Pattern */}
             <div className="space-y-1.5">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                <label className="text-xs font-bold text-white/90 flex items-center gap-1.5">
+                <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
                   Movie Embed Pattern <span className="text-red-400">*</span>
                 </label>
                 <span className="text-[11px] text-purple-300 font-mono">
@@ -372,7 +372,7 @@ export default function SubmitServerModal({
             {/* TV Embed URL Pattern */}
             <div className="space-y-1.5">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                <label className="text-xs font-bold text-white/90 flex items-center gap-1.5">
+                <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
                   TV Show Embed Pattern <span className="text-red-400">*</span>
                 </label>
                 <span className="text-[11px] text-purple-300 font-mono">
@@ -401,7 +401,7 @@ export default function SubmitServerModal({
             {mode === 'global' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-white/90">
+                  <label className="text-xs font-bold text-foreground">
                     Your Name or Handle <span className="text-white/40 font-normal">(Optional)</span>
                   </label>
                   <input
@@ -409,12 +409,12 @@ export default function SubmitServerModal({
                     placeholder="e.g. Alex or @alex_streams"
                     value={submitterName}
                     onChange={(e) => setSubmitterName(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-muted/30 border border-border text-foreground text-xs placeholder:text-muted-foreground dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder:text-white/30 focus:outline-none focus:border-purple-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-white/90">
+                  <label className="text-xs font-bold text-foreground">
                     Notes / Provider URL <span className="text-white/40 font-normal">(Optional)</span>
                   </label>
                   <input
@@ -422,7 +422,7 @@ export default function SubmitServerModal({
                     placeholder="e.g. Multi-subtitles, ad-free player"
                     value={submitterNote}
                     onChange={(e) => setSubmitterNote(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-white/30 focus:outline-none focus:border-purple-500"
+                    className="w-full px-3.5 py-2 rounded-xl bg-muted/30 border border-border text-foreground text-xs placeholder:text-muted-foreground dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder:text-white/30 focus:outline-none focus:border-purple-500"
                   />
                 </div>
               </div>
@@ -549,11 +549,11 @@ export default function SubmitServerModal({
         </div>
 
         {/* Modal Bottom Action Bar */}
-        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-t border-white/10 bg-[#101321] shrink-0 gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-7 py-3.5 sm:py-4 border-t border-border bg-muted/40 dark:border-white/10 dark:bg-[#101321] shrink-0 gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="h-10 px-4 rounded-xl text-xs font-semibold text-white/70 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/10 transition-all cursor-pointer"
+            className="h-10 px-4 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all cursor-pointer"
           >
             Cancel
           </button>

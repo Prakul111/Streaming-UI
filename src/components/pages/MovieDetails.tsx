@@ -596,7 +596,7 @@ export default function MovieDetails() {
                     "cursor-pointer px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5",
                     activeMediaTab === "popular"
                       ? "bg-white text-black shadow-md font-bold"
-                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
                   <span>Most popular</span>
@@ -609,7 +609,7 @@ export default function MovieDetails() {
                     "cursor-pointer px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5",
                     activeMediaTab === "videos"
                       ? "bg-white text-black shadow-md font-bold"
-                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
                   <span>Videos</span>
@@ -634,7 +634,7 @@ export default function MovieDetails() {
                     "cursor-pointer px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5",
                     activeMediaTab === "backdrops"
                       ? "bg-white text-black shadow-md font-bold"
-                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
                   <span>Backdrops</span>
@@ -659,7 +659,7 @@ export default function MovieDetails() {
                     "cursor-pointer px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5",
                     activeMediaTab === "posters"
                       ? "bg-white text-black shadow-md font-bold"
-                      : "text-muted-foreground hover:text-white hover:bg-white/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
                   <span>Posters</span>
@@ -682,14 +682,14 @@ export default function MovieDetails() {
               <div className="hidden sm:flex items-center gap-1 ml-1 shrink-0">
                 <button
                   onClick={() => scrollContainer(trailersScrollRef, "left")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Scroll left"
                 >
                   <ChevronLeft className="size-4" />
                 </button>
                 <button
                   onClick={() => scrollContainer(trailersScrollRef, "right")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Scroll right"
                 >
                   <ChevronRight className="size-4" />
@@ -731,7 +731,7 @@ export default function MovieDetails() {
                     </div>
                   </div>
 
-                  <p className="text-sm font-semibold text-white/90 group-hover:text-purple-400 transition-colors truncate">
+                  <p className="text-sm font-semibold text-foreground group-hover:text-primary dark:text-white/90 dark:group-hover:text-purple-400 transition-colors truncate">
                     {vid.name}
                   </p>
                 </div>
@@ -775,7 +775,7 @@ export default function MovieDetails() {
                     </div>
                   </div>
 
-                  <p className="text-sm font-semibold text-white/80 group-hover:text-purple-400 transition-colors">
+                  <p className="text-sm font-semibold text-foreground group-hover:text-primary dark:text-white/80 dark:group-hover:text-purple-400 transition-colors">
                     Backdrop • {img.width}×{img.height}
                   </p>
                 </div>
@@ -814,7 +814,7 @@ export default function MovieDetails() {
                     </div>
                   </div>
 
-                  <p className="text-sm font-semibold text-white/80 group-hover:text-purple-400 transition-colors truncate">
+                  <p className="text-sm font-semibold text-foreground group-hover:text-primary dark:text-white/80 dark:group-hover:text-purple-400 transition-colors truncate">
                     Official Poster
                   </p>
                 </div>
@@ -856,7 +856,7 @@ export default function MovieDetails() {
                         </div>
                       </div>
 
-                      <p className="text-sm font-semibold text-white/90 group-hover:text-purple-400 transition-colors truncate">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary dark:text-white/90 dark:group-hover:text-purple-400 transition-colors truncate">
                         {vid.name}
                       </p>
                     </div>
@@ -986,15 +986,15 @@ export default function MovieDetails() {
             3. CAST AND CREW SECTION (Screenshot 1 Bottom Reference)
         ======================================================================= */}
         <section className="text-left">
-          <div className="rounded-3xl bg-[#12161f]/80 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 shadow-2xl space-y-6">
+          <div className="rounded-3xl bg-card border border-border/80 dark:bg-[#12161f]/80 dark:border-white/10 p-6 sm:p-8 md:p-10 shadow-xl space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-border/50 dark:border-white/10 pb-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-[11px] font-bold tracking-widest text-muted-foreground uppercase">
                   <div className="w-1 h-3.5 bg-purple-500 rounded-full" />
                   <span>FEATURING</span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
                   Cast & crew
                 </h2>
               </div>
@@ -1031,7 +1031,7 @@ export default function MovieDetails() {
                         loading="lazy"
                       />
                       <div className="space-y-0.5 min-w-0">
-                        <p className="text-sm font-semibold text-white group-hover:text-purple-400 transition-colors truncate">
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors truncate">
                           {actor.name}
                         </p>
                         <p className="text-xs text-muted-foreground truncate">
@@ -1044,7 +1044,7 @@ export default function MovieDetails() {
               </div>
 
               {/* Right Column: Creative Team (approx 5 cols) */}
-              <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-8 space-y-6">
+              <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-border/50 dark:border-white/10 pt-6 lg:pt-0 lg:pl-8 space-y-6">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <Clapperboard className="size-3.5 text-purple-400" />
                   <span>Creative team</span>
@@ -1070,7 +1070,7 @@ export default function MovieDetails() {
                         className="size-10 rounded-full object-cover border border-white/10 bg-muted/40 shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple-500/50 transition-all"
                         loading="lazy"
                       />
-                      <span className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors">
+                      <span className="text-sm font-bold text-foreground group-hover:text-primary dark:text-white dark:group-hover:text-purple-400 transition-colors">
                         {director.name}
                       </span>
                     </Link>
@@ -1153,14 +1153,14 @@ export default function MovieDetails() {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => scrollContainer(similarsScrollRef, "left")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Previous similar movies"
                 >
                   <ChevronLeft className="size-4" />
                 </button>
                 <button
                   onClick={() => scrollContainer(similarsScrollRef, "right")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Next similar movies"
                 >
                   <ChevronRight className="size-4" />
@@ -1228,14 +1228,14 @@ export default function MovieDetails() {
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => scrollContainer(recommendationsScrollRef, "left")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Previous recommended movies"
                 >
                   <ChevronLeft className="size-4" />
                 </button>
                 <button
                   onClick={() => scrollContainer(recommendationsScrollRef, "right")}
-                  className="cursor-pointer size-8 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition active:scale-95"
+                  className="cursor-pointer size-8 rounded-full border border-border bg-muted/80 hover:bg-muted flex items-center justify-center text-foreground dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:text-white transition active:scale-95"
                   aria-label="Next recommended movies"
                 >
                   <ChevronRight className="size-4" />

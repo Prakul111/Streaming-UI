@@ -984,7 +984,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
-                <span className="h-3.5 w-0.5 bg-white/70 rounded-full" />
+                <span className="h-3.5 w-0.5 bg-foreground/70 dark:bg-white/70 rounded-full" />
                 <span>TRENDING TODAY</span>
               </div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
@@ -1032,7 +1032,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
-                <span className="h-3.5 w-0.5 bg-white/70 rounded-full" />
+                <span className="h-3.5 w-0.5 bg-foreground/70 dark:bg-white/70 rounded-full" />
                 <span>TRENDING TODAY</span>
               </div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
@@ -1080,7 +1080,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
-                <span className="h-3.5 w-0.5 bg-white/70 rounded-full" />
+                <span className="h-3.5 w-0.5 bg-foreground/70 dark:bg-white/70 rounded-full" />
                 <span>ALL-TIME FAVOURITES</span>
               </div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
@@ -1165,7 +1165,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/85">
-                <span className="h-3.5 w-0.5 bg-white/70 rounded-full" />
+                <span className="h-3.5 w-0.5 bg-foreground/70 dark:bg-white/70 rounded-full" />
                 <span>FIND YOUR MOOD</span>
               </div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
@@ -1244,7 +1244,7 @@ export default function HomePage() {
                     theme.cardGradient,
                     isSelected
                       ? cn(theme.selectedRing, theme.selectedShadow, "scale-[1.03]")
-                      : cn("border border-white/10 opacity-85 hover:opacity-100 hover:scale-[1.02]", theme.hoverBorder, theme.hoverShadow)
+                      : cn("border border-border/80 dark:border-white/10 opacity-90 hover:opacity-100 hover:scale-[1.02]", theme.hoverBorder, theme.hoverShadow)
                   )}
                 >
                   {/* Genre Background Art */}
